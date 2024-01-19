@@ -6,7 +6,6 @@
 #include <utility>
 
 #include "tokeniser.h"
-#include "readwrite.h"
 
 
 namespace tokeniser {
@@ -50,13 +49,7 @@ namespace tokeniser {
     parse(between, inserter, types_begin+1, types_end);
   }
 
-  void tokenise(const std::string& filename) {
-    const std::string input_extension = ".alpha";
-    const std::string output_extension = ".tokens.output";
-
-    std::cout << "tokenise: " << filename << std::endl;
-    std::string content = read(filename + input_extension);
-
+  std::vector<Token> tokenise(const std::string& content) {
     std::vector<std::pair<std::regex, Type>> types = {
       { std::regex("\\n"), Type::eol },
       { std::regex("[+-]"), Type::identifier },
@@ -65,13 +58,7 @@ namespace tokeniser {
     std::vector<Token> tokens;
     parse(content, std::back_inserter(tokens), types.begin(), types.end());
     tokens.push_back(Token(Type::end, "END"));
-
-    std::string result = "";
-    for (const Token& token: tokens) {
-      result += std::string(token) + "\n";
-    }
-
-    write(filename + output_extension, result);
+    return tokens;
   }
 
 } /* tokeniser */

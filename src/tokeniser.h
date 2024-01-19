@@ -26,7 +26,7 @@ namespace tokeniser {
   };
 
 
-  void tokenise(const std::string& filename);
+  std::vector<Token> tokenise(const std::string& filename);
 
 } /* tokeniser */
 

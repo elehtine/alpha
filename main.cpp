@@ -1,55 +1,21 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
-#include "src/tokeniser.h"
+#include "src/command.h"
 
-
-void help() {
-  std::cout << "Usage:" << std::endl;
-  std::cout << "Run compiler: alpha run <file>" << std::endl;
-  std::cout << "Run tests: alpha test" << std::endl;
-}
-
-void run(std::string file) {
-  std::cout << "file: " << file << std::endl;
-  tokeniser::tokenise(file);
-}
-
-void test() {
-  std::vector<std::string> files {
-    "tests/addition",
-    "tests/substitution"
-  };
-
-  for (const std::string& file: files) {
-    tokeniser::tokenise(file);
-  }
-}
 
 int main(int argc, char* argv[]) {
-  std::cout << "args:" << std::endl;
-  for (int i = 0; i < argc; i++) {
-    std::cout << "arg " << i << ": " << argv[i] << std::endl;
-  }
-  std::cout << std::endl;
+  std::vector<std::unique_ptr<Command>> commands;
+  commands.push_back(std::unique_ptr<Command>(new Compile));
+  commands.push_back(std::unique_ptr<Command>(new Test));
+  commands.push_back(std::unique_ptr<Command>(new Help));
 
-  if (argc < 2) {
-    help();
-    return 0;
-  }
-
-  std::string command = argv[1];
-  if (command == "run" && argc < 3) {
-    help();
-    return 0;
-  }
-
-  if (command == "run") {
-    std::string file = argv[2];
-    run(file);
-  }
-  if (command == "test") {
-    test();
+  for (std::unique_ptr<Command>& command: commands) {
+    if (command->check(argc, argv)) {
+      command->execute();
+      break;
+    }
   }
 }

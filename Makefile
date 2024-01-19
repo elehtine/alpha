@@ -3,7 +3,7 @@ appname = alpha
 CXX = g++
 CXXFLAGS = -Wall -g -std=c++20
 
-SRCS = main.cpp src/tokeniser.cpp src/readwrite.cpp
+SRCS = main.cpp src/tokeniser.cpp src/readwrite.cpp src/command.cpp
 
 
 .PHONY: test
@@ -16,14 +16,14 @@ build: $(appname)
 $(appname): $(SRCS)
 	$(CXX) $(CXXFLAGS) $(SRCS) -o $(appname)
 
-.PHONY: help
-help:
-	@echo "Commands for compiler alpha:"
-	@echo "Run tests: make test"
-	@echo "Build alpha: make build"
-	@echo "Show this help: make help"
-	@echo "Clean binaries: make clean"
-
 .PHONY: clean
 clean:
 	$(RM) $(appname) tests/*.output
+
+.PHONY: help
+help:
+	@echo "Commands for compiler alpha:"
+	@echo "  make test  - Run tests"
+	@echo "  make alpha - Build alpha"
+	@echo "  make clean - Clean binaries:"
+	@echo "  make help  - Show this help:"
