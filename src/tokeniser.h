@@ -9,12 +9,14 @@ namespace tokeniser {
   enum class Type {
     literal,
     identifier,
-    end,
+    eol,
+    end
   };
 
   class Token {
     public:
       Token(Type type, std::string content);
+      std::string to_string() const;
 
     private:
       Type type;
@@ -22,7 +24,7 @@ namespace tokeniser {
   };
 
 
-  std::vector<Token> tokenise(const std::string& filename);
+  void tokenise(const std::string& filename);
 
 } /* tokeniser */
 
