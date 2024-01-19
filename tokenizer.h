@@ -1,6 +1,10 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
-void tokenize();
+#include <string>
+
+std::string content(const std::string& file);
+
+void tokenize(std::string file);
 
 #endif

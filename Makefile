@@ -5,9 +5,10 @@ CXXFLAGS = -Wall -g -std=c++20
 
 SRCS = main.cpp tokenizer.cpp
 
-.PHONY: all
-all: $(appname)
-	./$(appname)
+
+.PHONY: test
+test: $(appname)
+	./$(appname) test
 
 $(appname): $(SRCS)
 	$(CXX) $(CXXFLAGS) $(SRCS) -o $(appname)
