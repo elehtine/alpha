@@ -10,13 +10,15 @@ namespace tokeniser {
     literal,
     identifier,
     eol,
-    end
+    end,
   };
+
+  std::string to_string(Type type);
 
   class Token {
     public:
       Token(Type type, std::string content);
-      std::string to_string() const;
+      operator std::string() const;
 
     private:
       Type type;
