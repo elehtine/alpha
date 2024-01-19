@@ -49,7 +49,7 @@ bool Test::check(int argc, char* argv[]) {
 void Compile::execute() {
   std::string content = read(filename);
   std::vector<tokeniser::Token> tokens = tokeniser::tokenise(content);
-  std::cout << to_string(tokens);
+  std::cout << to_string(tokens) << std::endl;
 }
 
 bool Compile::check(int argc, char* argv[]) {
