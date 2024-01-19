@@ -3,8 +3,8 @@
 
 #include <string>
 
-std::string content(const std::string& file);
+std::string read(const std::string& file);
 
-void tokenize(std::string file);
+void tokenize(const std::string& file);
 
 #endif
