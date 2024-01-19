@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "src/tokenizer.h"
+#include "src/tokeniser.h"
 
 
 void help() {
@@ -13,16 +13,17 @@ void help() {
 
 void run(std::string file) {
   std::cout << "file: " << file << std::endl;
-  tokenize(file);
+  tokeniser::tokenise(file);
 }
 
 void test() {
   std::vector<std::string> files {
-    "tests/addition.alpha",
-    "tests/substitution.alpha"
+    "tests/addition",
+    "tests/substitution"
   };
+
   for (const std::string& file: files) {
-    tokenize(file);
+    tokeniser::tokenise(file);
   }
 }
 

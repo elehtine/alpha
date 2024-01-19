@@ -3,7 +3,7 @@ appname = alpha
 CXX = g++
 CXXFLAGS = -Wall -g -std=c++20
 
-SRCS = main.cpp src/tokenizer.cpp src/readwrite.cpp
+SRCS = main.cpp src/tokeniser.cpp src/readwrite.cpp
 
 
 .PHONY: test
@@ -26,4 +26,4 @@ help:
 
 .PHONY: clean
 clean:
-	$(RM) $(appname)
+	$(RM) $(appname) tests/*.output

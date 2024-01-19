@@ -13,3 +13,9 @@ std::string read(const std::string& file) {
   }
   return text;
 }
+
+void write(const std::string& file, const std::string& content) {
+  std::ofstream out(file);
+  out << content;
+  out.close();
+}
