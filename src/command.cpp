@@ -11,12 +11,6 @@ Command::~Command() {}
 
 Command::Command() {}
 
-void Command::execute() {}
-
-bool Command::check(int argc, char* argv[]) { 
-  return false;
-}
-
 std::string to_string(std::vector<tokeniser::Token> tokens) {
   std::string result = "";
   for (const tokeniser::Token& token: tokens) {
@@ -41,7 +35,6 @@ void Test::execute() {
     std::vector<tokeniser::Token> tokens = tokeniser::tokenise(content);
     write(file + output_extension, to_string(tokens));
   }
-
 }
 
 bool Test::check(int argc, char* argv[]) {
