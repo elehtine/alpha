@@ -11,10 +11,11 @@
 namespace tokeniser {
 
   std::string to_string(Type type) {
-    if (type == Type::literal) return "literal";
-    if (type == Type::identifier) return "identifier";
+    if (type == Type::eof) return "EOL";
     if (type == Type::eol) return "EOL";
-    if (type == Type::end) return "END";
+    if (type == Type::oper) return "operator";
+    if (type == Type::identifier) return "identifier";
+    if (type == Type::literal) return "literal";
     return "";
   }
 
@@ -52,12 +53,13 @@ namespace tokeniser {
   std::vector<Token> tokenise(const std::string& content) {
     std::vector<std::pair<std::regex, Type>> types = {
       { std::regex("\\n"), Type::eol },
-      { std::regex("[+-]"), Type::identifier },
-      { std::regex("\\d"), Type::literal },
+      { std::regex("(\\+|-|\\*|/|==|=|!=|<=|<|>=|>)"), Type::identifier },
+      { std::regex("[a-z]\\w*"), Type::identifier },
+      { std::regex("\\d+"), Type::literal },
     };
     std::vector<Token> tokens;
     parse(content, std::back_inserter(tokens), types.begin(), types.end());
-    tokens.push_back(Token(Type::end, "END"));
+    tokens.push_back(Token(Type::eof, "EOF"));
     return tokens;
   }
 

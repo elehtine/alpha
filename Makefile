@@ -1,7 +1,7 @@
 appname = alpha
 
 CXX = g++
-CXXFLAGS = -Wall -g -std=c++20
+CXXFLAGS = -Wall -g -std=c++17
 
 SRCS = main.cpp src/tokeniser.cpp src/readwrite.cpp src/command.cpp
 
@@ -9,9 +9,6 @@ SRCS = main.cpp src/tokeniser.cpp src/readwrite.cpp src/command.cpp
 .PHONY: test
 test: $(appname)
 	./$(appname) test
-
-.PHONY: build
-build: $(appname)
 
 $(appname): $(SRCS)
 	$(CXX) $(CXXFLAGS) $(SRCS) -o $(appname)

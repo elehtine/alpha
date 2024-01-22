@@ -7,10 +7,11 @@
 namespace tokeniser {
 
   enum class Type {
-    literal,
-    identifier,
+    eof,
     eol,
-    end,
+    oper,
+    identifier,
+    literal,
   };
 
   std::string to_string(Type type);

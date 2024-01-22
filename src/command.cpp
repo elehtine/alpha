@@ -31,7 +31,9 @@ void Test::execute() {
 
   std::vector<std::string> files {
     "tests/addition",
-    "tests/substitution"
+    "tests/substitution",
+    "tests/operators",
+    "tests/identifier"
   };
 
   for (const std::string& file: files) {
