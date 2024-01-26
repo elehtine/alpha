@@ -3,7 +3,7 @@ appname = alpha
 CXX = g++
 CXXFLAGS = -Wall -g -std=c++17
 
-SRCS = main.cpp src/tokeniser.cpp src/readwrite.cpp src/command.cpp
+SRCS = main.cpp src/tokeniser.cpp src/readwrite.cpp src/command.cpp src/test.cpp
 
 
 .PHONY: test

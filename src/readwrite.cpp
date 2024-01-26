@@ -1,6 +1,20 @@
 #include <fstream>
 #include <string>
+#include <vector>
+#include <iostream>
 
+
+bool user_approval(std::string prompt) {
+  std::cout << prompt;
+
+  std::string approval;
+  std::cin >> approval;
+  std::vector<std::string> positive = { "", "Y", "y", "yes" };
+  for (const std::string& possible: positive) {
+    if (approval == possible) return true;
+  }
+  return false;
+}
 
 bool is_file(const std::string& file) {
   return std::ifstream(file, std::ios::in).good();

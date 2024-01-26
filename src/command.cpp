@@ -5,25 +5,14 @@
 #include "command.h"
 #include "tokeniser.h"
 #include "readwrite.h"
+#include "test.h"
 
 
 Command::~Command() {}
 
 Command::Command() {}
 
-std::string to_string(std::vector<tokeniser::Token> tokens) {
-  std::string result = "";
-  for (const tokeniser::Token& token: tokens) {
-    result += std::string(token) + "\n";
-  }
-  return result;
-}
-
 void Test::execute() {
-  const std::string input_extension = ".alpha";
-  const std::string output_extension = ".tokens.output";
-  const std::string test_extension = ".tokens.test";
-
   std::vector<std::string> files {
     "tests/addition",
     "tests/substitution",
@@ -33,31 +22,7 @@ void Test::execute() {
   };
 
   for (const std::string& file: files) {
-    const std::string input_file = file + input_extension;
-    const std::string output_file = file + output_extension;
-    const std::string test_file = file + test_extension;
-
-    if (!is_file(file + input_extension)) {
-      std::cout << "File " << input_file << " doesn't exists" << std::endl;
-      continue;
-    }
-
-    std::string content = read(input_file);
-    std::vector<tokeniser::Token> tokens = tokeniser::tokenise(content);
-    std::string result = to_string(tokens);
-    write(output_file, result);
-
-    if (is_file(test_file)) {
-      std::string test_content = read(test_file);
-      if (test_content == result) {
-        std::cout << "File " << file << " passed" << std::endl;
-      } else {
-        std::cout << "File " << file << " failed" << std::endl;
-      }
-    } else {
-      write(test_file, result);
-        std::cout << "File " << file << " saved" << std::endl;
-    }
+    test_file(file);
   }
 }
 
