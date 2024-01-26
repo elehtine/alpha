@@ -34,6 +34,7 @@ namespace tokeniser {
 
   std::string Token::parse_str() {
     if (type == Type::identifier) return content;
+    if (type == Type::oper) return content;
     throw ParseException(message());
   }
 
@@ -67,7 +68,7 @@ namespace tokeniser {
   std::vector<Token> tokenise(const std::string& content) {
     std::vector<std::pair<std::regex, Type>> types = {
       { std::regex("\\n"), Type::eol },
-      { std::regex("(\\+|-|\\*|/|==|=|!=|<=|<|>=|>)"), Type::identifier },
+      { std::regex("(\\+|-|\\*|/|==|=|!=|<=|<|>=|>)"), Type::oper },
       { std::regex("[a-z]\\w*"), Type::identifier },
       { std::regex("\\d+"), Type::literal },
     };

@@ -1,5 +1,4 @@
 #include <vector>
-#include <iostream>
 #include <memory>
 
 #include "tokeniser.h"
@@ -29,7 +28,7 @@ namespace parser {
     left(std::move(left)), op(op), right(std::move(right)) {}
 
   BinaryOp::operator std::string() const {
-    return std::string(*left) + op + std::string(*right);
+    return std::string(*left) + op + "\n" + std::string(*right);
   }
 
   Parser::Parser(std::vector<tokeniser::Token> tokens):
