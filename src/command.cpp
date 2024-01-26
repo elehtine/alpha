@@ -3,9 +3,11 @@
 #include <iostream>
 
 #include "command.h"
-#include "tokeniser.h"
 #include "readwrite.h"
 #include "test.h"
+
+#include "tokeniser.h"
+#include "parser.h"
 
 
 Command::~Command() {}
@@ -18,7 +20,6 @@ void Test::execute() {
     "tests/substitution",
     "tests/operators",
     "tests/identifier",
-    "foo"
   };
 
   for (const std::string& file: files) {
@@ -33,7 +34,10 @@ bool Test::check(int argc, char* argv[]) {
 void Compile::execute() {
   std::string content = read(filename);
   std::vector<tokeniser::Token> tokens = tokeniser::tokenise(content);
+  std::unique_ptr<parser::Expression> expression = parser::parse(tokens);
+
   std::cout << to_string(tokens) << std::endl;
+  std::cout << std::string(*expression) << std::endl;
 }
 
 bool Compile::check(int argc, char* argv[]) {
