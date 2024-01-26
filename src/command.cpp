@@ -34,9 +34,10 @@ bool Test::check(int argc, char* argv[]) {
 void Compile::execute() {
   std::string content = read(filename);
   std::vector<tokeniser::Token> tokens = tokeniser::tokenise(content);
-  std::unique_ptr<parser::Expression> expression = parser::parse(tokens);
-
   std::cout << to_string(tokens) << std::endl;
+
+  parser::Parser parser { tokens };
+  std::unique_ptr<parser::Expression> expression = parser.parse();
   std::cout << std::string(*expression) << std::endl;
 }
 

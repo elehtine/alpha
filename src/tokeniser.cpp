@@ -27,6 +27,21 @@ namespace tokeniser {
     return "Token(" + to_string(type) + ", " + show + ")";
   }
 
+  int Token::parse_int() {
+    if (type == Type::literal) return stoi(content);
+    std::string message("Token " + std::string(*this) + " is not a literal");
+    throw ParseException(message.c_str());
+  }
+
+  std::string Token::parse_str() {
+    if (type == Type::identifier) return content;
+    throw ParseException(message());
+  }
+
+  std::string Token::message() {
+    return "Token " + std::string(*this) + " is not " + to_string(type);
+  }
+
   void parse(const std::string& content,
       std::back_insert_iterator<std::vector<Token>> inserter,
       std::vector<std::pair<std::regex, Type>>::const_iterator types_begin,

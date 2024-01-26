@@ -27,7 +27,32 @@ namespace parser {
       int value;
   };
 
-  std::unique_ptr<Expression> parse(std::vector<tokeniser::Token> tokens);
+  class Identifier : public Expression {
+    public:
+      Identifier(tokeniser::Token token);
+      operator std::string() const override;
+
+    private:
+      std::string name;
+  };
+
+  class BinaryOp : public Expression {
+    public:
+
+    private:
+      std::unique_ptr<Expression> left;
+      std::unique_ptr<Expression> right;
+      std::string op;
+  };
+
+  class Parser {
+    public:
+      Parser(std::vector<tokeniser::Token> tokens);
+      std::unique_ptr<Expression> parse();
+
+    private:
+      std::vector<tokeniser::Token> tokens;
+  };
 
 }; /* parser */
 

@@ -23,15 +23,14 @@ namespace tokeniser {
       Token(Type type, std::string content);
       operator std::string() const;
 
-      int parse_int() {
-        if (type == Type::literal) return stoi(content);
-        std::string message("Token " + std::string(*this) + " is not a literal");
-        throw ParseException(message.c_str());
-      }
+      int parse_int();
+      std::string parse_str();
 
     private:
       Type type;
       std::string content;
+
+      std::string message();
   };
 
 
