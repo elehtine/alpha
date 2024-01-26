@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "test.h"
-#include "readwrite.h"
+#include "tools/readwrite.h"
 #include "tokeniser.h"
 
 std::string input_file(const std::string& file) {

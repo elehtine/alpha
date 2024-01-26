@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "command.h"
-#include "readwrite.h"
+#include "tools/readwrite.h"
 #include "test.h"
 
 #include "tokeniser.h"
