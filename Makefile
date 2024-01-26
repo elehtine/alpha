@@ -15,7 +15,7 @@ $(appname): $(SRCS)
 
 .PHONY: clean
 clean:
-	$(RM) $(appname) tests/*.output
+	$(RM) $(appname)
 
 .PHONY: help
 help:
