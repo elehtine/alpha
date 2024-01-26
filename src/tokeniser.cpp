@@ -7,10 +7,12 @@
 
 #include "tokeniser.h"
 
+#include "tools/readwrite.h"
+
 
 namespace tokeniser {
 
-  std::string to_string(Type type) {
+  std::string to_string(const Type& type) {
     if (type == Type::eof) return "EOF";
     if (type == Type::eol) return "EOL";
     if (type == Type::oper) return "operator";
@@ -27,19 +29,24 @@ namespace tokeniser {
     return "Token(" + to_string(type) + ", " + show + ")";
   }
 
+  Type Token::get_type() const {
+    return type;
+  }
+
   int Token::parse_int() {
     if (type == Type::literal) return stoi(content);
-    throw ParseException(message());
+    throw ParseException(message({ Type::literal }));
   }
 
   std::string Token::parse_str() {
     if (type == Type::identifier) return content;
     if (type == Type::oper) return content;
-    throw ParseException(message());
+    throw ParseException(message({ Type::oper, Type::identifier }));
   }
 
-  std::string Token::message() {
-    return "Token (" + std::string(*this) + ") is not " + to_string(type);
+  std::string Token::message(std::vector<Type> need) {
+    return "Token (" + std::string(*this) + ") is not " +
+      ::to_string(need);
   }
 
   void parse(const std::string& content,

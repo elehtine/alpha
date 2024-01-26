@@ -16,12 +16,13 @@ namespace tokeniser {
     literal,
   };
 
-  std::string to_string(Type type);
+  std::string to_string(const Type& type);
 
   class Token {
     public:
       Token(Type type, std::string content);
       operator std::string() const;
+      Type get_type() const;
 
       int parse_int();
       std::string parse_str();
@@ -30,7 +31,7 @@ namespace tokeniser {
       Type type;
       std::string content;
 
-      std::string message();
+      std::string message(std::vector<Type> need);
   };
 
 

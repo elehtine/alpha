@@ -59,18 +59,17 @@ void test_file(const std::string& file) {
   std::vector<tokeniser::Token> tokens = tokeniser::tokenise(input);
 
   parser::Parser parser { tokens };
-  std::unique_ptr<parser::Expression> expression =
-    std::make_unique<parser::Literal>(
-        tokeniser::Token(tokeniser::Type::literal, "1"));
-
+  std::vector<std::unique_ptr<parser::Expression>> lines;
   try {
-    expression = parser.parse();
+    lines = parser.parse();
   } catch (const ParseException& e) {
     std::cout << e.what() << std::endl;
   }
+  std::cout << "test:" << std::endl;
+  std::cout << to_string(lines) << std::endl;
 
   check_result(alpha_file(file), token_file(file),
       input, to_string(tokens));
   check_result(token_file(file), tree_file(file),
-      to_string(tokens), std::string(*expression));
+      to_string(tokens), to_string(lines));
 }

@@ -51,13 +51,14 @@ namespace parser {
   class Parser {
     public:
       Parser(std::vector<tokeniser::Token> tokens);
-      std::unique_ptr<Expression> parse();
+      std::vector<std::unique_ptr<Expression>> parse();
 
     private:
       std::unique_ptr<Literal> parse_literal();
       std::unique_ptr<Identifier> parse_identifier();
       std::unique_ptr<Expression> parse_term();
-      std::unique_ptr<BinaryOp> parse_expression();
+      std::unique_ptr<Expression> parse_expression();
+      std::vector<std::unique_ptr<Expression>> parse_lines();
 
       tokeniser::Token peek();
       tokeniser::Token consume();

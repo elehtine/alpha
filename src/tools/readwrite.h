@@ -3,6 +3,20 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+
+#include "../tokeniser.h"
+
+std::string to_string(const std::vector<tokeniser::Type>& vec);
+
+template<typename T>
+std::string to_string(const std::vector<std::unique_ptr<T>>& vec) {
+  std::string result = "";
+  for (const std::unique_ptr<T>& element: vec) {
+    result += std::string(*element) + "\n";
+  }
+  return result;
+}
 
 template<typename T>
 std::string to_string(std::vector<T> vec) {

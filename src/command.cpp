@@ -34,8 +34,10 @@ void Compile::execute() {
   std::cout << to_string(tokens) << std::endl;
 
   parser::Parser parser { tokens };
-  std::unique_ptr<parser::Expression> expression = parser.parse();
-  std::cout << std::string(*expression) << std::endl;
+  std::vector<std::unique_ptr<parser::Expression>> lines = parser.parse();
+  for (const std::unique_ptr<parser::Expression>& expression: lines) {
+    std::cout << std::string(*expression) << std::endl;
+  }
 }
 
 bool Compile::check(int argc, char* argv[]) {

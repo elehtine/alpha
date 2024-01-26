@@ -1,6 +1,7 @@
 #include <vector>
 #include <memory>
 
+#include "tools/readwrite.h"
 #include "tokeniser.h"
 #include "parser.h"
 
@@ -34,8 +35,8 @@ namespace parser {
   Parser::Parser(std::vector<tokeniser::Token> tokens):
     tokens(tokens), position(0) {}
 
-  std::unique_ptr<Expression> Parser::parse() {
-    return parse_expression();
+  std::vector<std::unique_ptr<Expression>> Parser::parse() {
+    return parse_lines();
   }
 
   std::unique_ptr<Literal> Parser::parse_literal() {
@@ -49,18 +50,42 @@ namespace parser {
   }
 
   std::unique_ptr<Expression> Parser::parse_term() {
+    size_t prev_pos = position;
     try {
       return parse_literal();
     } catch (const ParseException& e) {}
+    position = prev_pos;
     return parse_identifier();
   }
 
-  std::unique_ptr<BinaryOp> Parser::parse_expression() {
+  std::unique_ptr<Expression> Parser::parse_expression() {
     std::unique_ptr<Expression> left = parse_term();
-    tokeniser::Token token = consume();
-    std::unique_ptr<Expression> right = parse_term();
-    return std::make_unique<BinaryOp>(
-        std::move(left), token.parse_str(), std::move(right));
+    size_t prev_pos = position;
+    try {
+      while (true) {
+        prev_pos = position;
+        tokeniser::Token token = consume();
+        std::unique_ptr<Expression> right = parse_term();
+        left = std::make_unique<BinaryOp>(std::move(left),
+            token.parse_str(), std::move(right));
+      }
+    } catch (const ParseException& e) {}
+    position = prev_pos;
+    return left;
+  }
+
+  std::vector<std::unique_ptr<Expression>> Parser::parse_lines() {
+    std::vector<std::unique_ptr<Expression>> lines;
+    while (true) {
+      tokeniser::Token token = peek();
+      if (token.get_type() == tokeniser::Type::eol) {
+        consume();
+        continue;
+      }
+      if (token.get_type() == tokeniser::Type::eof) break;
+      lines.push_back(parse_expression());
+    }
+    return lines;
   }
 
   tokeniser::Token Parser::peek() {

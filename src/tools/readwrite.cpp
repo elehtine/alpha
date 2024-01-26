@@ -3,6 +3,19 @@
 #include <vector>
 #include <iostream>
 
+#include "../tokeniser.h"
+
+
+std::string to_string(const std::vector<tokeniser::Type>& vec) {
+  std::string result = "[ ";
+  bool comma = false;
+  for (const tokeniser::Type& type: vec) {
+    if (comma) result += ", ";
+    comma = true;
+    result += to_string(type);
+  }
+  return result + " ]";
+}
 
 bool user_approval(std::string prompt) {
   std::cout << prompt;
