@@ -38,14 +38,14 @@ namespace parser {
 
   class BinaryOp : public Expression {
     public:
-      BinaryOp(std::unique_ptr<Literal> left, std::string op,
-          std::unique_ptr<Literal> right);
+      BinaryOp(std::unique_ptr<Expression> left, std::string op,
+          std::unique_ptr<Expression> right);
       operator std::string() const override;
 
     private:
-      std::unique_ptr<Literal> left;
+      std::unique_ptr<Expression> left;
       std::string op;
-      std::unique_ptr<Literal> right;
+      std::unique_ptr<Expression> right;
   };
 
   class Parser {
@@ -55,6 +55,8 @@ namespace parser {
 
     private:
       std::unique_ptr<Literal> parse_literal();
+      std::unique_ptr<Identifier> parse_identifier();
+      std::unique_ptr<Expression> parse_term();
       std::unique_ptr<BinaryOp> parse_expression();
 
       tokeniser::Token peek();

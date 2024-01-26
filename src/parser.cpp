@@ -23,8 +23,8 @@ namespace parser {
     return name + "\n";
   }
 
-  BinaryOp::BinaryOp(std::unique_ptr<Literal> left, std::string op,
-      std::unique_ptr<Literal> right):
+  BinaryOp::BinaryOp(std::unique_ptr<Expression> left, std::string op,
+      std::unique_ptr<Expression> right):
     left(std::move(left)), op(op), right(std::move(right)) {}
 
   BinaryOp::operator std::string() const {
@@ -43,10 +43,22 @@ namespace parser {
     return std::make_unique<Literal>(token);
   }
 
-  std::unique_ptr<BinaryOp> Parser::parse_expression() {
-    std::unique_ptr<Literal> left = parse_literal();
+  std::unique_ptr<Identifier> Parser::parse_identifier() {
     tokeniser::Token token = consume();
-    std::unique_ptr<Literal> right = parse_literal();
+    return std::make_unique<Identifier>(token);
+  }
+
+  std::unique_ptr<Expression> Parser::parse_term() {
+    try {
+      return parse_literal();
+    } catch (const ParseException& e) {}
+    return parse_identifier();
+  }
+
+  std::unique_ptr<BinaryOp> Parser::parse_expression() {
+    std::unique_ptr<Expression> left = parse_term();
+    tokeniser::Token token = consume();
+    std::unique_ptr<Expression> right = parse_term();
     return std::make_unique<BinaryOp>(
         std::move(left), token.parse_str(), std::move(right));
   }
