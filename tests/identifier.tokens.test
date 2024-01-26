@@ -1,0 +1,5 @@
+Token(identifier, aaa)
+Token(literal, 123)
+Token(identifier, bbb)
+Token(EOL, \n)
+Token(EOL, EOF)

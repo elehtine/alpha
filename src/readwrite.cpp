@@ -2,11 +2,14 @@
 #include <string>
 
 
+bool is_file(const std::string& file) {
+  return std::ifstream(file, std::ios::in).good();
+}
+
 std::string read(const std::string& file) {
-  std::ifstream in;
   std::string text;
   std::string s;
-  in.open(file, std::ios::in);
+  std::ifstream in(file, std::ios::in);
   while (getline(in, s)) {
     text.append(s);
     text.append("\n");
