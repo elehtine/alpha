@@ -10,7 +10,7 @@ class ParseException : public std::exception {
     const char* what() const throw() override;
 
   private:
-    const char* message;
+    const std::string message;
 };
 
 #endif

@@ -11,7 +11,7 @@
 namespace tokeniser {
 
   std::string to_string(Type type) {
-    if (type == Type::eof) return "EOL";
+    if (type == Type::eof) return "EOF";
     if (type == Type::eol) return "EOL";
     if (type == Type::oper) return "operator";
     if (type == Type::identifier) return "identifier";
@@ -29,8 +29,7 @@ namespace tokeniser {
 
   int Token::parse_int() {
     if (type == Type::literal) return stoi(content);
-    std::string message("Token " + std::string(*this) + " is not a literal");
-    throw ParseException(message.c_str());
+    throw ParseException(message());
   }
 
   std::string Token::parse_str() {
@@ -39,7 +38,7 @@ namespace tokeniser {
   }
 
   std::string Token::message() {
-    return "Token " + std::string(*this) + " is not " + to_string(type);
+    return "Token (" + std::string(*this) + ") is not " + to_string(type);
   }
 
   void parse(const std::string& content,

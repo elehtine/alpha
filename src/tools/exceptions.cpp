@@ -3,8 +3,8 @@
 
 #include "exceptions.h"
 
-ParseException::ParseException(const std::string& message): message(message.c_str()) {}
+ParseException::ParseException(const std::string& message): message(message) {}
 
 const char* ParseException::what() const throw() {
-  return message;
+  return message.c_str();
 }
