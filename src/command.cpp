@@ -16,10 +16,7 @@ Command::Command() {}
 
 void Test::execute() {
   std::vector<std::string> files {
-    "tests/addition",
-    "tests/substitution",
-    "tests/operators",
-    "tests/identifier",
+    "tests/arithmetic",
   };
 
   for (const std::string& file: files) {

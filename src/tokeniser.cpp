@@ -68,7 +68,7 @@ namespace tokeniser {
   std::vector<Token> tokenise(const std::string& content) {
     std::vector<std::pair<std::regex, Type>> types = {
       { std::regex("\\n"), Type::eol },
-      { std::regex("(\\+|-|\\*|/|==|=|!=|<=|<|>=|>)"), Type::oper },
+      { std::regex("(\\+|-|\\*|/)"), Type::oper },
       { std::regex("[a-z]\\w*"), Type::identifier },
       { std::regex("\\d+"), Type::literal },
     };
