@@ -14,7 +14,7 @@ namespace compiler {
   }
 
   std::string Compiler::tree() {
-    return to_string(parser.parse());
+    return to_string(parser.get_tree());
   }
 
 

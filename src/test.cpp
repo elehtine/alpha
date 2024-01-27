@@ -7,6 +7,8 @@
 
 #include "tokeniser.h"
 #include "parser.h"
+#include "compiler.h"
+
 
 std::string alpha_file(const std::string& file) {
   const std::string input_extension = ".alpha";
@@ -55,18 +57,9 @@ void test_file(const std::string& file) {
     return;
   }
 
-  std::string input = read(alpha_file(file));
-  std::vector<tokeniser::Token> tokens = tokeniser::tokenise(input);
+  std::string source = read(alpha_file(file));
+  compiler::Compiler compiler(source);
 
-  std::vector<std::unique_ptr<parser::Expression>> lines;
-  try {
-    lines = parser::parse(tokens);
-  } catch (const ParseException& e) {
-    std::cout << e.what() << std::endl;
-  }
-
-  check_result(alpha_file(file), token_file(file),
-      input, to_string(tokens));
-  check_result(token_file(file), tree_file(file),
-      to_string(tokens), to_string(lines));
+  check_result(alpha_file(file), token_file(file), source, compiler.tokens());
+  check_result(token_file(file), tree_file(file), compiler.tokens(), compiler.tree());
 }

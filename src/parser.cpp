@@ -32,11 +32,12 @@ namespace parser {
     return std::string(*left) + op + "\n" + std::string(*right);
   }
 
-  Parser::Parser(std::vector<tokeniser::Token> tokens):
-    tokens(tokens), position(0) {}
+  Parser::Parser(std::vector<tokeniser::Token> tokens): tokens(tokens), position(0) {
+    parse_lines();
+  }
 
-  std::vector<std::unique_ptr<Expression>> Parser::parse() {
-    return parse_lines();
+  std::vector<std::unique_ptr<Expression>>& Parser::get_tree() {
+    return tree;
   }
 
   std::unique_ptr<Literal> Parser::parse_literal() {
@@ -74,8 +75,7 @@ namespace parser {
     return left;
   }
 
-  std::vector<std::unique_ptr<Expression>> Parser::parse_lines() {
-    std::vector<std::unique_ptr<Expression>> lines;
+  void Parser::parse_lines() {
     while (true) {
       tokeniser::Token token = peek();
       if (token.get_type() == tokeniser::Type::eol) {
@@ -83,9 +83,8 @@ namespace parser {
         continue;
       }
       if (token.get_type() == tokeniser::Type::eof) break;
-      lines.push_back(parse_expression());
+      tree.push_back(parse_expression());
     }
-    return lines;
   }
 
   tokeniser::Token Parser::peek() {
@@ -97,12 +96,6 @@ namespace parser {
     tokeniser::Token token = peek();
     position++;
     return token;
-  }
-
-  std::vector<std::unique_ptr<Expression>> parse(
-      std::vector<tokeniser::Token> tokens) {
-    Parser parser(tokens);
-    return parser.parse();
   }
 
 }; /* parser */
