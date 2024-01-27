@@ -34,8 +34,18 @@ namespace tokeniser {
       std::string message(std::vector<Type> need);
   };
 
+  class Tokeniser {
+    public:
+      Tokeniser(const std::string& content);
+      std::vector<Token> get_tokens() const;
 
-  std::vector<Token> tokenise(const std::string& filename);
+    private:
+      const std::string content;
+      std::vector<Token> tokens;
+
+  };
+
+  std::vector<Token> tokenise(const std::string& content);
 
 } /* tokeniser */
 

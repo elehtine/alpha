@@ -58,15 +58,12 @@ void test_file(const std::string& file) {
   std::string input = read(alpha_file(file));
   std::vector<tokeniser::Token> tokens = tokeniser::tokenise(input);
 
-  parser::Parser parser { tokens };
   std::vector<std::unique_ptr<parser::Expression>> lines;
   try {
-    lines = parser.parse();
+    lines = parser::parse(tokens);
   } catch (const ParseException& e) {
     std::cout << e.what() << std::endl;
   }
-  std::cout << "test:" << std::endl;
-  std::cout << to_string(lines) << std::endl;
 
   check_result(alpha_file(file), token_file(file),
       input, to_string(tokens));

@@ -67,6 +67,9 @@ namespace parser {
       size_t position;
   };
 
+  std::vector<std::unique_ptr<Expression>> parse(
+      std::vector<tokeniser::Token> tokens);
+
 }; /* parser */
 
 #endif

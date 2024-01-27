@@ -72,17 +72,24 @@ namespace tokeniser {
     parse(between, inserter, types_begin+1, types_end);
   }
 
-  std::vector<Token> tokenise(const std::string& content) {
+  Tokeniser::Tokeniser(const std::string& content): content(content) {
     std::vector<std::pair<std::regex, Type>> types = {
       { std::regex("\\n"), Type::eol },
       { std::regex("(\\+|-|\\*|/)"), Type::oper },
       { std::regex("[a-z]\\w*"), Type::identifier },
       { std::regex("\\d+"), Type::literal },
     };
-    std::vector<Token> tokens;
     parse(content, std::back_inserter(tokens), types.begin(), types.end());
     tokens.push_back(Token(Type::eof, "EOF"));
+  }
+
+  std::vector<Token> Tokeniser::get_tokens() const {
     return tokens;
+  }
+
+  std::vector<Token> tokenise(const std::string& content) {
+    Tokeniser tokeniser(content);
+    return tokeniser.get_tokens();
   }
 
 } /* tokeniser */

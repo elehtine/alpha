@@ -99,4 +99,10 @@ namespace parser {
     return token;
   }
 
+  std::vector<std::unique_ptr<Expression>> parse(
+      std::vector<tokeniser::Token> tokens) {
+    Parser parser(tokens);
+    return parser.parse();
+  }
+
 }; /* parser */
