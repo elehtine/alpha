@@ -8,6 +8,7 @@
 
 #include "tokeniser.h"
 #include "parser.h"
+#include "compiler.h"
 
 
 Command::~Command() {}
@@ -29,14 +30,11 @@ bool Test::check(int argc, char* argv[]) {
 }
 
 void Compile::execute() {
-  std::string content = read(filename);
-  std::vector<tokeniser::Token> tokens = tokeniser::tokenise(content);
-  std::cout << to_string(tokens) << std::endl;
-
-  std::vector<std::unique_ptr<parser::Expression>> lines = parser::parse(tokens);
-  for (const std::unique_ptr<parser::Expression>& expression: lines) {
-    std::cout << std::string(*expression) << std::endl;
-  }
+  std::string source = read(filename);
+  compiler::Compiler compiler(source);
+  std::cout << source << std::endl;
+  std::cout << compiler.tokens() << std::endl;
+  std::cout << compiler.tree() << std::endl;
 }
 
 bool Compile::check(int argc, char* argv[]) {

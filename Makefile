@@ -4,7 +4,7 @@ CXX = g++
 CXXFLAGS = -Wall -g -std=c++17
 
 SRCS = main.cpp \
-	   src/parser.cpp src/tokeniser.cpp \
+	   src/compiler.cpp src/parser.cpp src/tokeniser.cpp \
 	   src/command.cpp src/test.cpp \
 	   src/tools/readwrite.cpp src/tools/exceptions.cpp
 
