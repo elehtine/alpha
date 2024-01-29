@@ -20,6 +20,7 @@ void Test::execute() {
     "tests/arithmetic",
     "tests/identifier",
     "tests/punctuation",
+    "tests/fail",
   };
 
   for (const std::string& file: files) {

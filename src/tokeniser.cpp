@@ -49,14 +49,27 @@ namespace tokeniser {
   }
 
   Tokeniser::Tokeniser(const std::string& content): content(content) {
-    std::vector<std::pair<std::regex, Type>> types = {
-      { std::regex("^\\s+"), Type::whitespace },
-      { std::regex("^(\\(|\\))"), Type::punctuation },
-      { std::regex("^(\\+|-|\\*|/)"), Type::oper },
-      { std::regex("^[a-zA-Z]\\w*"), Type::identifier },
-      { std::regex("^\\d+"), Type::literal },
-    };
+    try {
+      tokenise();
+    } catch (const TokeniseException& exception) {
+      error = exception.what();
+    }
+  }
 
+  std::vector<Token> Tokeniser::get_tokens() const {
+    return tokens;
+  }
+
+  Tokeniser::operator std::string() {
+    std::string result = "";
+    for (const Token& element: tokens) {
+      result += std::string(element) + "\n";
+    }
+    result += error;
+    return result;
+  }
+
+  void Tokeniser::tokenise() {
     while (position < content.size()) {
       bool unknown = true;
       for (auto p: types) {
@@ -72,10 +85,6 @@ namespace tokeniser {
         throw TokeniseException(content.substr(position, 10));
       }
     }
-  }
-
-  std::vector<Token> Tokeniser::get_tokens() const {
-    return tokens;
   }
 
   bool Tokeniser::check(const std::regex& expression, const Type& type) {

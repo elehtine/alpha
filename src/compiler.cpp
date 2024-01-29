@@ -10,13 +10,12 @@ namespace compiler {
     source(source), tokeniser(source), parser(tokeniser.get_tokens()) {}
 
   std::string Compiler::tokens() {
-    return to_string(tokeniser.get_tokens());
+    return std::string(tokeniser);
   }
 
   std::string Compiler::tree() {
     return to_string(parser.get_tree());
   }
-
 
 }; /* compiler */
 

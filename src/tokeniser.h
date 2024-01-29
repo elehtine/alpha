@@ -40,14 +40,25 @@ namespace tokeniser {
     public:
       Tokeniser(const std::string& content);
       std::vector<Token> get_tokens() const;
+      operator std::string();
 
     private:
+      void tokenise();
       bool check(const std::regex& expression, const Type& type);
 
       std::vector<Token> tokens;
+      const std::string content;
 
       std::size_t position = 0;
-      const std::string content;
+      std::string error = "";
+
+      std::vector<std::pair<std::regex, Type>> types = {
+        { std::regex("^\\s+"), Type::whitespace },
+        { std::regex("^(\\(|\\))"), Type::punctuation },
+        { std::regex("^(\\+|-|\\*|/)"), Type::oper },
+        { std::regex("^[a-zA-Z]\\w*"), Type::identifier },
+        { std::regex("^\\d+"), Type::literal },
+      };
   };
 
 } /* tokeniser */
