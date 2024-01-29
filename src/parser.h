@@ -53,9 +53,11 @@ namespace parser {
       Parser(std::vector<tokeniser::Token> tokens);
       std::vector<std::unique_ptr<Expression>>& get_tree();
 
+      operator std::string() const;
+
     private:
-      std::unique_ptr<Literal> parse_literal();
-      std::unique_ptr<Identifier> parse_identifier();
+      std::unique_ptr<Literal> parse_literal(tokeniser::Token token);
+      std::unique_ptr<Identifier> parse_identifier(tokeniser::Token token);
       std::unique_ptr<Expression> parse_term();
       std::unique_ptr<Expression> parse_expression();
       void parse_lines();
@@ -63,10 +65,11 @@ namespace parser {
       tokeniser::Token peek();
       tokeniser::Token consume();
 
-      std::vector<tokeniser::Token> tokens;
-      size_t position;
-
       std::vector<std::unique_ptr<Expression>> tree;
+
+      std::vector<tokeniser::Token> tokens;
+      size_t position = 0;
+      std::string error = "";
   };
 
 }; /* parser */

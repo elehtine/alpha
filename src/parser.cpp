@@ -33,30 +33,42 @@ namespace parser {
   }
 
   Parser::Parser(std::vector<tokeniser::Token> tokens): tokens(tokens), position(0) {
-    parse_lines();
+    try {
+      parse_lines();
+    } catch (const ParseException& exception) {
+      error = exception.what();
+    }
   }
 
   std::vector<std::unique_ptr<Expression>>& Parser::get_tree() {
     return tree;
   }
 
-  std::unique_ptr<Literal> Parser::parse_literal() {
-    tokeniser::Token token = consume();
+  Parser::operator std::string() const {
+    return to_string(tree) + error;
+  }
+
+  std::unique_ptr<Literal> Parser::parse_literal(tokeniser::Token token) {
     return std::make_unique<Literal>(token);
   }
 
-  std::unique_ptr<Identifier> Parser::parse_identifier() {
-    tokeniser::Token token = consume();
+  std::unique_ptr<Identifier> Parser::parse_identifier(tokeniser::Token token) {
     return std::make_unique<Identifier>(token);
   }
 
   std::unique_ptr<Expression> Parser::parse_term() {
-    size_t prev_pos = position;
+    tokeniser::Token token = peek();
+    std::unique_ptr<Expression> result;
     try {
-      return parse_literal();
+      result =  parse_literal(token);
     } catch (const ParseException& e) {}
-    position = prev_pos;
-    return parse_identifier();
+    try {
+      result =  parse_identifier(token);
+    } catch (const ParseException& e) {
+      throw ParseException("Excpected literal or identifier" + std::string(token));
+    }
+    consume();
+    return result;
   }
 
   std::unique_ptr<Expression> Parser::parse_expression() {

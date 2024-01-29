@@ -1,6 +1,7 @@
 abc
 +
 a1
-+
-5
 
++
+
+Excpected literal or identifierToken(literal, 5)
