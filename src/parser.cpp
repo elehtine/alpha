@@ -60,12 +60,13 @@ namespace parser {
     tokeniser::Token token = peek();
     std::unique_ptr<Expression> result;
     try {
-      result =  parse_literal(token);
-    } catch (const ParseException& e) {}
-    try {
-      result =  parse_identifier(token);
+      result = parse_literal(token);
     } catch (const ParseException& e) {
-      throw ParseException("Excpected literal or identifier" + std::string(token));
+      try {
+        result = parse_identifier(token);
+      } catch (const ParseException& e) {
+        throw ParseException("Excpected literal or identifier" + std::string(token));
+      }
     }
     consume();
     return result;
