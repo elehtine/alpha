@@ -3,17 +3,19 @@
 
 #include <string>
 #include <vector>
+#include <regex>
 
 #include "tools/exceptions.h"
 
 namespace tokeniser {
 
   enum class Type {
-    eof,
-    eol,
+    whitespace,
+    punctuation,
     oper,
     identifier,
     literal,
+    eof,
   };
 
   std::string to_string(const Type& type);
@@ -40,12 +42,13 @@ namespace tokeniser {
       std::vector<Token> get_tokens() const;
 
     private:
-      const std::string content;
+      bool check(const std::regex& expression, const Type& type);
+
       std::vector<Token> tokens;
 
+      std::size_t position = 0;
+      const std::string content;
   };
-
-  std::vector<Token> tokenise(const std::string& content);
 
 } /* tokeniser */
 

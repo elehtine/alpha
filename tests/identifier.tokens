@@ -1,0 +1,5 @@
+Token(identifier, abc)
+Token(operator, +)
+Token(identifier, a1)
+Token(operator, +)
+Token(literal, 5)

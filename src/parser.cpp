@@ -78,10 +78,6 @@ namespace parser {
   void Parser::parse_lines() {
     while (true) {
       tokeniser::Token token = peek();
-      if (token.get_type() == tokeniser::Type::eol) {
-        consume();
-        continue;
-      }
       if (token.get_type() == tokeniser::Type::eof) break;
       tree.push_back(parse_expression());
     }

@@ -8,13 +8,13 @@
 #include "tokeniser.h"
 
 #include "tools/readwrite.h"
+#include "tools/exceptions.h"
 
 
 namespace tokeniser {
 
   std::string to_string(const Type& type) {
     if (type == Type::eof) return "EOF";
-    if (type == Type::eol) return "EOL";
     if (type == Type::oper) return "operator";
     if (type == Type::identifier) return "identifier";
     if (type == Type::literal) return "literal";
@@ -25,8 +25,7 @@ namespace tokeniser {
     type(type), content(content) {}
 
   Token::operator std::string() const {
-    std::string show = type == Type::eol ? "\\n" : content;
-    return "Token(" + to_string(type) + ", " + show + ")";
+    return "Token(" + to_string(type) + ", " + content + ")";
   }
 
   Type Token::get_type() const {
@@ -49,47 +48,46 @@ namespace tokeniser {
       ::to_string(need);
   }
 
-  void parse(const std::string& content,
-      std::back_insert_iterator<std::vector<Token>> inserter,
-      std::vector<std::pair<std::regex, Type>>::const_iterator types_begin,
-      std::vector<std::pair<std::regex, Type>>::const_iterator types_end) {
-    if (types_begin == types_end) return;
-
-    std::regex regex = types_begin->first;
-    auto lines_begin =
-      std::sregex_iterator(content.begin(), content.end(), regex);
-    auto lines_end = std::sregex_iterator();
-
-    int last = 0;
-    for (std::sregex_iterator i = lines_begin; i != lines_end; i++) {
-      int pos = i->position();
-      std::string between = content.substr(last, pos-last);
-      parse(between, inserter, types_begin+1, types_end);
-      inserter = Token(types_begin->second, i->str());
-      last = pos+1;
-    }
-    std::string between = content.substr(last, content.size());
-    parse(between, inserter, types_begin+1, types_end);
-  }
-
   Tokeniser::Tokeniser(const std::string& content): content(content) {
     std::vector<std::pair<std::regex, Type>> types = {
-      { std::regex("\\n"), Type::eol },
-      { std::regex("(\\+|-|\\*|/)"), Type::oper },
-      { std::regex("[a-z]\\w*"), Type::identifier },
-      { std::regex("\\d+"), Type::literal },
+      { std::regex("^\\s+"), Type::whitespace },
+      { std::regex("^(\\(|\\))"), Type::punctuation },
+      { std::regex("^(\\+|-|\\*|/)"), Type::oper },
+      { std::regex("^[a-zA-Z]\\w*"), Type::identifier },
+      { std::regex("^\\d+"), Type::literal },
     };
-    parse(content, std::back_inserter(tokens), types.begin(), types.end());
-    tokens.push_back(Token(Type::eof, "EOF"));
+
+    while (position < content.size()) {
+      bool unknown = true;
+      for (auto p: types) {
+        std::regex expression = p.first;
+        Type type = p.second;
+        if (check(expression, type)) {
+          unknown = false;
+          break;
+        }
+      }
+
+      if (unknown) {
+        throw TokeniseException(content.substr(position, 10));
+      }
+    }
   }
 
   std::vector<Token> Tokeniser::get_tokens() const {
     return tokens;
   }
 
-  std::vector<Token> tokenise(const std::string& content) {
-    Tokeniser tokeniser(content);
-    return tokeniser.get_tokens();
+  bool Tokeniser::check(const std::regex& expression, const Type& type) {
+    std::string current = content.substr(position);
+    std::smatch match;
+    if (!std::regex_search(current, match, expression)) return false;
+
+    position += match[0].length();
+    if (type == Type::whitespace) return true;
+
+    tokens.push_back(Token(type, match[0]));
+    return true;
   }
 
 } /* tokeniser */

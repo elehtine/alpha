@@ -18,6 +18,8 @@ Command::Command() {}
 void Test::execute() {
   std::vector<std::string> files {
     "tests/arithmetic",
+    "tests/identifier",
+    "tests/punctuation",
   };
 
   for (const std::string& file: files) {
