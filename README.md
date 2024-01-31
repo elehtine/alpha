@@ -1,3 +1,3 @@
 # Alpha
 
-Programming language for Compilers course.
+Compiler for university course.
