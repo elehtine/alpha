@@ -15,3 +15,9 @@ ParseException::ParseException(const std::string& message): message(message) {}
 const char* ParseException::what() const throw() {
   return message.c_str();
 }
+
+InterpretException::InterpretException(const std::string& message): message(message) {}
+
+const char* InterpretException::what() const throw() {
+  return message.c_str();
+}

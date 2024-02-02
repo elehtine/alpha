@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "tokeniser.h"
+#include "interpreter.h"
 
 
 namespace parser {
@@ -13,6 +14,7 @@ namespace parser {
     public:
       virtual ~Expression();
       virtual operator std::string() const = 0;
+      virtual std::unique_ptr<interpreter::Value> interpret() = 0;
 
     protected:
       Expression();
@@ -22,6 +24,7 @@ namespace parser {
     public:
       Literal(tokeniser::Token token);
       operator std::string() const override;
+      virtual std::unique_ptr<interpreter::Value> interpret() override;
 
     private:
       int value;
@@ -31,6 +34,7 @@ namespace parser {
     public:
       Identifier(tokeniser::Token token);
       operator std::string() const override;
+      virtual std::unique_ptr<interpreter::Value> interpret() override;
 
     private:
       std::string name;
@@ -41,6 +45,7 @@ namespace parser {
       BinaryOp(std::unique_ptr<Expression> left, std::string op,
           std::unique_ptr<Expression> right);
       operator std::string() const override;
+      virtual std::unique_ptr<interpreter::Value> interpret() override;
 
     private:
       std::unique_ptr<Expression> left;
