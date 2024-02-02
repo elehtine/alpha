@@ -9,12 +9,7 @@
 
 class Interpreter {
   public:
-    Interpreter(std::shared_ptr<ast::Expression> root);
-    std::string prefix() const;
-    operator std::string() const;
-
-  private:
-    std::shared_ptr<ast::Expression> root;
+    std::unique_ptr<value::Value> interpret(ast::Expression* tree);
 };
 
 #endif

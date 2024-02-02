@@ -10,7 +10,7 @@
 
 class Tokeniser {
   public:
-    Tokeniser(const std::string& content);
+    std::vector<token::Token> tokenise(const std::string& content);
     std::vector<token::Token> get_tokens() const;
     std::string prefix() const;
     operator std::string();
@@ -20,10 +20,9 @@ class Tokeniser {
     bool check(const std::regex& expression, const token::Type& type);
 
     std::vector<token::Token> tokens;
-    const std::string content;
-
-    std::size_t position = 0;
-    std::string error = "";
+    std::string content;
+    std::size_t position;
+    std::string error;
 
     std::vector<std::pair<std::regex, token::Type>> types = {
       { std::regex("^\\s+"), token::Type::whitespace },

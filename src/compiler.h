@@ -2,6 +2,7 @@
 #define COMPILER_H
 
 #include <string>
+#include <memory>
 
 #include "tokeniser.h"
 #include "parser.h"
@@ -22,6 +23,10 @@ namespace compiler {
       Tokeniser tokeniser;
       Parser parser;
       Interpreter interpreter;
+
+      std::vector<token::Token> t;
+      std::unique_ptr<ast::Expression> ast;
+      std::unique_ptr<value::Value> value;
   };
 
 } /* compiler */

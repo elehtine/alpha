@@ -14,7 +14,7 @@ namespace value {
     throw InterpretException("Expected bool, got int");
   }
   Integer::operator std::string() {
-    return std::to_string(value);
+    return std::to_string(value) + "\n";
   }
 
   Boolean::Boolean(bool value): value(value) {}
@@ -24,7 +24,7 @@ namespace value {
     throw InterpretException("Expected int, got bool");
   }
   Boolean::operator std::string() {
-    return "TRUE";
+    return "TRUE\n";
   }
 
 } /* value */ 

@@ -3,13 +3,6 @@
 #include "tools/exceptions.h"
 
 
-Interpreter::Interpreter(std::shared_ptr<ast::Expression> root
-    ): root(root) {}
-
-std::string Interpreter::prefix() const {
-  return "Interpretation:";
-}
-
-Interpreter::operator std::string() const {
-  return *root->interpret();
+std::unique_ptr<value::Value> Interpreter::interpret(ast::Expression* tree) {
+  return std::move(tree->interpret());
 }

@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #include "compiler.h"
 
@@ -7,8 +8,11 @@
 namespace compiler {
 
   Compiler::Compiler(std::string source):
-    source(source), tokeniser(source), parser(tokeniser.get_tokens()),
-    interpreter(parser.get_tree()) {}
+    source(source) {
+      t = tokeniser.tokenise(source);
+      ast = parser.parse(t);
+      value = interpreter.interpret(ast.get());
+    }
 
   std::string Compiler::tokens(bool verbal) {
     std::string prefix = verbal ? tokeniser.prefix() : "";
@@ -17,12 +21,12 @@ namespace compiler {
 
   std::string Compiler::tree(bool verbal) {
     std::string prefix = verbal ? parser.prefix() : "";
-    return prefix + std::string(parser);
+    return prefix + std::string(*ast);
   }
 
   std::string Compiler::interpret(bool verbal) {
-    std::string prefix = verbal ? interpreter.prefix() : "";
-    return prefix + std::string(interpreter);
+    std::string prefix = verbal ? "Interpretation:\n" : "";
+    return prefix + std::string(*value);
   }
 
 }; /* compiler */

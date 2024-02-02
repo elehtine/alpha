@@ -8,17 +8,16 @@
 #include "interpreter.h"
 
 
-Parser::Parser(std::vector<token::Token> tokens
-    ): tokens(tokens), position(0) {
+std::unique_ptr<ast::Expression> Parser::parse(std::vector<token::Token> tokens) {
+  this->tokens = tokens;
+  std::unique_ptr<ast::Expression> tree;
   try {
-    root = parse_expression();
+    tree = parse_expression();
   } catch (const ParseException& exception) {
     error = std::string(exception.what()) + "\n";
   }
-}
-
-std::shared_ptr<ast::Expression> Parser::get_tree() {
-  return root;
+  root = tree.get();
+  return tree;
 }
 
 std::string Parser::prefix() const {
@@ -29,18 +28,18 @@ Parser::operator std::string() const {
   return std::string(*root) + error;
 }
 
-std::shared_ptr<ast::Literal> Parser::parse_literal(token::Token token) {
-  return std::make_shared<ast::Literal>(token);
+std::unique_ptr<ast::Literal> Parser::parse_literal(token::Token token) {
+  return std::make_unique<ast::Literal>(token);
 }
 
-std::shared_ptr<ast::Identifier> Parser::parse_identifier(
+std::unique_ptr<ast::Identifier> Parser::parse_identifier(
     token::Token token) {
-  return std::make_shared<ast::Identifier>(token);
+  return std::make_unique<ast::Identifier>(token);
 }
 
-std::shared_ptr<ast::Expression> Parser::parse_term() {
+std::unique_ptr<ast::Expression> Parser::parse_term() {
   token::Token token = peek();
-  std::shared_ptr<ast::Expression> result;
+  std::unique_ptr<ast::Expression> result;
   try {
     result = parse_literal(token);
   } catch (const ParseException& e) {
@@ -55,15 +54,15 @@ std::shared_ptr<ast::Expression> Parser::parse_term() {
   return result;
 }
 
-std::shared_ptr<ast::Expression> Parser::parse_expression() {
-  std::shared_ptr<ast::Expression> left = parse_term();
+std::unique_ptr<ast::Expression> Parser::parse_expression() {
+  std::unique_ptr<ast::Expression> left = parse_term();
   size_t prev_pos = position;
   try {
     while (true) {
       prev_pos = position;
       token::Token token = consume();
-      std::shared_ptr<ast::Expression> right = parse_term();
-      left = std::make_shared<ast::BinaryOp>(std::move(left),
+      std::unique_ptr<ast::Expression> right = parse_term();
+      left = std::make_unique<ast::BinaryOp>(std::move(left),
           token.parse_str(), std::move(right));
     }
   } catch (const ParseException& e) {}

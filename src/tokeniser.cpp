@@ -10,12 +10,18 @@
 #include "tools/readwrite.h"
 #include "tools/exceptions.h"
 
-Tokeniser::Tokeniser(const std::string& content): content(content) {
+std::vector<token::Token> Tokeniser::tokenise(const std::string& content) {
+  tokens.clear();
+  this->content = content;
+  position = 0;
+  error = "";
+
   try {
     tokenise();
   } catch (const TokeniseException& exception) {
     error = std::string(exception.what()) + "\n";
   }
+  return tokens;
 }
 
 std::vector<token::Token> Tokeniser::get_tokens() const {
