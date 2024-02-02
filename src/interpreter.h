@@ -7,9 +7,10 @@
 #include "types/value.h"
 
 
-class Interpreter {
-  public:
-    std::unique_ptr<value::Value> interpret(ast::Expression* tree);
-};
+namespace  interpreter {
+
+  std::unique_ptr<value::Value> interpret(ast::Expression* tree);
+
+} /* interpreter */
 
 #endif

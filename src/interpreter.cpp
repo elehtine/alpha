@@ -3,6 +3,10 @@
 #include "tools/exceptions.h"
 
 
-std::unique_ptr<value::Value> Interpreter::interpret(ast::Expression* tree) {
-  return std::move(tree->interpret());
-}
+namespace  interpreter {
+
+  std::unique_ptr<value::Value> interpret(ast::Expression* tree) {
+    return std::move(tree->interpret());
+  }
+
+} /* interpreter */

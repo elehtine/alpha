@@ -19,7 +19,6 @@ class Compiler {
     std::string source;
     Tokeniser tokeniser;
     Parser parser;
-    Interpreter interpreter;
 
     std::vector<token::Token> t;
     std::unique_ptr<ast::Expression> ast;

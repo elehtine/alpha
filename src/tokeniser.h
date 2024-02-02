@@ -12,9 +12,6 @@
 class Tokeniser {
   public:
     std::vector<token::Token> tokenise(const std::string& content);
-    std::vector<token::Token> get_tokens() const;
-    std::string prefix() const;
-    operator std::string();
 
   private:
     void tokenise();

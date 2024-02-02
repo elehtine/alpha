@@ -13,9 +13,6 @@ class Parser {
   public:
     std::unique_ptr<ast::Expression> parse(std::vector<token::Token> tokens);
 
-    std::string prefix() const;
-    operator std::string() const;
-
   private:
     std::unique_ptr<ast::Literal> parse_literal(token::Token token);
     std::unique_ptr<ast::Identifier> parse_identifier(token::Token token);

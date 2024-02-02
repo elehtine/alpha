@@ -25,23 +25,6 @@ std::vector<token::Token> Tokeniser::tokenise(const std::string& content) {
   return tokens;
 }
 
-std::vector<token::Token> Tokeniser::get_tokens() const {
-  return tokens;
-}
-
-std::string Tokeniser::prefix() const {
-  return "Tokens:\n";
-}
-
-Tokeniser::operator std::string() {
-  std::string result = "";
-  for (const token::Token& element: tokens) {
-    result += std::string(element) + "\n";
-  }
-  result += error;
-  return result;
-}
-
 void Tokeniser::tokenise() {
   while (position < content.size()) {
     bool unknown = true;

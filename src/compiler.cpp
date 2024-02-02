@@ -9,7 +9,7 @@ Compiler::Compiler(std::string source):
   source(source) {
     t = tokeniser.tokenise(source);
     ast = parser.parse(t);
-    value = interpreter.interpret(ast.get());
+    value = interpreter::interpret(ast.get());
   }
 
 void Compiler::compile(Printer& printer) {

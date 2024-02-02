@@ -20,14 +20,6 @@ std::unique_ptr<ast::Expression> Parser::parse(std::vector<token::Token> tokens)
   return tree;
 }
 
-std::string Parser::prefix() const {
-  return "AST:\n";
-}
-
-Parser::operator std::string() const {
-  return std::string(*root) + error;
-}
-
 std::unique_ptr<ast::Literal> Parser::parse_literal(token::Token token) {
   return std::make_unique<ast::Literal>(token);
 }
