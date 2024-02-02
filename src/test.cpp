@@ -60,6 +60,8 @@ void test_file(const std::string& file) {
   std::string source = read(alpha_file(file));
   compiler::Compiler compiler(source);
 
-  check_result(alpha_file(file), token_file(file), source, compiler.tokens());
-  check_result(token_file(file), tree_file(file), compiler.tokens(), compiler.tree());
+  check_result(alpha_file(file), token_file(file),
+      source, compiler.tokens(false));
+  check_result(token_file(file), tree_file(file),
+      compiler.tokens(false), compiler.tree(false));
 }

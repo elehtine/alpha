@@ -1,6 +1,9 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
+#include <string>
+
+
 namespace interpreter {
 
   class Value {
@@ -27,6 +30,13 @@ namespace interpreter {
 
     private:
       bool value;
+  };
+
+  class Interpreter {
+    public:
+      Interpreter();
+      std::string prefix() const;
+      operator std::string() const;
   };
 
 }; /* interpreter */

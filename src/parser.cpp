@@ -63,6 +63,10 @@ namespace parser {
     return tree;
   }
 
+  std::string Parser::prefix() const {
+    return "AST:\n";
+  }
+
   Parser::operator std::string() const {
     return to_string(tree) + error;
   }

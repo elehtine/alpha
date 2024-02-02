@@ -40,6 +40,7 @@ namespace tokeniser {
     public:
       Tokeniser(const std::string& content);
       std::vector<Token> get_tokens() const;
+      std::string prefix() const;
       operator std::string();
 
     private:

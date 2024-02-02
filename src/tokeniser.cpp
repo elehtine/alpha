@@ -60,6 +60,10 @@ namespace tokeniser {
     return tokens;
   }
 
+  std::string Tokeniser::prefix() const {
+    return "Tokens:\n";
+  }
+
   Tokeniser::operator std::string() {
     std::string result = "";
     for (const Token& element: tokens) {

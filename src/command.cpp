@@ -33,9 +33,11 @@ bool Test::check(int argc, char* argv[]) {
 void Compile::execute() {
   std::string source = read(filename);
   compiler::Compiler compiler(source);
+  std::cout << "source:" << std::endl;
   std::cout << source << std::endl;
-  std::cout << compiler.tokens() << std::endl;
-  std::cout << compiler.tree() << std::endl;
+  std::cout << compiler.tokens(true) << std::endl;
+  std::cout << compiler.tree(true) << std::endl;
+  std::cout << compiler.interpret(true) << std::endl;
 }
 
 bool Compile::check(int argc, char* argv[]) {

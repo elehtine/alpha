@@ -7,7 +7,6 @@
 #include "tokeniser.h"
 #include "interpreter.h"
 
-
 namespace parser {
 
   class Expression {
@@ -58,6 +57,7 @@ namespace parser {
       Parser(std::vector<tokeniser::Token> tokens);
       std::vector<std::unique_ptr<Expression>>& get_tree();
 
+      std::string prefix() const;
       operator std::string() const;
 
     private:
