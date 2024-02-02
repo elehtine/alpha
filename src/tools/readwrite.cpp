@@ -2,9 +2,18 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <boost/filesystem.hpp>
 
 #include "../tokeniser.h"
 
+std::vector<std::string> test_files() {
+  const boost::filesystem::path dir { "tests" };
+  std::vector<std::string> files;
+  for (auto const& file: boost::filesystem::directory_iterator(dir)) {
+    files.push_back(file.path().string());
+  }
+  return files;
+}
 
 std::string to_string(const std::vector<tokeniser::Type>& vec) {
   std::string result = "[ ";

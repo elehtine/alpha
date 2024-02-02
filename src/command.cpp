@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <regex>
 
 #include "command.h"
 #include "tools/readwrite.h"
@@ -16,15 +17,12 @@ Command::~Command() {}
 Command::Command() {}
 
 void Test::execute() {
-  std::vector<std::string> files {
-    "tests/arithmetic",
-    "tests/identifier",
-    "tests/punctuation",
-    "tests/fail",
-  };
-
+  std::vector<std::string> files = test_files();
+  std::regex file_expression("(tests/\\w+)\\.alpha");
   for (const std::string& file: files) {
-    test_file(file);
+    std::smatch match;
+    if (!std::regex_match(file, match, file_expression)) continue;
+    test_file(match[1]);
   }
 }
 

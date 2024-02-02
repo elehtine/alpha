@@ -1,6 +1,7 @@
 appname = alpha
 
 CXX = g++
+BOOST = -lboost_system -lboost_filesystem
 CXXFLAGS = -Wall -g -std=c++17
 
 SRCS = main.cpp \
@@ -14,7 +15,7 @@ test: $(appname)
 	./$(appname) test
 
 $(appname): $(SRCS)
-	$(CXX) $(CXXFLAGS) $(SRCS) -o $(appname)
+	$(CXX) $(CXXFLAGS) $(SRCS) $(BOOST) -o $(appname)
 
 .PHONY: clean
 clean:

@@ -4,8 +4,11 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <filesystem>
 
 #include "../tokeniser.h"
+
+std::vector<std::string> test_files();
 
 std::string to_string(const std::vector<tokeniser::Type>& vec);
 
