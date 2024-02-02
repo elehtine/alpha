@@ -12,7 +12,7 @@
 
 class Compiler {
   public:
-    Compiler(std::string source);
+    Compiler(std::string source, bool verbose);
     void compile(Printer& printer);
 
   private:
@@ -20,7 +20,7 @@ class Compiler {
     Tokeniser tokeniser;
     Parser parser;
 
-    std::vector<token::Token> t;
+    std::vector<token::Token> tokens;
     std::unique_ptr<ast::Expression> ast;
     std::unique_ptr<value::Value> value;
 };

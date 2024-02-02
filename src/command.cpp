@@ -25,7 +25,7 @@ void Test::execute() {
     std::string name = match[1];
     std::string source = read(name + ".alpha");
 
-    Compiler compiler(source);
+    Compiler compiler(source, false);
     FilePrinter printer(name);
     compiler.compile(printer);
   }
@@ -42,7 +42,7 @@ void Compile::execute() {
   }
 
   std::string source = read(filename);
-  Compiler compiler(source);
+  Compiler compiler(source, true);
   UserPrinter printer;
   compiler.compile(printer);
 }

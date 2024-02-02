@@ -11,18 +11,19 @@
 
 class Tokeniser {
   public:
-    std::vector<token::Token> tokenise(const std::string& content);
+    Tokeniser(const std::string& source, bool verbose);
+    std::vector<token::Token> get_tokens();
 
   private:
     void tokenise();
     bool check(const std::regex& expression, const token::Type& type);
 
     std::vector<token::Token> tokens;
-    std::string content;
-    std::size_t position;
-    std::string error;
 
-    std::vector<std::pair<std::regex, token::Type>> types = {
+    std::string source;
+    std::size_t position;
+
+    const std::vector<std::pair<std::regex, token::Type>> types = {
       { std::regex("^\\s+"), token::Type::whitespace },
       { std::regex("^(\\(|\\))"), token::Type::punctuation },
       { std::regex("^(\\+|-|\\*|/)"), token::Type::oper },

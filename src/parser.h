@@ -11,7 +11,8 @@
 
 class Parser {
   public:
-    std::unique_ptr<ast::Expression> parse(std::vector<token::Token> tokens);
+    Parser(std::vector<token::Token> tokens, bool verbose);
+    std::unique_ptr<ast::Expression> parse();
 
   private:
     std::unique_ptr<ast::Literal> parse_literal(token::Token token);
@@ -25,8 +26,8 @@ class Parser {
     ast::Expression* root;
 
     std::vector<token::Token> tokens;
+    bool verbose;
     size_t position = 0;
-    std::string error = "";
 };
 
 #endif

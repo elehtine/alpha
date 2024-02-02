@@ -11,22 +11,22 @@
 #include "tools/exceptions.h"
 
 
-std::vector<token::Token> Tokeniser::tokenise(const std::string& content) {
-  tokens.clear();
-  this->content = content;
-  position = 0;
-  error = "";
-
-  try {
-    tokenise();
-  } catch (const TokeniseException& exception) {
-    error = std::string(exception.what()) + "\n";
+Tokeniser::Tokeniser(const std::string& source, bool verbose):
+  source(source) {
+    position = 0;
+    try {
+      tokenise();
+    } catch (const TokeniseException& exception) {
+      if (verbose) std::cout << exception.what() << std::endl;
+    }
   }
+
+std::vector<token::Token> Tokeniser::get_tokens() {
   return tokens;
 }
 
 void Tokeniser::tokenise() {
-  while (position < content.size()) {
+  while (position < source.size()) {
     bool unknown = true;
     for (auto p: types) {
       std::regex expression = p.first;
@@ -38,14 +38,14 @@ void Tokeniser::tokenise() {
     }
 
     if (unknown) {
-      throw TokeniseException(content.substr(position, 10));
+      throw TokeniseException(source.substr(position, 10));
     }
   }
 }
 
 bool Tokeniser::check(const std::regex& expression,
     const token::Type& type) {
-  std::string current = content.substr(position);
+  std::string current = source.substr(position);
   std::smatch match;
   if (!std::regex_search(current, match, expression)) return false;
 
