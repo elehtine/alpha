@@ -5,63 +5,33 @@
 #include <vector>
 #include <regex>
 
+#include "types/token.h"
 #include "tools/exceptions.h"
 
-namespace tokeniser {
+class Tokeniser {
+  public:
+    Tokeniser(const std::string& content);
+    std::vector<token::Token> get_tokens() const;
+    std::string prefix() const;
+    operator std::string();
 
-  enum class Type {
-    whitespace,
-    punctuation,
-    oper,
-    identifier,
-    literal,
-    eof,
-  };
+  private:
+    void tokenise();
+    bool check(const std::regex& expression, const token::Type& type);
 
-  std::string to_string(const Type& type);
+    std::vector<token::Token> tokens;
+    const std::string content;
 
-  class Token {
-    public:
-      Token(Type type, std::string content);
-      operator std::string() const;
-      Type get_type() const;
+    std::size_t position = 0;
+    std::string error = "";
 
-      int parse_int();
-      std::string parse_str();
-
-    private:
-      Type type;
-      std::string content;
-
-      std::string message(std::vector<Type> need);
-  };
-
-  class Tokeniser {
-    public:
-      Tokeniser(const std::string& content);
-      std::vector<Token> get_tokens() const;
-      std::string prefix() const;
-      operator std::string();
-
-    private:
-      void tokenise();
-      bool check(const std::regex& expression, const Type& type);
-
-      std::vector<Token> tokens;
-      const std::string content;
-
-      std::size_t position = 0;
-      std::string error = "";
-
-      std::vector<std::pair<std::regex, Type>> types = {
-        { std::regex("^\\s+"), Type::whitespace },
-        { std::regex("^(\\(|\\))"), Type::punctuation },
-        { std::regex("^(\\+|-|\\*|/)"), Type::oper },
-        { std::regex("^[a-zA-Z]\\w*"), Type::identifier },
-        { std::regex("^\\d+"), Type::literal },
-      };
-  };
-
-} /* tokeniser */
+    std::vector<std::pair<std::regex, token::Type>> types = {
+      { std::regex("^\\s+"), token::Type::whitespace },
+      { std::regex("^(\\(|\\))"), token::Type::punctuation },
+      { std::regex("^(\\+|-|\\*|/)"), token::Type::oper },
+      { std::regex("^[a-zA-Z]\\w*"), token::Type::identifier },
+      { std::regex("^\\d+"), token::Type::literal },
+    };
+};
 
 #endif

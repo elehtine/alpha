@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-#include "tokeniser.h"
+#include "types/token.h"
 #include "interpreter.h"
 
 namespace parser {
@@ -21,7 +21,7 @@ namespace parser {
 
   class Literal : public Expression {
     public:
-      Literal(tokeniser::Token token);
+      Literal(token::Token token);
       operator std::string() const override;
       virtual std::unique_ptr<interpreter::Value> interpret() override;
 
@@ -31,7 +31,7 @@ namespace parser {
 
   class Identifier : public Expression {
     public:
-      Identifier(tokeniser::Token token);
+      Identifier(token::Token token);
       operator std::string() const override;
       virtual std::unique_ptr<interpreter::Value> interpret() override;
 
@@ -54,25 +54,25 @@ namespace parser {
 
   class Parser {
     public:
-      Parser(std::vector<tokeniser::Token> tokens);
+      Parser(std::vector<token::Token> tokens);
       std::vector<std::unique_ptr<Expression>>& get_tree();
 
       std::string prefix() const;
       operator std::string() const;
 
     private:
-      std::unique_ptr<Literal> parse_literal(tokeniser::Token token);
-      std::unique_ptr<Identifier> parse_identifier(tokeniser::Token token);
+      std::unique_ptr<Literal> parse_literal(token::Token token);
+      std::unique_ptr<Identifier> parse_identifier(token::Token token);
       std::unique_ptr<Expression> parse_term();
       std::unique_ptr<Expression> parse_expression();
       void parse_lines();
 
-      tokeniser::Token peek();
-      tokeniser::Token consume();
+      token::Token peek();
+      token::Token consume();
 
       std::vector<std::unique_ptr<Expression>> tree;
 
-      std::vector<tokeniser::Token> tokens;
+      std::vector<token::Token> tokens;
       size_t position = 0;
       std::string error = "";
   };

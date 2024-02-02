@@ -2,7 +2,8 @@
 #include <memory>
 
 #include "tools/readwrite.h"
-#include "tokeniser.h"
+#include "tools/exceptions.h"
+#include "types/token.h"
 #include "parser.h"
 #include "interpreter.h"
 
@@ -12,7 +13,7 @@ namespace parser {
   Expression::Expression() {}
   Expression::~Expression() {}
 
-  Literal::Literal(tokeniser::Token token): value(token.parse_int()) {}
+  Literal::Literal(token::Token token): value(token.parse_int()) {}
 
   Literal::operator std::string() const {
     return std::to_string(value) + "\n";
@@ -22,7 +23,7 @@ namespace parser {
     return std::make_unique<interpreter::Integer>(value);
   }
 
-  Identifier::Identifier(tokeniser::Token token):
+  Identifier::Identifier(token::Token token):
     name(token.parse_str()) {}
 
   Identifier::operator std::string() const {
@@ -51,7 +52,7 @@ namespace parser {
     return std::make_unique<interpreter::Integer>(1);
   }
 
-  Parser::Parser(std::vector<tokeniser::Token> tokens): tokens(tokens), position(0) {
+  Parser::Parser(std::vector<token::Token> tokens): tokens(tokens), position(0) {
     try {
       parse_lines();
     } catch (const ParseException& exception) {
@@ -71,16 +72,16 @@ namespace parser {
     return to_string(tree) + error;
   }
 
-  std::unique_ptr<Literal> Parser::parse_literal(tokeniser::Token token) {
+  std::unique_ptr<Literal> Parser::parse_literal(token::Token token) {
     return std::make_unique<Literal>(token);
   }
 
-  std::unique_ptr<Identifier> Parser::parse_identifier(tokeniser::Token token) {
+  std::unique_ptr<Identifier> Parser::parse_identifier(token::Token token) {
     return std::make_unique<Identifier>(token);
   }
 
   std::unique_ptr<Expression> Parser::parse_term() {
-    tokeniser::Token token = peek();
+    token::Token token = peek();
     std::unique_ptr<Expression> result;
     try {
       result = parse_literal(token);
@@ -101,7 +102,7 @@ namespace parser {
     try {
       while (true) {
         prev_pos = position;
-        tokeniser::Token token = consume();
+        token::Token token = consume();
         std::unique_ptr<Expression> right = parse_term();
         left = std::make_unique<BinaryOp>(std::move(left),
             token.parse_str(), std::move(right));
@@ -113,19 +114,19 @@ namespace parser {
 
   void Parser::parse_lines() {
     while (true) {
-      tokeniser::Token token = peek();
-      if (token.get_type() == tokeniser::Type::eof) break;
+      token::Token token = peek();
+      if (token.get_type() == token::Type::eof) break;
       tree.push_back(parse_expression());
     }
   }
 
-  tokeniser::Token Parser::peek() {
+  token::Token Parser::peek() {
     if (position < tokens.size()) return tokens[position];
-    return tokeniser::Token(tokeniser::Type::eof, "EOF");
+    return token::Token(token::Type::eof, "EOF");
   }
 
-  tokeniser::Token Parser::consume() {
-    tokeniser::Token token = peek();
+  token::Token Parser::consume() {
+    token::Token token = peek();
     position++;
     return token;
   }

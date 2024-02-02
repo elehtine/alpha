@@ -19,7 +19,7 @@ namespace compiler {
 
     private:
       std::string source;
-      tokeniser::Tokeniser tokeniser;
+      Tokeniser tokeniser;
       parser::Parser parser;
       interpreter::Interpreter interpreter;
   };

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <boost/filesystem.hpp>
 
-#include "../tokeniser.h"
+#include "../types/token.h"
 
 std::vector<std::string> test_files() {
   const boost::filesystem::path dir { "tests" };
@@ -15,10 +15,10 @@ std::vector<std::string> test_files() {
   return files;
 }
 
-std::string to_string(const std::vector<tokeniser::Type>& vec) {
+std::string to_string(const std::vector<token::Type> vec) {
   std::string result = "[ ";
   bool comma = false;
-  for (const tokeniser::Type& type: vec) {
+  for (const token::Type& type: vec) {
     if (comma) result += ", ";
     comma = true;
     result += to_string(type);

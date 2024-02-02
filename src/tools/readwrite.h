@@ -6,11 +6,11 @@
 #include <memory>
 #include <filesystem>
 
-#include "../tokeniser.h"
+#include "../types/token.h"
 
 std::vector<std::string> test_files();
 
-std::string to_string(const std::vector<tokeniser::Type>& vec);
+std::string to_string(const std::vector<token::Type> vec);
 
 template<typename T>
 std::string to_string(const std::vector<std::unique_ptr<T>>& vec) {
