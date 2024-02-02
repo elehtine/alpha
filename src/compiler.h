@@ -21,7 +21,7 @@ namespace compiler {
       std::string source;
       Tokeniser tokeniser;
       Parser parser;
-      interpreter::Interpreter interpreter;
+      Interpreter interpreter;
   };
 
 } /* compiler */
