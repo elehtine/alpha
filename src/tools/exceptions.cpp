@@ -3,6 +3,7 @@
 
 #include "exceptions.h"
 
+
 TokeniseException::TokeniseException(const std::string& message):
   message(prefix + message + suffix) {}
 

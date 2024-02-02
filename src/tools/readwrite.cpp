@@ -5,6 +5,8 @@
 #include <boost/filesystem.hpp>
 
 #include "../types/token.h"
+#include "readwrite.h"
+
 
 std::vector<std::string> test_files() {
   const boost::filesystem::path dir { "tests" };
@@ -15,23 +17,12 @@ std::vector<std::string> test_files() {
   return files;
 }
 
-std::string to_string(const std::vector<token::Type> vec) {
-  std::string result = "[ ";
-  bool comma = false;
-  for (const token::Type& type: vec) {
-    if (comma) result += ", ";
-    comma = true;
-    result += to_string(type);
-  }
-  return result + " ]";
-}
-
 bool user_approval(std::string prompt) {
   std::cout << prompt;
 
   std::string approval;
   std::cin >> approval;
-  std::vector<std::string> positive = { "", "Y", "y", "yes" };
+  std::vector<std::string> positive = { "Y", "y", "yes" };
   for (const std::string& possible: positive) {
     if (approval == possible) return true;
   }
@@ -58,3 +49,86 @@ void write(const std::string& file, const std::string& content) {
   out << content;
   out.close();
 }
+
+template<typename T>
+std::string to_string(std::vector<T> vec) {
+  std::string result = "";
+  for (const T& element: vec) {
+    result += std::string(element) + "\n";
+  }
+  return result;
+}
+
+void UserPrinter::print_source(std::string source) {
+  std::cout << "Source:" << std::endl;
+  std::cout << source << std::endl;
+}
+
+void UserPrinter::print_tokens(std::vector<token::Token> tokens) {
+  std::cout << "Tokens:" << std::endl;
+  std::cout << to_string(tokens) << std::endl;
+}
+
+void UserPrinter::print_tree(ast::Expression* root) {
+  std::cout << "AST:" << std::endl;
+  std::cout << std::string(*root) << std::endl;
+}
+
+void UserPrinter::print_value(value::Value* value) {
+  std::cout << "Value:" << std::endl;
+  std::cout << std::string(*value) << std::endl;
+}
+
+FilePrinter::FilePrinter(std::string name): name(name) {}
+
+void FilePrinter::print_source(std::string source) {
+  input = source;
+}
+
+void FilePrinter::print_tokens(std::vector<token::Token> tokens) {
+  print(to_string(tokens), filename(FileType::tokens));
+}
+
+void FilePrinter::print_tree(ast::Expression* root) {
+  print(std::string(*root), filename(FileType::tree));
+}
+
+void FilePrinter::print_value(value::Value* value) {
+  print(std::string(*value), filename(FileType::interpret));
+}
+
+std::string FilePrinter::filename(const FileType type) {
+  std::string suffix = ".unknown";
+  if (type == FileType::source) suffix = ".alpha";
+  if (type == FileType::tokens) suffix = ".tokens";
+  if (type == FileType::tree) suffix = ".tree";
+  if (type == FileType::interpret) suffix = ".interpret";
+  return name + suffix;
+}
+
+void FilePrinter::print(const std::string& result, const std::string& file) {
+  std::string before = read(file);
+  if (accept(result, before)) {
+    std::cout << "File passed: " << file << std::endl;
+    write(file, result);
+  } else {
+    std::cout << "File failed: " << file << std::endl;
+  }
+  input = result;
+}
+
+bool FilePrinter::accept(const std::string& result, const std::string& before) {
+  if (result == before) {
+    return true;
+  }
+
+  std::cout << "File failed! " << std::endl;
+  std::cout << "Input:" << std::endl;
+  std::cout << input << std::endl;
+  std::cout << "Result:" << std::endl;
+  std::cout << result << std::endl;
+  std::cout << "Before:" << std::endl;
+  std::cout << before << std::endl;
+  return user_approval("Do you want to override [Y/n]? ");
+}
+

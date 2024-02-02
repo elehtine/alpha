@@ -3,6 +3,7 @@
 
 #include <string>
 
+
 class Command {
   public:
     virtual ~Command();

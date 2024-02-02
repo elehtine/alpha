@@ -5,7 +5,6 @@
 
 #include "command.h"
 #include "tools/readwrite.h"
-#include "test.h"
 
 #include "tokeniser.h"
 #include "parser.h"
@@ -19,10 +18,16 @@ Command::Command() {}
 void Test::execute() {
   std::vector<std::string> files = test_files();
   std::regex file_expression("(tests/\\w+)\\.alpha");
+
   for (const std::string& file: files) {
     std::smatch match;
     if (!std::regex_match(file, match, file_expression)) continue;
-    test_file(match[1]);
+    std::string name = match[1];
+    std::string source = read(name + ".alpha");
+
+    Compiler compiler(source);
+    FilePrinter printer(name);
+    compiler.compile(printer);
   }
 }
 
@@ -31,13 +36,15 @@ bool Test::check(int argc, char* argv[]) {
 }
 
 void Compile::execute() {
+  if (!is_file(filename)) {
+    std::cout << "File doesn't exist: " << filename << std::endl;
+    return;
+  }
+
   std::string source = read(filename);
-  compiler::Compiler compiler(source);
-  std::cout << "source:" << std::endl;
-  std::cout << source << std::endl;
-  std::cout << compiler.tokens(true) << std::endl;
-  std::cout << compiler.tree(true) << std::endl;
-  std::cout << compiler.interpret(true) << std::endl;
+  Compiler compiler(source);
+  UserPrinter printer;
+  compiler.compile(printer);
 }
 
 bool Compile::check(int argc, char* argv[]) {

@@ -7,28 +7,11 @@
 #include <filesystem>
 
 #include "../types/token.h"
+#include "../types/ast.h"
+#include "../types/value.h"
+
 
 std::vector<std::string> test_files();
-
-std::string to_string(const std::vector<token::Type> vec);
-
-template<typename T>
-std::string to_string(const std::vector<std::unique_ptr<T>>& vec) {
-  std::string result = "";
-  for (const std::unique_ptr<T>& element: vec) {
-    result += std::string(*element) + "\n";
-  }
-  return result;
-}
-
-template<typename T>
-std::string to_string(std::vector<T> vec) {
-  std::string result = "";
-  for (const T& element: vec) {
-    result += std::string(element) + "\n";
-  }
-  return result;
-}
 
 bool user_approval(std::string prompt);
 
@@ -37,5 +20,47 @@ bool is_file(const std::string& file);
 std::string read(const std::string& file);
 
 void write(const std::string& file, const std::string& content);
+
+class Printer {
+  public:
+    virtual void print_source(std::string) = 0;
+    virtual void print_tokens(std::vector<token::Token> tokens) = 0;
+    virtual void print_tree(ast::Expression* root) = 0;
+    virtual void print_value(value::Value* value) = 0;
+};
+
+class UserPrinter: public Printer  {
+  public:
+    void print_source(std::string source) override;
+    void print_tokens(std::vector<token::Token> tokens) override;
+    void print_tree(ast::Expression* root) override;
+    void print_value(value::Value* value) override;
+};
+
+enum class FileType {
+  source,
+  tokens,
+  tree,
+  interpret,
+};
+
+class FilePrinter: public Printer  {
+  public:
+    FilePrinter(std::string name);
+
+    void print_source(std::string source) override;
+    void print_tokens(std::vector<token::Token> tokens) override;
+    void print_tree(ast::Expression* root) override;
+    void print_value(value::Value* value) override;
+
+  private:
+    std::string filename(const FileType type);
+    void print(const std::string& result, const std::string& file);
+    bool accept(const std::string& result, const std::string& before);
+
+    const std::string name;
+
+    std::string input;
+};
 
 #endif

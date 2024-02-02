@@ -10,6 +10,7 @@
 #include "tools/readwrite.h"
 #include "tools/exceptions.h"
 
+
 std::vector<token::Token> Tokeniser::tokenise(const std::string& content) {
   tokens.clear();
   this->content = content;
