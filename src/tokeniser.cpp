@@ -52,7 +52,7 @@ namespace tokeniser {
     try {
       tokenise();
     } catch (const TokeniseException& exception) {
-      error = exception.what();
+      error = std::string(exception.what()) + "\n";
     }
   }
 

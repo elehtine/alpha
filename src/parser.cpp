@@ -36,7 +36,7 @@ namespace parser {
     try {
       parse_lines();
     } catch (const ParseException& exception) {
-      error = exception.what();
+      error = std::string(exception.what()) + "\n";
     }
   }
 
