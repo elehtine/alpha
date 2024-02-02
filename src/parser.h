@@ -12,22 +12,21 @@
 class Parser {
   public:
     Parser(std::vector<token::Token> tokens);
-    std::vector<std::unique_ptr<ast::Expression>>& get_tree();
+  std::shared_ptr<ast::Expression> get_tree();
 
     std::string prefix() const;
     operator std::string() const;
 
   private:
-    std::unique_ptr<ast::Literal> parse_literal(token::Token token);
-    std::unique_ptr<ast::Identifier> parse_identifier(token::Token token);
-    std::unique_ptr<ast::Expression> parse_term();
-    std::unique_ptr<ast::Expression> parse_expression();
-    void parse_lines();
+    std::shared_ptr<ast::Literal> parse_literal(token::Token token);
+    std::shared_ptr<ast::Identifier> parse_identifier(token::Token token);
+    std::shared_ptr<ast::Expression> parse_term();
+    std::shared_ptr<ast::Expression> parse_expression();
 
     token::Token peek();
     token::Token consume();
 
-    std::vector<std::unique_ptr<ast::Expression>> tree;
+    std::shared_ptr<ast::Expression> root;
 
     std::vector<token::Token> tokens;
     size_t position = 0;

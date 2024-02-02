@@ -7,7 +7,8 @@
 namespace compiler {
 
   Compiler::Compiler(std::string source):
-    source(source), tokeniser(source), parser(tokeniser.get_tokens()) {}
+    source(source), tokeniser(source), parser(tokeniser.get_tokens()),
+    interpreter(parser.get_tree()) {}
 
   std::string Compiler::tokens(bool verbal) {
     std::string prefix = verbal ? tokeniser.prefix() : "";

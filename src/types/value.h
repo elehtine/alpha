@@ -1,12 +1,16 @@
 #ifndef VALUE_H
 #define VALUE_H
 
+#include <string>
+
+
 namespace value {
   
   class Value {
     public:
       virtual operator int() = 0;
       virtual operator bool() = 0;
+      virtual operator std::string() = 0;
   };
 
   class Integer: public Value {
@@ -14,6 +18,7 @@ namespace value {
       Integer(int value);
       operator int() override;
       operator bool() override;
+      operator std::string() override;
 
     private:
       int value;
@@ -24,6 +29,7 @@ namespace value {
       Boolean(bool value);
       operator int() override;
       operator bool() override;
+      operator std::string() override;
 
     private:
       bool value;

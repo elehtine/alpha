@@ -11,14 +11,14 @@
 Parser::Parser(std::vector<token::Token> tokens
     ): tokens(tokens), position(0) {
   try {
-    parse_lines();
+    root = parse_expression();
   } catch (const ParseException& exception) {
     error = std::string(exception.what()) + "\n";
   }
 }
 
-std::vector<std::unique_ptr<ast::Expression>>& Parser::get_tree() {
-  return tree;
+std::shared_ptr<ast::Expression> Parser::get_tree() {
+  return root;
 }
 
 std::string Parser::prefix() const {
@@ -26,21 +26,21 @@ std::string Parser::prefix() const {
 }
 
 Parser::operator std::string() const {
-  return to_string(tree) + error;
+  return std::string(*root) + error;
 }
 
-std::unique_ptr<ast::Literal> Parser::parse_literal(token::Token token) {
-  return std::make_unique<ast::Literal>(token);
+std::shared_ptr<ast::Literal> Parser::parse_literal(token::Token token) {
+  return std::make_shared<ast::Literal>(token);
 }
 
-std::unique_ptr<ast::Identifier> Parser::parse_identifier(
+std::shared_ptr<ast::Identifier> Parser::parse_identifier(
     token::Token token) {
-  return std::make_unique<ast::Identifier>(token);
+  return std::make_shared<ast::Identifier>(token);
 }
 
-std::unique_ptr<ast::Expression> Parser::parse_term() {
+std::shared_ptr<ast::Expression> Parser::parse_term() {
   token::Token token = peek();
-  std::unique_ptr<ast::Expression> result;
+  std::shared_ptr<ast::Expression> result;
   try {
     result = parse_literal(token);
   } catch (const ParseException& e) {
@@ -55,28 +55,20 @@ std::unique_ptr<ast::Expression> Parser::parse_term() {
   return result;
 }
 
-std::unique_ptr<ast::Expression> Parser::parse_expression() {
-  std::unique_ptr<ast::Expression> left = parse_term();
+std::shared_ptr<ast::Expression> Parser::parse_expression() {
+  std::shared_ptr<ast::Expression> left = parse_term();
   size_t prev_pos = position;
   try {
     while (true) {
       prev_pos = position;
       token::Token token = consume();
-      std::unique_ptr<ast::Expression> right = parse_term();
-      left = std::make_unique<ast::BinaryOp>(std::move(left),
+      std::shared_ptr<ast::Expression> right = parse_term();
+      left = std::make_shared<ast::BinaryOp>(std::move(left),
           token.parse_str(), std::move(right));
     }
   } catch (const ParseException& e) {}
   position = prev_pos;
   return left;
-}
-
-void Parser::parse_lines() {
-  while (true) {
-    token::Token token = peek();
-    if (token.get_type() == token::Type::eof) break;
-    tree.push_back(parse_expression());
-  }
 }
 
 token::Token Parser::peek() {
