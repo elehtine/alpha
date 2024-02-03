@@ -11,6 +11,7 @@ Compiler::Compiler(std::string source, bool verbose): source(source),
     ast = parser.parse();
     interpretation = interpreter::interpret(ast.get());
     check = checker::check(ast.get());
+    ir = ir_generator.generate();
   }
 
 void Compiler::compile(Printer& printer) {
@@ -19,4 +20,5 @@ void Compiler::compile(Printer& printer) {
   printer.print_tree(ast.get());
   printer.print_interpretation(interpretation.get());
   printer.print_check(check);
+  printer.print_ir(ir);
 }

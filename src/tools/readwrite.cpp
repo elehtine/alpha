@@ -60,6 +60,14 @@ std::string to_string(std::vector<T> vec) {
   return result;
 }
 
+std::string to_string(const std::vector<std::unique_ptr<Instruction>>& vec) {
+  std::string result = "";
+  for (const std::unique_ptr<Instruction>& element: vec) {
+    result += std::string(*element) + "\n";
+  }
+  return result;
+}
+
 std::string bool_to_string(bool value) {
   return value ? "TRUE\n" : "FALSE\n";
 }
@@ -77,6 +85,11 @@ void UserPrinter::print_tokens(std::vector<token::Token> tokens) {
 void UserPrinter::print_tree(ast::Expression* root) {
   std::cout << "AST:" << std::endl;
   std::cout << root->print(0) << std::endl;
+}
+
+void UserPrinter::print_ir(std::vector<std::unique_ptr<Instruction>>& ir) {
+  std::cout << "Internal representation:" << std::endl;
+  std::cout << to_string(ir) << std::endl;
 }
 
 void UserPrinter::print_interpretation(interpretation::Interpretation* interpretation) {
@@ -103,6 +116,10 @@ void FilePrinter::print_tree(ast::Expression* root) {
   if (root != nullptr) print(root->print(0), filename(FileType::tree), true);
 }
 
+void FilePrinter::print_ir(std::vector<std::unique_ptr<Instruction>>& ir) {
+  print(to_string(ir), filename(FileType::internal), true);
+}
+
 void FilePrinter::print_interpretation(interpretation::Interpretation* interpretation) {
   print(std::string(*interpretation), filename(FileType::interpret), false);
 }
@@ -116,6 +133,7 @@ std::string FilePrinter::filename(const FileType type) {
   if (type == FileType::source) suffix = ".alpha";
   if (type == FileType::tokens) suffix = ".tokens";
   if (type == FileType::tree) suffix = ".tree";
+  if (type == FileType::internal) suffix = ".internal";
   if (type == FileType::interpret) suffix = ".interpret";
   if (type == FileType::check) suffix = ".check";
   return name + suffix;

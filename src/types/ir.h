@@ -14,6 +14,7 @@ class IrVar {
     std::string name;
 };
 
+
 class Instruction {
   public:
     virtual operator std::string() const = 0;
@@ -45,6 +46,10 @@ class Call : public Instruction {
     IrVar function;
     std::vector<IrVar> arguments;
     IrVar destination;
+};
+
+
+class SymbolTable {
 };
 
 #endif
