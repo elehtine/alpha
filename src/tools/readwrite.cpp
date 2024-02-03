@@ -92,6 +92,11 @@ void UserPrinter::print_ir(std::vector<Instruction*> ir) {
   std::cout << to_string(ir) << std::endl;
 }
 
+void UserPrinter::print_asm(std::vector<std::string> lines) {
+  std::cout << "Assembly:" << std::endl;
+  std::cout << to_string(lines) << std::endl;
+}
+
 void UserPrinter::print_interpretation(interpretation::Interpretation* interpretation) {
   std::cout << "Interpretation:" << std::endl;
   std::cout << std::string(*interpretation) << std::endl;
@@ -120,6 +125,10 @@ void FilePrinter::print_ir(std::vector<Instruction*> ir) {
   print(to_string(ir), filename(FileType::internal), true);
 }
 
+void FilePrinter::print_asm(std::vector<std::string> lines) {
+  print(to_string(lines), filename(FileType::assembly), true);
+}
+
 void FilePrinter::print_interpretation(interpretation::Interpretation* interpretation) {
   print(std::string(*interpretation), filename(FileType::interpret), false);
 }
@@ -134,6 +143,7 @@ std::string FilePrinter::filename(const FileType type) {
   if (type == FileType::tokens) suffix = ".tokens";
   if (type == FileType::tree) suffix = ".tree";
   if (type == FileType::internal) suffix = ".internal";
+  if (type == FileType::assembly) suffix = ".s";
   if (type == FileType::interpret) suffix = ".interpret";
   if (type == FileType::check) suffix = ".check";
   return name + suffix;

@@ -28,6 +28,7 @@ class Printer {
     virtual void print_tokens(std::vector<token::Token> tokens) = 0;
     virtual void print_tree(ast::Expression* root) = 0;
     virtual void print_ir(std::vector<Instruction*> ir) = 0;
+    virtual void print_asm(std::vector<std::string> lines) = 0;
 
     virtual void print_interpretation(interpretation::Interpretation* interpretation) = 0;
     virtual void print_check(bool check) = 0;
@@ -39,6 +40,7 @@ class UserPrinter: public Printer  {
     void print_tokens(std::vector<token::Token> tokens) override;
     void print_tree(ast::Expression* root) override;
     void print_ir(std::vector<Instruction*> ir) override;
+    void print_asm(std::vector<std::string> lines) override;
 
     void print_interpretation(interpretation::Interpretation* interpretation) override;
     void print_check(bool check) override;
@@ -49,6 +51,7 @@ enum class FileType {
   tokens,
   tree,
   internal,
+  assembly,
   interpret,
   check,
 };
@@ -61,6 +64,7 @@ class FilePrinter: public Printer  {
     void print_tokens(std::vector<token::Token> tokens) override;
     void print_tree(ast::Expression* root) override;
     void print_ir(std::vector<Instruction*> ir) override;
+    void print_asm(std::vector<std::string> lines) override;
 
     void print_interpretation(interpretation::Interpretation* interpretation) override;
     void print_check(bool check) override;

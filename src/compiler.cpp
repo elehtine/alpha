@@ -17,4 +17,5 @@ void Compiler::compile(Printer& printer) {
   printer.print_interpretation(interpreter.get_interpretation());
   printer.print_check(checker::check(parser.get_ast()));
   printer.print_ir(ir_generator.get_instructions());
+  printer.print_asm(asm_generator.get_lines());
 }
