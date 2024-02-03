@@ -74,9 +74,9 @@ void UserPrinter::print_tree(ast::Expression* root) {
   std::cout << std::string(*root) << std::endl;
 }
 
-void UserPrinter::print_value(value::Value* value) {
-  std::cout << "Value:" << std::endl;
-  std::cout << std::string(*value) << std::endl;
+void UserPrinter::print_value(interpretation::Interpretation* interpretation) {
+  std::cout << "Interpretation:" << std::endl;
+  std::cout << std::string(*interpretation) << std::endl;
 }
 
 FilePrinter::FilePrinter(std::string name): name(name) {}
@@ -93,8 +93,8 @@ void FilePrinter::print_tree(ast::Expression* root) {
   if (root != nullptr) print(std::string(*root), filename(FileType::tree));
 }
 
-void FilePrinter::print_value(value::Value* value) {
-  print(std::string(*value), filename(FileType::interpret));
+void FilePrinter::print_value(interpretation::Interpretation* interpretation) {
+  print(std::string(*interpretation), filename(FileType::interpret));
 }
 
 std::string FilePrinter::filename(const FileType type) {

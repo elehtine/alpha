@@ -6,14 +6,14 @@ namespace ast {
   Expression::Expression() {}
   Expression::~Expression() {}
 
-  Literal::Literal(token::Token token): value(token.parse_int()) {}
+  Literal::Literal(token::Token token): interpretation(token.parse_int()) {}
 
   Literal::operator std::string() const {
-    return std::to_string(value) + "\n";
+    return std::to_string(interpretation) + "\n";
   }
 
-  std::unique_ptr<value::Value> Literal::interpret() {
-    return std::make_unique<value::Integer>(value);
+  std::unique_ptr<interpretation::Interpretation> Literal::interpret() {
+    return std::make_unique<interpretation::Integer>(interpretation);
   }
 
   Identifier::Identifier(token::Token token):
@@ -23,8 +23,8 @@ namespace ast {
     return name + "\n";
   }
 
-  std::unique_ptr<value::Value> Identifier::interpret() {
-    return std::make_unique<value::Integer>(1);
+  std::unique_ptr<interpretation::Interpretation> Identifier::interpret() {
+    return std::make_unique<interpretation::Integer>(1);
   }
 
   BinaryOp::BinaryOp(std::unique_ptr<Expression> left, std::string op,
@@ -35,14 +35,14 @@ namespace ast {
     return std::string(*left) + op + "\n" + std::string(*right);
   }
 
-  std::unique_ptr<value::Value> BinaryOp::interpret() {
+  std::unique_ptr<interpretation::Interpretation> BinaryOp::interpret() {
     int left_value = *left->interpret();
     int right_value = *right->interpret();
-    if (op == "+") return std::make_unique<value::Integer>(left_value + right_value);
-    if (op == "-") return std::make_unique<value::Integer>(left_value - right_value);
-    if (op == "*") return std::make_unique<value::Integer>(left_value * right_value);
-    if (op == "/") return std::make_unique<value::Integer>(left_value / right_value);
-    return std::make_unique<value::Integer>(1);
+    if (op == "+") return std::make_unique<interpretation::Integer>(left_value + right_value);
+    if (op == "-") return std::make_unique<interpretation::Integer>(left_value - right_value);
+    if (op == "*") return std::make_unique<interpretation::Integer>(left_value * right_value);
+    if (op == "/") return std::make_unique<interpretation::Integer>(left_value / right_value);
+    return std::make_unique<interpretation::Integer>(1);
   }
   
 } /* ast */ 

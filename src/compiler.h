@@ -22,7 +22,7 @@ class Compiler {
 
     std::vector<token::Token> tokens;
     std::unique_ptr<ast::Expression> ast;
-    std::unique_ptr<value::Value> value;
+    std::unique_ptr<interpretation::Interpretation> interpretation;
 };
 
 #endif

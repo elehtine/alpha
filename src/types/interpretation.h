@@ -4,16 +4,16 @@
 #include <string>
 
 
-namespace value {
+namespace interpretation {
   
-  class Value {
+  class Interpretation {
     public:
       virtual operator int() = 0;
       virtual operator bool() = 0;
       virtual operator std::string() = 0;
   };
 
-  class Integer: public Value {
+  class Integer: public Interpretation {
     public:
       Integer(int value);
       operator int() override;
@@ -24,7 +24,7 @@ namespace value {
       int value;
   };
 
-  class Boolean: public Value {
+  class Boolean: public Interpretation {
     public:
       Boolean(bool value);
       operator int() override;

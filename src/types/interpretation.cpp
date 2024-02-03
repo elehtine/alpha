@@ -1,11 +1,11 @@
 #include <string>
 
-#include "value.h"
+#include "interpretation.h"
 
 #include "../tools/exceptions.h"
 
 
-namespace value {
+namespace interpretation {
   
   Integer::Integer(int value): value(value) {}
 
