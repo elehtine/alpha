@@ -5,9 +5,9 @@ BOOST = -lboost_system -lboost_filesystem
 CXXFLAGS = -Wall -g -std=c++17
 
 SRCS = main.cpp \
-	   src/compiler.cpp src/interpreter.cpp src/parser.cpp src/tokeniser.cpp \
-	   src/types/token.cpp src/types/ast.cpp src/types/interpretation.cpp \
-	   src/command.cpp \
+	   src/interpreter.cpp src/parser.cpp src/tokeniser.cpp src/checker.cpp \
+	   src/compiler.cpp src/command.cpp \
+	   src/types/token.cpp src/types/ast.cpp src/types/interpretation.cpp src/types/type.cpp \
 	   src/tools/readwrite.cpp src/tools/exceptions.cpp
 
 

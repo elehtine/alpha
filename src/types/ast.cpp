@@ -1,5 +1,7 @@
 #include "ast.h"
 
+#include "../tools/exceptions.h"
+
 
 namespace ast {
 
@@ -15,8 +17,12 @@ namespace ast {
     return result;
   }
 
-  std::unique_ptr<interpretation::Interpretation> Literal::interpret() {
+  std::unique_ptr<interpretation::Interpretation> Literal::interpret() const {
     return std::make_unique<interpretation::Integer>(interpretation);
+  }
+
+  type::Type Literal::check() {
+    return type::Type::integer;
   }
 
   Identifier::Identifier(token::Token token):
@@ -29,8 +35,12 @@ namespace ast {
     return result;
   }
 
-  std::unique_ptr<interpretation::Interpretation> Identifier::interpret() {
+  std::unique_ptr<interpretation::Interpretation> Identifier::interpret() const {
     return std::make_unique<interpretation::Integer>(1);
+  }
+
+  type::Type Identifier::check() {
+    return type::Type::unknown;
   }
 
   BinaryOp::BinaryOp(std::unique_ptr<Expression> left, std::string op,
@@ -46,7 +56,7 @@ namespace ast {
     return result;
   }
 
-  std::unique_ptr<interpretation::Interpretation> BinaryOp::interpret() {
+  std::unique_ptr<interpretation::Interpretation> BinaryOp::interpret() const {
     int left_value = *left->interpret();
     int right_value = *right->interpret();
     if (op == "+") return std::make_unique<interpretation::Integer>(left_value + right_value);
@@ -54,6 +64,16 @@ namespace ast {
     if (op == "*") return std::make_unique<interpretation::Integer>(left_value * right_value);
     if (op == "/") return std::make_unique<interpretation::Integer>(left_value / right_value);
     return std::make_unique<interpretation::Integer>(1);
+  }
+
+  type::Type BinaryOp::check() {
+    if (left->check() != type::Type::integer) {
+      throw TypeException("Expected integer, got " + type_to_string(left->check()));
+    }
+    if (right->check() != type::Type::integer) {
+      throw TypeException("Expected integer, got " + type_to_string(left->check()));
+    }
+    return type::Type::integer;
   }
 
 } /* ast */ 

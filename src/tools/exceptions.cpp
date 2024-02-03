@@ -22,3 +22,9 @@ InterpretException::InterpretException(const std::string& message): message(mess
 const char* InterpretException::what() const throw() {
   return message.c_str();
 }
+
+TypeException::TypeException(const std::string& message): message(message) {}
+
+const char* TypeException::what() const throw() {
+  return message.c_str();
+}

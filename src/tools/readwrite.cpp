@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <boost/filesystem.hpp>
 
 #include "../types/token.h"
@@ -59,6 +60,10 @@ std::string to_string(std::vector<T> vec) {
   return result;
 }
 
+std::string bool_to_string(bool value) {
+  return value ? "TRUE\n" : "FALSE\n";
+}
+
 void UserPrinter::print_source(std::string source) {
   std::cout << "Source:" << std::endl;
   std::cout << source << std::endl;
@@ -74,9 +79,14 @@ void UserPrinter::print_tree(ast::Expression* root) {
   std::cout << root->print(0) << std::endl;
 }
 
-void UserPrinter::print_value(interpretation::Interpretation* interpretation) {
+void UserPrinter::print_interpretation(interpretation::Interpretation* interpretation) {
   std::cout << "Interpretation:" << std::endl;
   std::cout << std::string(*interpretation) << std::endl;
+}
+
+void UserPrinter::print_check(bool check) {
+  std::cout << "Type check:" << std::endl;
+  std::cout << bool_to_string(check) << std::endl;
 }
 
 FilePrinter::FilePrinter(std::string name): name(name) {}
@@ -86,15 +96,19 @@ void FilePrinter::print_source(std::string source) {
 }
 
 void FilePrinter::print_tokens(std::vector<token::Token> tokens) {
-  print(to_string(tokens), filename(FileType::tokens));
+  print(to_string(tokens), filename(FileType::tokens), true);
 }
 
 void FilePrinter::print_tree(ast::Expression* root) {
-  if (root != nullptr) print(root->print(0), filename(FileType::tree));
+  if (root != nullptr) print(root->print(0), filename(FileType::tree), true);
 }
 
-void FilePrinter::print_value(interpretation::Interpretation* interpretation) {
-  print(std::string(*interpretation), filename(FileType::interpret));
+void FilePrinter::print_interpretation(interpretation::Interpretation* interpretation) {
+  print(std::string(*interpretation), filename(FileType::interpret), false);
+}
+
+void FilePrinter::print_check(bool check) {
+  print(bool_to_string(check), filename(FileType::check), false);
 }
 
 std::string FilePrinter::filename(const FileType type) {
@@ -103,10 +117,11 @@ std::string FilePrinter::filename(const FileType type) {
   if (type == FileType::tokens) suffix = ".tokens";
   if (type == FileType::tree) suffix = ".tree";
   if (type == FileType::interpret) suffix = ".interpret";
+  if (type == FileType::check) suffix = ".check";
   return name + suffix;
 }
 
-void FilePrinter::print(const std::string& result, const std::string& file) {
+void FilePrinter::print(const std::string& result, const std::string& file, bool save) {
   std::string before = read(file);
   if (accept(result, before)) {
     std::cout << "File passed: " << file << std::endl;
@@ -114,7 +129,7 @@ void FilePrinter::print(const std::string& result, const std::string& file) {
   } else {
     std::cout << "File failed: " << file << std::endl;
   }
-  input = result;
+  if (save) input = result;
 }
 
 bool FilePrinter::accept(const std::string& result, const std::string& before) {

@@ -7,6 +7,8 @@
 #include "token.h"
 #include "interpretation.h"
 
+#include "type.h"
+
 
 namespace ast {
 
@@ -14,7 +16,8 @@ namespace ast {
     public:
       virtual ~Expression();
       virtual std::string print(int level) const = 0;
-      virtual std::unique_ptr<interpretation::Interpretation> interpret() = 0;
+      virtual std::unique_ptr<interpretation::Interpretation> interpret() const = 0;
+      virtual type::Type check() = 0;
 
     protected:
       Expression();
@@ -25,7 +28,8 @@ namespace ast {
     public:
       Literal(token::Token token);
       std::string print(int level) const override;
-      std::unique_ptr<interpretation::Interpretation> interpret() override;
+      std::unique_ptr<interpretation::Interpretation> interpret() const override;
+      type::Type check() override;
 
     private:
       int interpretation;
@@ -35,7 +39,8 @@ namespace ast {
     public:
       Identifier(token::Token token);
       std::string print(int level) const override;
-      std::unique_ptr<interpretation::Interpretation> interpret() override;
+      std::unique_ptr<interpretation::Interpretation> interpret() const override;
+      type::Type check() override;
 
     private:
       std::string name;
@@ -46,7 +51,8 @@ namespace ast {
       BinaryOp(std::unique_ptr<Expression> left, std::string op,
           std::unique_ptr<Expression> right);
       std::string print(int level) const override;
-      std::unique_ptr<interpretation::Interpretation> interpret() override;
+      std::unique_ptr<interpretation::Interpretation> interpret() const override;
+      type::Type check() override;
 
     private:
       std::unique_ptr<Expression> left;

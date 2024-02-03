@@ -7,6 +7,8 @@
 #include "tokeniser.h"
 #include "parser.h"
 #include "interpreter.h"
+#include "checker.h"
+
 #include "tools/readwrite.h"
 
 
@@ -23,6 +25,7 @@ class Compiler {
     std::vector<token::Token> tokens;
     std::unique_ptr<ast::Expression> ast;
     std::unique_ptr<interpretation::Interpretation> interpretation;
+    bool check;
 };
 
 #endif
