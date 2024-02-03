@@ -4,11 +4,11 @@
 #include "types/interpretation.h"
 
 
-namespace  interpreter {
+Interpreter::Interpreter(ast::Expression* tree) {
+  if (tree == nullptr) return;
+  interpretation = tree->interpret();
+}
 
-  std::unique_ptr<interpretation::Interpretation> interpret(ast::Expression* tree) {
-    if (tree == nullptr) return std::make_unique<interpretation::Boolean>(false);
-    return std::move(tree->interpret());
-  }
-
-} /* interpreter */
+interpretation::Interpretation* Interpreter::get_interpretation() {
+  return interpretation.get();
+}

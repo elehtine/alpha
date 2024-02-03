@@ -12,7 +12,7 @@
 class Parser {
   public:
     Parser(std::vector<token::Token> tokens, bool verbose);
-    std::unique_ptr<ast::Expression> parse();
+    ast::Expression* get_ast();
 
   private:
     std::unique_ptr<ast::Literal> parse_literal(token::Token token);
@@ -25,11 +25,11 @@ class Parser {
     token::Token peek();
     token::Token consume();
 
-    ast::Expression* root;
+    std::unique_ptr<ast::Expression> root;
 
     const std::vector<token::Token> tokens;
     const bool verbose;
-    size_t position;
+    size_t position = 0;
 
 };
 

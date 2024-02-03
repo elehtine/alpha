@@ -10,18 +10,16 @@
 
 
 Parser::Parser(std::vector<token::Token> tokens, bool verbose
-    ): tokens(tokens), verbose(verbose) {}
-
-std::unique_ptr<ast::Expression> Parser::parse() {
-  position = 0;
-  std::unique_ptr<ast::Expression> tree;
+    ): tokens(tokens), verbose(verbose) {
   try {
-    tree = parse_expression();
+    root = parse_expression();
   } catch (const ParseException& e) {
     if (verbose) std::cout << e.what() << std::endl;
   }
-  root = tree.get();
-  return tree;
+}
+
+ast::Expression* Parser::get_ast() {
+  return root.get();
 }
 
 std::unique_ptr<ast::Literal> Parser::parse_literal(token::Token token) {

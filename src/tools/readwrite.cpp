@@ -60,9 +60,9 @@ std::string to_string(std::vector<T> vec) {
   return result;
 }
 
-std::string to_string(const std::vector<std::unique_ptr<Instruction>>& vec) {
+std::string to_string(const std::vector<Instruction*> vec) {
   std::string result = "";
-  for (const std::unique_ptr<Instruction>& element: vec) {
+  for (const Instruction* element: vec) {
     result += std::string(*element) + "\n";
   }
   return result;
@@ -87,7 +87,7 @@ void UserPrinter::print_tree(ast::Expression* root) {
   std::cout << root->print(0) << std::endl;
 }
 
-void UserPrinter::print_ir(std::vector<std::unique_ptr<Instruction>>& ir) {
+void UserPrinter::print_ir(std::vector<Instruction*> ir) {
   std::cout << "Internal representation:" << std::endl;
   std::cout << to_string(ir) << std::endl;
 }
@@ -116,7 +116,7 @@ void FilePrinter::print_tree(ast::Expression* root) {
   if (root != nullptr) print(root->print(0), filename(FileType::tree), true);
 }
 
-void FilePrinter::print_ir(std::vector<std::unique_ptr<Instruction>>& ir) {
+void FilePrinter::print_ir(std::vector<Instruction*> ir) {
   print(to_string(ir), filename(FileType::internal), true);
 }
 

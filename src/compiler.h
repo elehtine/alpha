@@ -24,12 +24,7 @@ class Compiler {
     Tokeniser tokeniser;
     Parser parser;
     IrGenerator ir_generator;
-
-    std::vector<token::Token> tokens;
-    std::unique_ptr<ast::Expression> ast;
-    std::unique_ptr<interpretation::Interpretation> interpretation;
-    bool check;
-    std::vector<std::unique_ptr<Instruction>> ir;
+    Interpreter interpreter;
 };
 
 #endif

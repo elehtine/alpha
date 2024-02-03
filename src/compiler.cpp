@@ -6,19 +6,14 @@
 
 
 Compiler::Compiler(std::string source, bool verbose): source(source),
-  tokeniser(source, verbose), parser(tokeniser.get_tokens(), verbose) {
-    tokens = tokeniser.get_tokens();
-    ast = parser.parse();
-    interpretation = interpreter::interpret(ast.get());
-    check = checker::check(ast.get());
-    ir = ir_generator.generate();
-  }
+  tokeniser(source, verbose), parser(tokeniser.get_tokens(), verbose),
+  ir_generator(parser.get_ast()), interpreter(parser.get_ast()) {}
 
 void Compiler::compile(Printer& printer) {
   printer.print_source(source);
-  printer.print_tokens(tokens);
-  printer.print_tree(ast.get());
-  printer.print_interpretation(interpretation.get());
-  printer.print_check(check);
-  printer.print_ir(ir);
+  printer.print_tokens(tokeniser.get_tokens());
+  printer.print_tree(parser.get_ast());
+  printer.print_interpretation(interpreter.get_interpretation());
+  printer.print_check(checker::check(parser.get_ast()));
+  printer.print_ir(ir_generator.get_instructions());
 }

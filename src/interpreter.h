@@ -2,15 +2,18 @@
 #define INTERPRETER_H
 
 #include <string>
+#include <memory>
 
 #include "types/ast.h"
 #include "types/interpretation.h"
 
 
-namespace  interpreter {
-
-  std::unique_ptr<interpretation::Interpretation> interpret(ast::Expression* tree);
-
-} /* interpreter */
+class Interpreter {
+  public:
+    Interpreter(ast::Expression* tree);
+    interpretation::Interpretation* get_interpretation();
+  private:
+    std::unique_ptr<interpretation::Interpretation> interpretation;
+};
 
 #endif

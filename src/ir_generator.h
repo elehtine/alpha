@@ -4,12 +4,17 @@
 #include <vector>
 #include <memory>
 
+#include "types/ast.h"
 #include "types/ir.h"
 
 
 class IrGenerator {
   public:
-    std::vector<std::unique_ptr<Instruction>> generate();
+    IrGenerator(ast::Expression* root);
+    std::vector<Instruction*> get_instructions();
+
+  private:
+    std::vector<std::unique_ptr<Instruction>> instructions;
 };
 
 #endif

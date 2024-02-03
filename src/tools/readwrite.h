@@ -27,7 +27,7 @@ class Printer {
     virtual void print_source(std::string) = 0;
     virtual void print_tokens(std::vector<token::Token> tokens) = 0;
     virtual void print_tree(ast::Expression* root) = 0;
-    virtual void print_ir(std::vector<std::unique_ptr<Instruction>>& ir) = 0;
+    virtual void print_ir(std::vector<Instruction*> ir) = 0;
 
     virtual void print_interpretation(interpretation::Interpretation* interpretation) = 0;
     virtual void print_check(bool check) = 0;
@@ -38,7 +38,7 @@ class UserPrinter: public Printer  {
     void print_source(std::string source) override;
     void print_tokens(std::vector<token::Token> tokens) override;
     void print_tree(ast::Expression* root) override;
-    void print_ir(std::vector<std::unique_ptr<Instruction>>& ir) override;
+    void print_ir(std::vector<Instruction*> ir) override;
 
     void print_interpretation(interpretation::Interpretation* interpretation) override;
     void print_check(bool check) override;
@@ -60,7 +60,7 @@ class FilePrinter: public Printer  {
     void print_source(std::string source) override;
     void print_tokens(std::vector<token::Token> tokens) override;
     void print_tree(ast::Expression* root) override;
-    void print_ir(std::vector<std::unique_ptr<Instruction>>& ir) override;
+    void print_ir(std::vector<Instruction*> ir) override;
 
     void print_interpretation(interpretation::Interpretation* interpretation) override;
     void print_check(bool check) override;
