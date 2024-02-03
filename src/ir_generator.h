@@ -11,14 +11,11 @@
 class IrGenerator {
   public:
     IrGenerator(ast::Expression* root);
-    std::vector<Instruction*> get_instructions();
+    std::vector<Instruction*> get_instructions() const;
+    void add_instruction(std::unique_ptr<Instruction> instruction);
+    IrVar create_var();
 
   private:
-    IrVar visit(ast::Expression* node);
-    IrVar create_var();
-    IrVar add_literal(ast::Literal* literal);
-    IrVar add_binary_op(ast::BinaryOp* binary_op);
-
     std::vector<std::unique_ptr<Instruction>> instructions;
     int number = 1;
 };

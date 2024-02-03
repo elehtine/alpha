@@ -1,6 +1,7 @@
 #include "ast.h"
 
 #include "../tools/exceptions.h"
+#include "../ir_generator.h"
 
 
 namespace ast {
@@ -21,8 +22,10 @@ namespace ast {
     return std::make_unique<interpretation::Integer>(value);
   }
 
-  int Literal::get_value() const {
-    return value;
+  IrVar Literal::visit(IrGenerator* generator) const {
+    IrVar variable = generator->create_var();
+    generator->add_instruction(std::make_unique<LoadIntConst>(value, variable));
+    return variable;
   }
 
   type::Type Literal::check() {
@@ -45,6 +48,10 @@ namespace ast {
 
   type::Type Identifier::check() {
     return type::Type::unknown;
+  }
+
+  IrVar Identifier::visit(IrGenerator* generator) const {
+    return IrVar(name);
   }
 
   BinaryOp::BinaryOp(std::unique_ptr<Expression> left, std::string op,
@@ -80,17 +87,15 @@ namespace ast {
     return type::Type::integer;
   }
 
-  Expression* BinaryOp::get_left() const {
-    return left.get();
+  IrVar BinaryOp::visit(IrGenerator* generator) const {
+    std::vector<IrVar> arguments = {
+      left->visit(generator),
+      right->visit(generator),
+    };
+    IrVar function = IrVar(op);
+    IrVar result = generator->create_var();
+    generator->add_instruction(std::make_unique<Call>(function, arguments, result));
+    return result;
   }
-
-  std::string BinaryOp::get_op() const {
-    return op;
-  }
-
-  Expression* BinaryOp::get_right() const {
-    return right.get();
-  }
-
 
 } /* ast */ 

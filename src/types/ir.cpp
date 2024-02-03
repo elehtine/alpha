@@ -30,9 +30,7 @@ std::string Instruction::format(std::vector<IrVar> values) const {
 }
 
 LoadIntConst::LoadIntConst(int value, const IrVar& destination):
-  value(value), destination(destination) {
-    std::cout << "here" << std::endl;
-  }
+  value(value), destination(destination) {}
 
 LoadIntConst::operator std::string() const {
   std::string start = "LoadIntConst(";
@@ -58,4 +56,3 @@ Call::operator std::string() const {
   std::vector<std::string> values { start, function, format(arguments), destination, end };
   return format(values);
 }
-

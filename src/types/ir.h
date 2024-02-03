@@ -51,8 +51,4 @@ class Call : public Instruction {
     IrVar destination;
 };
 
-
-class SymbolTable {
-};
-
 #endif

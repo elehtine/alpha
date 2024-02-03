@@ -5,10 +5,12 @@
 #include <memory>
 
 #include "token.h"
+#include "ir.h"
 #include "interpretation.h"
-
 #include "type.h"
 
+
+class IrGenerator;
 
 namespace ast {
 
@@ -18,6 +20,8 @@ namespace ast {
       virtual std::string print(int level) const = 0;
       virtual std::unique_ptr<interpretation::Interpretation> interpret() const = 0;
       virtual type::Type check() = 0;
+
+      virtual IrVar visit(IrGenerator* generator) const = 0;
 
     protected:
       Expression();
@@ -31,7 +35,7 @@ namespace ast {
       std::unique_ptr<interpretation::Interpretation> interpret() const override;
       type::Type check() override;
 
-      int get_value() const;
+      IrVar visit(IrGenerator* generator) const override;
 
     private:
       int value;
@@ -43,6 +47,8 @@ namespace ast {
       std::string print(int level) const override;
       std::unique_ptr<interpretation::Interpretation> interpret() const override;
       type::Type check() override;
+
+      IrVar visit(IrGenerator* generator) const override;
 
     private:
       std::string name;
@@ -56,9 +62,7 @@ namespace ast {
       std::unique_ptr<interpretation::Interpretation> interpret() const override;
       type::Type check() override;
 
-      Expression* get_left() const;
-      std::string get_op() const;
-      Expression* get_right() const;
+      IrVar visit(IrGenerator* generator) const override;
 
     private:
       std::unique_ptr<Expression> left;
