@@ -17,6 +17,7 @@ class Parser {
   private:
     std::unique_ptr<ast::Literal> parse_literal(token::Token token);
     std::unique_ptr<ast::Identifier> parse_identifier(token::Token token);
+    std::unique_ptr<ast::Expression> parse_parenthesis(token::Token token);
     std::unique_ptr<ast::Expression> parse_factor();
     std::unique_ptr<ast::Expression> parse_term();
     std::unique_ptr<ast::Expression> parse_expression();

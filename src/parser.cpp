@@ -33,19 +33,21 @@ std::unique_ptr<ast::Identifier> Parser::parse_identifier(
   return std::make_unique<ast::Identifier>(token);
 }
 
+std::unique_ptr<ast::Expression> Parser::parse_parenthesis(
+    token::Token token) {
+  consume();
+  std::unique_ptr<ast::Expression> result = parse_expression();
+  consume();
+  return result;
+}
+
 std::unique_ptr<ast::Expression> Parser::parse_term() {
   token::Token token = peek();
   std::unique_ptr<ast::Expression> result;
-  try {
-    result = parse_literal(token);
-  } catch (const ParseException& e) {
-    try {
-      result = parse_identifier(token);
-    } catch (const ParseException& e) {
-      throw ParseException("Excpected literal or identifier" +
-          std::string(token));
-    }
-  }
+  if (token.get_type() == token::Type::literal) result = parse_literal(token);
+  else if (token.get_type() == token::Type::identifier) result = parse_identifier(token);
+  else if (token.get_type() == token::Type::punctuation) result = parse_parenthesis(token);
+  else throw ParseException("Excpected parenthesis, literal or identifier" + std::string(token));
   consume();
   return result;
 }
