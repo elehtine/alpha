@@ -9,15 +9,16 @@
 #include "interpreter.h"
 
 
-Parser::Parser(std::vector<token::Token> tokens, bool verbose):
-  tokens(tokens), verbose(verbose) {}
+Parser::Parser(std::vector<token::Token> tokens, bool verbose
+    ): tokens(tokens), verbose(verbose) {}
 
 std::unique_ptr<ast::Expression> Parser::parse() {
+  position = 0;
   std::unique_ptr<ast::Expression> tree;
   try {
     tree = parse_expression();
-  } catch (const ParseException& exception) {
-    if (verbose) std::cout << exception.what() << std::endl;
+  } catch (const ParseException& e) {
+    if (verbose) std::cout << e.what() << std::endl;
   }
   root = tree.get();
   return tree;
@@ -51,17 +52,9 @@ std::unique_ptr<ast::Expression> Parser::parse_term() {
 
 std::unique_ptr<ast::Expression> Parser::parse_expression() {
   std::unique_ptr<ast::Expression> left = parse_term();
-  while (true) {
+  while (peek().get_type() != token::Type::eof) {
     token::Token token = consume();
-    if (token.get_type() == token::Type::eof) break;
-
-    std::unique_ptr<ast::Expression> right;
-    try {
-      right = parse_term();
-    } catch (const ParseException& e) {
-      break;
-    }
-
+    std::unique_ptr<ast::Expression> right = parse_term();
     left = std::make_unique<ast::BinaryOp>(std::move(left),
         token.parse_str(), std::move(right));
   }

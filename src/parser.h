@@ -25,9 +25,10 @@ class Parser {
 
     ast::Expression* root;
 
-    std::vector<token::Token> tokens;
-    bool verbose;
-    size_t position = 0;
+    const std::vector<token::Token> tokens;
+    const bool verbose;
+    size_t position;
+
 };
 
 #endif

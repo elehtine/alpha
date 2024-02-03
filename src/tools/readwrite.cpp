@@ -90,7 +90,7 @@ void FilePrinter::print_tokens(std::vector<token::Token> tokens) {
 }
 
 void FilePrinter::print_tree(ast::Expression* root) {
-  print(std::string(*root), filename(FileType::tree));
+  if (root != nullptr) print(std::string(*root), filename(FileType::tree));
 }
 
 void FilePrinter::print_value(value::Value* value) {
