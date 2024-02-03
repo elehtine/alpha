@@ -1,11 +1,16 @@
 #include <iostream>
 
 #include "ir.h"
+#include "../asm_generator.h"
 
 
 IrVar::IrVar(std::string name): name(name) {}
 
 IrVar::operator std::string() const { return name; }
+
+bool operator<(const IrVar& left, const IrVar& right) {
+  return left.name < right.name;
+}
 
 std::string Instruction::format(std::vector<std::string> values) const {
   std::string result = "";
@@ -39,11 +44,20 @@ LoadIntConst::operator std::string() const {
   return format(values);
 }
 
+void LoadIntConst::add_variables(Locals* locals) const {
+  locals->add_location(destination);
+}
+
 Copy::operator std::string() const {
   std::string start = "Copy(";
   std::string end = ")";
   std::vector<std::string> values { start, source, destination, end };
   return format(values);
+}
+
+void Copy::add_variables(Locals* locals) const {
+  locals->add_location(source);
+  locals->add_location(destination);
 }
 
 Call::Call(IrVar function, std::vector<IrVar> arguments, IrVar destination):
@@ -55,4 +69,12 @@ Call::operator std::string() const {
   std::string end = ")";
   std::vector<std::string> values { start, function, format(arguments), destination, end };
   return format(values);
+}
+
+void Call::add_variables(Locals* locals) const {
+  locals->add_location(function);
+  for (const IrVar& variable: arguments) {
+    locals->add_location(variable);
+  }
+  locals->add_location(destination);
 }

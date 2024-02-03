@@ -7,6 +7,7 @@
 #include "tokeniser.h"
 #include "parser.h"
 #include "ir_generator.h"
+#include "asm_generator.h"
 
 #include "interpreter.h"
 #include "checker.h"
@@ -24,6 +25,7 @@ class Compiler {
     Tokeniser tokeniser;
     Parser parser;
     IrGenerator ir_generator;
+    AssemblyGenerator asm_generator;
     Interpreter interpreter;
 };
 
