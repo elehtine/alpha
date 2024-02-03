@@ -50,11 +50,22 @@ std::unique_ptr<ast::Expression> Parser::parse_term() {
   return result;
 }
 
-std::unique_ptr<ast::Expression> Parser::parse_expression() {
+std::unique_ptr<ast::Expression> Parser::parse_factor() {
   std::unique_ptr<ast::Expression> left = parse_term();
-  while (peek().get_type() != token::Type::eof) {
+  while (peek().get_content() == "*" || peek().get_content() == "/") {
     token::Token token = consume();
     std::unique_ptr<ast::Expression> right = parse_term();
+    left = std::make_unique<ast::BinaryOp>(std::move(left),
+        token.parse_str(), std::move(right));
+  }
+  return left;
+}
+
+std::unique_ptr<ast::Expression> Parser::parse_expression() {
+  std::unique_ptr<ast::Expression> left = parse_factor();
+  while (peek().get_content() == "+" || peek().get_content() == "-") {
+    token::Token token = consume();
+    std::unique_ptr<ast::Expression> right = parse_factor();
     left = std::make_unique<ast::BinaryOp>(std::move(left),
         token.parse_str(), std::move(right));
   }

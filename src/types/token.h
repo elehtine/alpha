@@ -23,6 +23,7 @@ namespace token {
       Token(Type type, std::string content);
       operator std::string() const;
       Type get_type() const;
+      std::string get_content() const;
 
       int parse_int();
       std::string parse_str();

@@ -25,6 +25,10 @@ namespace token {
     return type;
   }
 
+  std::string Token::get_content() const {
+    return content;
+  }
+
   int Token::parse_int() {
     if (type == Type::literal) return stoi(content);
     throw ParseException(message({ Type::literal }));
