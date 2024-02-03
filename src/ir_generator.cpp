@@ -1,4 +1,4 @@
-#include "generate_ir.h"
+#include "ir_generator.h"
 
 
 std::vector<std::unique_ptr<Instruction>> IrGenerator::generate() {

@@ -6,7 +6,7 @@
 
 #include "tokeniser.h"
 #include "parser.h"
-#include "generate_ir.h"
+#include "ir_generator.h"
 
 #include "interpreter.h"
 #include "checker.h"
