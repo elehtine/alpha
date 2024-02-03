@@ -8,8 +8,11 @@ namespace ast {
 
   Literal::Literal(token::Token token): interpretation(token.parse_int()) {}
 
-  Literal::operator std::string() const {
-    return std::to_string(interpretation) + "\n";
+  std::string Literal::print(int level) const {
+    std::string result = std::string(level * space, ' ');
+    result += std::to_string(interpretation);
+    result += "\n";
+    return result;
   }
 
   std::unique_ptr<interpretation::Interpretation> Literal::interpret() {
@@ -19,8 +22,11 @@ namespace ast {
   Identifier::Identifier(token::Token token):
     name(token.parse_str()) {}
 
-  Identifier::operator std::string() const {
-    return name + "\n";
+  std::string Identifier::print(int level) const {
+    std::string result = std::string(level * space, ' ');
+    result += name;
+    result += "\n";
+    return result;
   }
 
   std::unique_ptr<interpretation::Interpretation> Identifier::interpret() {
@@ -31,8 +37,13 @@ namespace ast {
       std::unique_ptr<Expression> right):
     left(std::move(left)), op(op), right(std::move(right)) {}
 
-  BinaryOp::operator std::string() const {
-    return std::string(*left) + op + "\n" + std::string(*right);
+  std::string BinaryOp::print(int level) const {
+    std::string result = left->print(level+1);
+    result += std::string(level * space, ' ');
+    result += op;
+    result += "\n";
+    result += right->print(level+1);
+    return result;
   }
 
   std::unique_ptr<interpretation::Interpretation> BinaryOp::interpret() {
@@ -44,5 +55,5 @@ namespace ast {
     if (op == "/") return std::make_unique<interpretation::Integer>(left_value / right_value);
     return std::make_unique<interpretation::Integer>(1);
   }
-  
+
 } /* ast */ 

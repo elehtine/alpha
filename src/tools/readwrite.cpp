@@ -71,7 +71,7 @@ void UserPrinter::print_tokens(std::vector<token::Token> tokens) {
 
 void UserPrinter::print_tree(ast::Expression* root) {
   std::cout << "AST:" << std::endl;
-  std::cout << std::string(*root) << std::endl;
+  std::cout << root->print(0) << std::endl;
 }
 
 void UserPrinter::print_value(interpretation::Interpretation* interpretation) {
@@ -90,7 +90,7 @@ void FilePrinter::print_tokens(std::vector<token::Token> tokens) {
 }
 
 void FilePrinter::print_tree(ast::Expression* root) {
-  if (root != nullptr) print(std::string(*root), filename(FileType::tree));
+  if (root != nullptr) print(root->print(0), filename(FileType::tree));
 }
 
 void FilePrinter::print_value(interpretation::Interpretation* interpretation) {

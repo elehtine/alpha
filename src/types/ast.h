@@ -13,18 +13,19 @@ namespace ast {
   class Expression {
     public:
       virtual ~Expression();
-      virtual operator std::string() const = 0;
+      virtual std::string print(int level) const = 0;
       virtual std::unique_ptr<interpretation::Interpretation> interpret() = 0;
 
     protected:
       Expression();
+      const int space = 2;
   };
 
   class Literal : public Expression {
     public:
       Literal(token::Token token);
-      operator std::string() const override;
-      virtual std::unique_ptr<interpretation::Interpretation> interpret() override;
+      std::string print(int level) const override;
+      std::unique_ptr<interpretation::Interpretation> interpret() override;
 
     private:
       int interpretation;
@@ -33,8 +34,8 @@ namespace ast {
   class Identifier : public Expression {
     public:
       Identifier(token::Token token);
-      operator std::string() const override;
-      virtual std::unique_ptr<interpretation::Interpretation> interpret() override;
+      std::string print(int level) const override;
+      std::unique_ptr<interpretation::Interpretation> interpret() override;
 
     private:
       std::string name;
@@ -44,8 +45,8 @@ namespace ast {
     public:
       BinaryOp(std::unique_ptr<Expression> left, std::string op,
           std::unique_ptr<Expression> right);
-      operator std::string() const override;
-      virtual std::unique_ptr<interpretation::Interpretation> interpret() override;
+      std::string print(int level) const override;
+      std::unique_ptr<interpretation::Interpretation> interpret() override;
 
     private:
       std::unique_ptr<Expression> left;
