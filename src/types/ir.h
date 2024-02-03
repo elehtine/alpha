@@ -18,6 +18,7 @@ class IrVar {
 
 
 class Locals;
+class AssemblyGenerator;
 
 class Instruction {
   public:
@@ -25,6 +26,7 @@ class Instruction {
     virtual operator std::string() const = 0;
 
     virtual void add_variables(Locals* locals) const = 0;
+    virtual void to_asm(AssemblyGenerator* asm_generator) const = 0;
 
   protected:
     std::string format(std::vector<std::string> values) const;
@@ -37,6 +39,7 @@ class LoadIntConst : public Instruction {
     operator std::string() const override;
 
     void add_variables(Locals* locals) const override;
+    void to_asm(AssemblyGenerator* asm_generator) const override;
 
   private:
     int value;
@@ -48,6 +51,7 @@ class Copy : public Instruction {
     operator std::string() const override;
 
     void add_variables(Locals* locals) const override;
+    void to_asm(AssemblyGenerator* asm_generator) const override;
 
   private:
     IrVar source;
@@ -60,6 +64,7 @@ class Call : public Instruction {
     operator std::string() const override;
 
     void add_variables(Locals* locals) const override;
+    void to_asm(AssemblyGenerator* asm_generator) const override;
 
   private:
     IrVar function;

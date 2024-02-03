@@ -2,6 +2,7 @@
 
 #include "ir.h"
 #include "../asm_generator.h"
+#include "../intrinsics.h"
 
 
 IrVar::IrVar(std::string name): name(name) {}
@@ -48,6 +49,14 @@ void LoadIntConst::add_variables(Locals* locals) const {
   locals->add_location(destination);
 }
 
+void LoadIntConst::to_asm(AssemblyGenerator* asm_generator) const {
+  asm_generator->emit(std::string("# ") + std::string(*this));
+
+  std::string dest = asm_generator->get_location(destination);
+  asm_generator->emit("movq $" + std::to_string(value) + ", " + dest);
+  asm_generator->emit("movq " + dest + ", %rsi");
+}
+
 Copy::operator std::string() const {
   std::string start = "Copy(";
   std::string end = ")";
@@ -58,6 +67,10 @@ Copy::operator std::string() const {
 void Copy::add_variables(Locals* locals) const {
   locals->add_location(source);
   locals->add_location(destination);
+}
+
+void Copy::to_asm(AssemblyGenerator* asm_generator) const {
+  asm_generator->emit(std::string("# ") + std::string(*this));
 }
 
 Call::Call(IrVar function, std::vector<IrVar> arguments, IrVar destination):
@@ -72,9 +85,26 @@ Call::operator std::string() const {
 }
 
 void Call::add_variables(Locals* locals) const {
-  locals->add_location(function);
   for (const IrVar& variable: arguments) {
     locals->add_location(variable);
   }
   locals->add_location(destination);
+}
+
+void Call::to_asm(AssemblyGenerator* asm_generator) const {
+  asm_generator->emit(std::string("# ") + std::string(*this));
+  std::vector<std::string> args {
+    asm_generator->get_location(arguments[0]),
+    asm_generator->get_location(arguments[1]),
+  };
+
+  if (std::string(arguments[0])[0] != 'x') asm_generator->emit("movq $1, " + args[0]);
+  if (std::string(arguments[1])[0] != 'x') asm_generator->emit("movq $1, " + args[1]);
+
+  std::string result = asm_generator->get_location(destination);
+  if (std::string(function) == "+") intrinsics::plus(args, result, asm_generator);
+  if (std::string(function) == "-") intrinsics::minus(args, result, asm_generator);
+  if (std::string(function) == "*") intrinsics::multiply(args, result, asm_generator);
+  if (std::string(function) == "/") intrinsics::divide(args, result, asm_generator);
+  asm_generator->emit("movq " + result + ", %rsi");
 }
