@@ -28,3 +28,9 @@ TypeException::TypeException(const std::string& message): message(message) {}
 const char* TypeException::what() const throw() {
   return message.c_str();
 }
+
+IrGenerateException::IrGenerateException(const std::string& message): message(message) {}
+
+const char* IrGenerateException::what() const throw() {
+  return message.c_str();
+}

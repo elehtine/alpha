@@ -43,4 +43,14 @@ class TypeException : public std::exception {
     const std::string message;
 };
 
+
+class IrGenerateException : public std::exception {
+  public:
+    IrGenerateException(const std::string& message);
+    const char* what() const throw() override;
+
+  private:
+    const std::string message;
+};
+
 #endif

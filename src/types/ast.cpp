@@ -8,17 +8,21 @@ namespace ast {
   Expression::Expression() {}
   Expression::~Expression() {}
 
-  Literal::Literal(token::Token token): interpretation(token.parse_int()) {}
+  Literal::Literal(token::Token token): value(token.parse_int()) {}
 
   std::string Literal::print(int level) const {
     std::string result = std::string(level * space, ' ');
-    result += std::to_string(interpretation);
+    result += std::to_string(value);
     result += "\n";
     return result;
   }
 
   std::unique_ptr<interpretation::Interpretation> Literal::interpret() const {
-    return std::make_unique<interpretation::Integer>(interpretation);
+    return std::make_unique<interpretation::Integer>(value);
+  }
+
+  int Literal::get_value() const {
+    return value;
   }
 
   type::Type Literal::check() {
@@ -75,5 +79,18 @@ namespace ast {
     }
     return type::Type::integer;
   }
+
+  Expression* BinaryOp::get_left() const {
+    return left.get();
+  }
+
+  std::string BinaryOp::get_op() const {
+    return op;
+  }
+
+  Expression* BinaryOp::get_right() const {
+    return right.get();
+  }
+
 
 } /* ast */ 

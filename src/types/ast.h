@@ -31,8 +31,10 @@ namespace ast {
       std::unique_ptr<interpretation::Interpretation> interpret() const override;
       type::Type check() override;
 
+      int get_value() const;
+
     private:
-      int interpretation;
+      int value;
   };
 
   class Identifier : public Expression {
@@ -53,6 +55,10 @@ namespace ast {
       std::string print(int level) const override;
       std::unique_ptr<interpretation::Interpretation> interpret() const override;
       type::Type check() override;
+
+      Expression* get_left() const;
+      std::string get_op() const;
+      Expression* get_right() const;
 
     private:
       std::unique_ptr<Expression> left;

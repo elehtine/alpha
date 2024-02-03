@@ -17,6 +17,7 @@ class IrVar {
 
 class Instruction {
   public:
+    virtual ~Instruction() = default;
     virtual operator std::string() const = 0;
   protected:
     std::string format(std::vector<std::string> values) const;
@@ -25,6 +26,7 @@ class Instruction {
 
 class LoadIntConst : public Instruction {
   public:
+    LoadIntConst(int value, const IrVar& destination);
     operator std::string() const override;
   private:
     int value;
@@ -41,6 +43,7 @@ class Copy : public Instruction {
 
 class Call : public Instruction {
   public:
+    Call(IrVar function, std::vector<IrVar> arguments, IrVar destination);
     operator std::string() const override;
   private:
     IrVar function;
