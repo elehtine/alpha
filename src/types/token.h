@@ -3,7 +3,14 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
+
+namespace ast {
+
+  class Expression;
+
+} /* ast  */
 
 namespace token {
 
@@ -25,16 +32,17 @@ namespace token {
       Type get_type() const;
       std::string get_content() const;
 
-      int parse_int();
       std::string parse_str();
+
+      std::unique_ptr<ast::Expression> parse() const;
+
 
     private:
       Type type;
       std::string content;
 
-      std::string message(std::vector<Type> need);
+      std::string message(std::vector<Type> need) const;
   };
-
 
 } /* token */
 

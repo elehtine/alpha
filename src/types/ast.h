@@ -30,7 +30,8 @@ namespace ast {
 
   class Literal : public Expression {
     public:
-      Literal(token::Token token);
+      Literal(int value);
+
       std::string print(int level) const override;
       std::unique_ptr<interpretation::Interpretation> interpret() const override;
       type::Type check() override;
@@ -44,6 +45,8 @@ namespace ast {
   class Identifier : public Expression {
     public:
       Identifier(token::Token token);
+      Identifier(std::string name);
+
       std::string print(int level) const override;
       std::unique_ptr<interpretation::Interpretation> interpret() const override;
       type::Type check() override;

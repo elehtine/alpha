@@ -9,7 +9,7 @@ namespace ast {
   Expression::Expression() {}
   Expression::~Expression() {}
 
-  Literal::Literal(token::Token token): value(token.parse_int()) {}
+  Literal::Literal(int value): value(value) {}
 
   std::string Literal::print(int level) const {
     std::string result = std::string(level * space, ' ');
@@ -34,6 +34,8 @@ namespace ast {
 
   Identifier::Identifier(token::Token token):
     name(token.parse_str()) {}
+
+  Identifier::Identifier(std::string name): name(name) {}
 
   std::string Identifier::print(int level) const {
     std::string result = std::string(level * space, ' ');

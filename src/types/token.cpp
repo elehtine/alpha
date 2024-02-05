@@ -1,13 +1,15 @@
-#include "token.h"
-
 #include "../tools/exceptions.h"
 #include "../tools/readwrite.h"
+
+#include "token.h"
+#include "ast.h"
 
 
 namespace token {
 
   std::string to_string(const Type& type) {
     if (type == Type::eof) return "EOF";
+    if (type == Type::punctuation) return "punctuation";
     if (type == Type::oper) return "operator";
     if (type == Type::identifier) return "identifier";
     if (type == Type::literal) return "literal";
@@ -29,17 +31,22 @@ namespace token {
     return content;
   }
 
-  int Token::parse_int() {
-    if (type == Type::literal) return stoi(content);
-    throw ParseException(message({ Type::literal }));
-  }
-
   std::string Token::parse_str() {
     if (type == Type::identifier) return content;
     if (type == Type::oper) return content;
     throw ParseException(message({ Type::oper, Type::identifier }));
   }
 
+  std::unique_ptr<ast::Expression> Token::parse() const {
+    if (type == token::Type::literal) {
+      return std::make_unique<ast::Literal>(stoi(content));
+    }
+    if (type == token::Type::identifier) {
+      return std::make_unique<ast::Identifier>(content);
+    }
+    throw ParseException("Excpected parenthesis, literal or identifier" +
+        std::string(*this));
+  }
 
   std::string types_to_string(std::vector<Type> vec) {
     std::string result = "";
@@ -49,7 +56,7 @@ namespace token {
     return result;
   }
 
-  std::string Token::message(std::vector<Type> need) {
+  std::string Token::message(std::vector<Type> need) const {
     return "Token (" + std::string(*this) + ") is not " +
       types_to_string(need);
   }
