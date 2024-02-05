@@ -11,7 +11,7 @@ Locals::Locals(std::vector<Instruction*> instructions) {
 void Locals::add_location(const IrVar& variable) {
   if (get_location(variable) != "") return;
   stack_size++;
-  std::string location = std::string("-") + std::to_string(stack_size * 8) + std::string("(%rbp)");
+  std::string location = "-" + std::to_string(stack_size * 8) + "(%rbp)";
   variable_locations[variable] = location;
 }
 
@@ -23,8 +23,8 @@ int Locals::get_stack_size() {
   return stack_size;
 }
 
-AssemblyGenerator::AssemblyGenerator(std::vector<Instruction*> instructions
-    ): locals(instructions) {
+AssemblyGenerator::AssemblyGenerator(
+    std::vector<Instruction*> instructions): locals(instructions) {
   std::string start = read("resources/start.s");
   std::string end = read("resources/end.s");
 
@@ -54,7 +54,7 @@ AssemblyGenerator::AssemblyGenerator(std::vector<Instruction*> instructions
   }
 }
 
-std::vector<std::string> AssemblyGenerator::get_lines() {
+std::vector<std::string> AssemblyGenerator::get_lines() const {
   return lines;
 }
 

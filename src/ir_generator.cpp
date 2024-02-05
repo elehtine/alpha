@@ -19,7 +19,8 @@ std::vector<Instruction*> IrGenerator::get_instructions() const {
   return result;
 }
 
-void IrGenerator::add_instruction(std::unique_ptr<Instruction> instruction) {
+void IrGenerator::add_instruction(
+    std::unique_ptr<Instruction> instruction) {
   instructions.push_back(std::move(instruction));
 }
 
