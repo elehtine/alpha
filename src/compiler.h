@@ -17,8 +17,7 @@
 
 class Compiler {
   public:
-    Compiler(std::string source, bool verbose);
-    void compile(Printer& printer);
+    Compiler(std::string source, Printer& printer);
 
   private:
     std::string source;

@@ -6,6 +6,8 @@
 
 #include "types/ir.h"
 
+#include "tools/readwrite.h"
+
 
 class Locals {
   public:
@@ -21,7 +23,8 @@ class Locals {
 
 class AssemblyGenerator {
   public:
-    AssemblyGenerator(std::vector<Instruction*> instructions);
+    AssemblyGenerator(std::vector<Instruction*> instructions,
+        Printer& printer);
     std::vector<std::string> get_lines() const;
     void emit(std::string line);
     std::string get_location(const IrVar& variable);

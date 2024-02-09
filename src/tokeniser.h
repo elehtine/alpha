@@ -7,11 +7,12 @@
 
 #include "types/token.h"
 #include "tools/exceptions.h"
+#include "tools/readwrite.h"
 
 
 class Tokeniser {
   public:
-    Tokeniser(const std::string& source, bool verbose);
+    Tokeniser(const std::string& source, Printer& printer);
     std::vector<token::Token> get_tokens();
 
   private:

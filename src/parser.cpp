@@ -9,13 +9,10 @@
 #include "interpreter.h"
 
 
-Parser::Parser(std::vector<token::Token> tokens, bool verbose
-    ): tokens(tokens), verbose(verbose) {
-  try {
-    root = parse_expression();
-  } catch (const ParseException& e) {
-    if (verbose) std::cout << e.what() << std::endl;
-  }
+Parser::Parser(std::vector<token::Token> tokens, Printer& printer
+    ): tokens(tokens) {
+  root = parse_expression();
+  printer.print_tree(root.get());
 }
 
 ast::Expression* Parser::get_ast() {

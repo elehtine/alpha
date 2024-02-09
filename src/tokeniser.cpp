@@ -11,15 +11,13 @@
 #include "tools/exceptions.h"
 
 
-Tokeniser::Tokeniser(const std::string& source, bool verbose):
-  source(source) {
-    position = 0;
-    try {
-      tokenise();
-    } catch (const TokeniseException& exception) {
-      if (verbose) std::cout << exception.what() << std::endl;
-    }
-  }
+Tokeniser::Tokeniser(const std::string& source, Printer& printer
+    ): source(source) {
+  position = 0;
+  tokenise();
+
+  printer.print_tokens(tokens);
+}
 
 std::vector<token::Token> Tokeniser::get_tokens() {
   return tokens;

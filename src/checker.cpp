@@ -6,15 +6,8 @@
 namespace checker {
 
   bool check(ast::Expression* tree) {
-    bool pass = true;
-    if (tree != nullptr) {
-      try {
-        tree->check();
-      } catch (const TypeException& exception) {
-        pass = false;
-      }
-    }
-    return pass;
+    if (tree != nullptr) tree->check();
+    return true;
   }
   
 } /* checker */ 

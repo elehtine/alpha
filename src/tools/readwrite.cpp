@@ -107,6 +107,11 @@ void UserPrinter::print_check(bool check) {
   std::cout << bool_to_string(check) << std::endl;
 }
 
+void UserPrinter::print_exception(const CompileException& exception) {
+  std::cout << "Exception:" << std::endl;
+  std::cout << exception.what() << std::endl;
+}
+
 FilePrinter::FilePrinter(std::string name): name(name) {}
 
 void FilePrinter::print_source(std::string source) {
@@ -137,6 +142,10 @@ void FilePrinter::print_check(bool check) {
   print(bool_to_string(check), filename(FileType::check), false);
 }
 
+void FilePrinter::print_exception(const CompileException& exception) {
+  print(exception.what(), filename(FileType::exception), false);
+}
+
 std::string FilePrinter::filename(const FileType type) {
   std::string suffix = ".unknown";
   if (type == FileType::source) suffix = ".alpha";
@@ -146,6 +155,7 @@ std::string FilePrinter::filename(const FileType type) {
   if (type == FileType::assembly) suffix = ".s";
   if (type == FileType::interpret) suffix = ".interpret";
   if (type == FileType::check) suffix = ".check";
+  if (type == FileType::exception) suffix = ".exception";
   return name + suffix;
 }
 

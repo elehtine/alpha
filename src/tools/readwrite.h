@@ -11,6 +11,8 @@
 #include "../types/ir.h"
 #include "../types/interpretation.h"
 
+#include "exceptions.h"
+
 
 std::vector<std::string> test_files();
 
@@ -30,8 +32,11 @@ class Printer {
     virtual void print_ir(std::vector<Instruction*> ir) = 0;
     virtual void print_asm(std::vector<std::string> lines) = 0;
 
-    virtual void print_interpretation(interpretation::Interpretation* interpretation) = 0;
+    virtual void print_interpretation(
+        interpretation::Interpretation* interpretation) = 0;
     virtual void print_check(bool check) = 0;
+
+    virtual void print_exception(const CompileException& exception) = 0;
 };
 
 class UserPrinter: public Printer  {
@@ -42,8 +47,12 @@ class UserPrinter: public Printer  {
     void print_ir(std::vector<Instruction*> ir) override;
     void print_asm(std::vector<std::string> lines) override;
 
-    void print_interpretation(interpretation::Interpretation* interpretation) override;
+    void print_interpretation(
+        interpretation::Interpretation* interpretation) override;
     void print_check(bool check) override;
+
+
+    void print_exception(const CompileException& exception) override;
 };
 
 enum class FileType {
@@ -54,6 +63,7 @@ enum class FileType {
   assembly,
   interpret,
   check,
+  exception,
 };
 
 class FilePrinter: public Printer  {
@@ -66,8 +76,11 @@ class FilePrinter: public Printer  {
     void print_ir(std::vector<Instruction*> ir) override;
     void print_asm(std::vector<std::string> lines) override;
 
-    void print_interpretation(interpretation::Interpretation* interpretation) override;
+    void print_interpretation(
+        interpretation::Interpretation* interpretation) override;
     void print_check(bool check) override;
+
+    void print_exception(const CompileException& exception) override;
 
   private:
     std::string filename(const FileType type);

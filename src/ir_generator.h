@@ -7,10 +7,12 @@
 #include "types/ast.h"
 #include "types/ir.h"
 
+#include "tools/readwrite.h"
+
 
 class IrGenerator {
   public:
-    IrGenerator(ast::Expression* root);
+    IrGenerator(ast::Expression* root, Printer& printer);
     std::vector<Instruction*> get_instructions() const;
     void add_instruction(std::unique_ptr<Instruction> instruction);
     IrVar create_var();

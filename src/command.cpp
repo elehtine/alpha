@@ -25,9 +25,13 @@ void Test::execute() {
     std::string name = match[1];
     std::string source = read(name + ".alpha");
 
-    Compiler compiler(source, false);
     FilePrinter printer(name);
-    compiler.compile(printer);
+
+    try {
+      Compiler compiler(source, printer);
+    } catch (const CompileException& exception) {
+      printer.print_exception(exception);
+    }
   }
 }
 
@@ -41,10 +45,14 @@ void Compile::execute() {
     return;
   }
 
-  std::string source = read(filename);
-  Compiler compiler(source, true);
   UserPrinter printer;
-  compiler.compile(printer);
+
+  std::string source = read(filename);
+  try {
+    Compiler compiler(source, printer);
+  } catch (const CompileException& exception) {
+    printer.print_exception(exception);
+  }
 }
 
 bool Compile::check(int argc, char* argv[]) {

@@ -1,4 +1,4 @@
 Token(literal, 1)
 Token(operator, +)
-Token(literal, 5)
-Token(literal, 6)
+Token(operator, +)
+Token(literal, 2)
