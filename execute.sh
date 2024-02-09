@@ -5,6 +5,7 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-make alpha
-gcc -g -no-pie $@ -o program
-./program
+make build/alpha
+
+gcc -g -no-pie $@ -o build/program
+./build/program

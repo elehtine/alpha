@@ -5,9 +5,12 @@
 #include "tools/readwrite.h"
 
 
-Compiler::Compiler(std::string source, bool verbose): source(source),
-  tokeniser(source, verbose), parser(tokeniser.get_tokens(), verbose),
-  ir_generator(parser.get_ast()), asm_generator(ir_generator.get_instructions()),
+Compiler::Compiler(std::string source, bool verbose):
+  source(source),
+  tokeniser(source, verbose),
+  parser(tokeniser.get_tokens(), verbose),
+  ir_generator(parser.get_ast()),
+  asm_generator(ir_generator.get_instructions()),
   interpreter(parser.get_ast()) {}
 
 void Compiler::compile(Printer& printer) {

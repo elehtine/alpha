@@ -1,4 +1,5 @@
 appname = alpha
+builddir = build
 
 CXX = g++
 BOOST = -lboost_system -lboost_filesystem
@@ -14,15 +15,18 @@ SRCS = main.cpp \
 
 
 .PHONY: test
-test: $(appname)
-	./$(appname) test
+test: $(builddir)/$(appname) | $(builddir)
+	./$(builddir)/$(appname) test
 
-$(appname): $(SRCS)
-	$(CXX) $(CXXFLAGS) $(SRCS) $(BOOST) -o $(appname)
+$(builddir)/$(appname): $(SRCS)
+	$(CXX) $(CXXFLAGS) $(SRCS) $(BOOST) -o $(builddir)/$(appname)
 
+$(builddir):
+	mkdir $(builddir)
+	
 .PHONY: clean
 clean:
-	$(RM) $(appname)
+	$(RM) $(builddir)/$(appname)
 
 .PHONY: help
 help:
