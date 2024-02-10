@@ -1,1 +1,1 @@
-Excpected parenthesis, literal or identifierToken(operator, +)
+Token (Token(operator, '+')) is not literal or identifier

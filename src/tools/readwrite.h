@@ -27,7 +27,7 @@ void write(const std::string& file, const std::string& content);
 class Printer {
   public:
     virtual void print_source(std::string) = 0;
-    virtual void print_tokens(std::vector<token::Token> tokens) = 0;
+    virtual void print_tokens(std::vector<token::Token*> tokens) = 0;
     virtual void print_tree(ast::Expression* root) = 0;
     virtual void print_ir(std::vector<Instruction*> ir) = 0;
     virtual void print_asm(std::vector<std::string> lines) = 0;
@@ -42,7 +42,7 @@ class Printer {
 class UserPrinter: public Printer  {
   public:
     void print_source(std::string source) override;
-    void print_tokens(std::vector<token::Token> tokens) override;
+    void print_tokens(std::vector<token::Token*> tokens) override;
     void print_tree(ast::Expression* root) override;
     void print_ir(std::vector<Instruction*> ir) override;
     void print_asm(std::vector<std::string> lines) override;
@@ -71,7 +71,7 @@ class FilePrinter: public Printer  {
     FilePrinter(std::string name);
 
     void print_source(std::string source) override;
-    void print_tokens(std::vector<token::Token> tokens) override;
+    void print_tokens(std::vector<token::Token*> tokens) override;
     void print_tree(ast::Expression* root) override;
     void print_ir(std::vector<Instruction*> ir) override;
     void print_asm(std::vector<std::string> lines) override;

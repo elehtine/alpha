@@ -60,6 +60,14 @@ std::string to_string(std::vector<T> vec) {
   return result;
 }
 
+std::string to_string(const std::vector<token::Token*> vec) {
+  std::string result = "";
+  for (const token::Token* element: vec) {
+    result += std::string(*element) + "\n";
+  }
+  return result;
+}
+
 std::string to_string(const std::vector<Instruction*> vec) {
   std::string result = "";
   for (const Instruction* element: vec) {
@@ -77,7 +85,7 @@ void UserPrinter::print_source(std::string source) {
   std::cout << source << std::endl;
 }
 
-void UserPrinter::print_tokens(std::vector<token::Token> tokens) {
+void UserPrinter::print_tokens(std::vector<token::Token*> tokens) {
   std::cout << "Tokens:" << std::endl;
   std::cout << to_string(tokens) << std::endl;
 }
@@ -118,7 +126,7 @@ void FilePrinter::print_source(std::string source) {
   input = source;
 }
 
-void FilePrinter::print_tokens(std::vector<token::Token> tokens) {
+void FilePrinter::print_tokens(std::vector<token::Token*> tokens) {
   print(to_string(tokens), filename(FileType::tokens), true);
 }
 

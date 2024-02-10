@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <regex>
 
 
 namespace ast {
@@ -42,6 +43,46 @@ namespace token {
       std::string content;
 
       std::string message(std::vector<Type> need) const;
+  };
+
+  class Whitespace: public Token {
+    public:
+      Whitespace(Type type, std::string content);
+
+      static const std::regex expression;
+  };
+
+  class Punctuation: public Token {
+    public:
+      Punctuation(Type type, std::string content);
+
+      static const std::regex expression;
+  };
+
+  class Oper: public Token {
+    public:
+      Oper(Type type, std::string content);
+
+      static const std::regex expression;
+  };
+
+  class Identifier: public Token {
+    public:
+      Identifier(Type type, std::string content);
+
+      static const std::regex expression;
+  };
+
+  class Literal: public Token {
+    public:
+      Literal(Type type, std::string content);
+
+      static const std::regex expression;
+  };
+
+  class Eof: public Token {
+    public:
+      Eof(Type type, std::string content);
   };
 
 } /* token */
