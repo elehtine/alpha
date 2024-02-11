@@ -35,10 +35,9 @@ namespace token {
 
       std::string parse_str();
 
-      std::unique_ptr<ast::Expression> parse() const;
+      virtual std::unique_ptr<ast::Expression> parse() const;
 
-
-    private:
+    protected:
       Type type;
       std::string content;
 
@@ -69,6 +68,7 @@ namespace token {
   class Identifier: public Token {
     public:
       Identifier(Type type, std::string content);
+      std::unique_ptr<ast::Expression> parse() const override;
 
       static const std::regex expression;
   };
@@ -76,6 +76,7 @@ namespace token {
   class Literal: public Token {
     public:
       Literal(Type type, std::string content);
+      std::unique_ptr<ast::Expression> parse() const override;
 
       static const std::regex expression;
   };

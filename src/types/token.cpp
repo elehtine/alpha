@@ -39,12 +39,6 @@ namespace token {
   }
 
   std::unique_ptr<ast::Expression> Token::parse() const {
-    if (type == token::Type::literal) {
-      return std::make_unique<ast::Literal>(stoi(content));
-    }
-    if (type == token::Type::identifier) {
-      return std::make_unique<ast::Identifier>(content);
-    }
     throw ParseException(message({ Type::literal, Type::identifier }));
   }
 
@@ -66,14 +60,27 @@ namespace token {
 
   Whitespace::Whitespace(Type type, std::string content):
     Token(type, content) {}
+
   Punctuation::Punctuation(Type type, std::string content):
     Token(type, content) {}
+
   Oper::Oper(Type type, std::string content):
     Token(type, content) {}
+
   Identifier::Identifier(Type type, std::string content):
     Token(type, content) {}
+
+  std::unique_ptr<ast::Expression> Identifier::parse() const {
+    return std::make_unique<ast::Identifier>(content);
+  }
+
   Literal::Literal(Type type, std::string content):
     Token(type, content) {}
+
+  std::unique_ptr<ast::Expression> Literal::parse() const {
+    return std::make_unique<ast::Literal>(stoi(content));
+  }
+
   Eof::Eof(Type type, std::string content):
     Token(type, content) {}
 
