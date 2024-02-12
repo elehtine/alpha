@@ -1,3 +1,5 @@
+#include "../parser.h"
+
 #include "../tools/exceptions.h"
 #include "../tools/readwrite.h"
 
@@ -38,7 +40,7 @@ namespace token {
     throw ParseException(message({ Type::oper, Type::identifier }));
   }
 
-  std::unique_ptr<ast::Expression> Token::parse() const {
+  std::unique_ptr<ast::Expression> Token::parse(Parser* parser) const {
     throw ParseException(message({ Type::literal, Type::identifier }));
   }
 
@@ -54,8 +56,7 @@ namespace token {
   }
 
   std::string Token::message(std::vector<Type> need) const {
-    return "Token (" + std::string(*this) + ") is not " +
-      types_to_string(need);
+    return std::string(*this) + " is not " + types_to_string(need);
   }
 
   Whitespace::Whitespace(Type type, std::string content):
@@ -64,21 +65,37 @@ namespace token {
   Punctuation::Punctuation(Type type, std::string content):
     Token(type, content) {}
 
+  std::unique_ptr<ast::Expression> Punctuation::parse(Parser* parser) const {
+    return parser->parse_parenthesis();
+  }
+
   Oper::Oper(Type type, std::string content):
     Token(type, content) {}
 
   Identifier::Identifier(Type type, std::string content):
     Token(type, content) {}
 
-  std::unique_ptr<ast::Expression> Identifier::parse() const {
-    return std::make_unique<ast::Identifier>(content);
+  std::unique_ptr<ast::Expression> Identifier::parse(Parser* parser) const {
+    std::unique_ptr<ast::Identifier> result;
+    try {
+      result = std::make_unique<ast::Identifier>(content);
+    } catch (const std::exception& exceptino) {
+      throw ParseException(message({ Type::identifier }));
+    }
+    return result;
   }
 
   Literal::Literal(Type type, std::string content):
     Token(type, content) {}
 
-  std::unique_ptr<ast::Expression> Literal::parse() const {
-    return std::make_unique<ast::Literal>(stoi(content));
+  std::unique_ptr<ast::Expression> Literal::parse(Parser* parser) const {
+    std::unique_ptr<ast::Literal> result;
+    try {
+      result = std::make_unique<ast::Literal>(stoi(content));
+    } catch (const std::exception& exceptino) {
+      throw ParseException(message({ Type::literal }));
+    }
+    return result;
   }
 
   Eof::Eof(Type type, std::string content):

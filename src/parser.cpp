@@ -12,6 +12,11 @@
 Parser::Parser(std::vector<token::Token*> tokens, Printer& printer
     ): tokens(tokens) {
   root = parse_expression();
+
+  token::Token* token = consume();
+  if (token->get_type() != token::Type::eof) {
+    throw ParseException(token->message({ token::Type::eof }));
+  }
   printer.print_tree(root.get());
 }
 
@@ -19,22 +24,18 @@ ast::Expression* Parser::get_ast() {
   return root.get();
 }
 
-std::unique_ptr<ast::Expression> Parser::parse_parenthesis(
-    token::Token* token) {
-  consume();
+std::unique_ptr<ast::Expression> Parser::parse_parenthesis() {
   std::unique_ptr<ast::Expression> result = parse_expression();
-  consume();
+  token::Token* token = consume();
+  if (token->get_content() != ")") {
+    throw ParseException(token->message({ token::Type::punctuation }));
+  }
   return result;
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_term() {
-  token::Token* token = peek();
-  if (token->get_type() == token::Type::punctuation) {
-    return parse_parenthesis(token);
-  }
-  std::unique_ptr<ast::Expression> result = token->parse();
-  consume();
-  return result;
+  token::Token* token = consume();
+  return token->parse(this);
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_factor() {
@@ -60,7 +61,7 @@ std::unique_ptr<ast::Expression> Parser::parse_expression() {
 }
 
 token::Token* Parser::peek() {
-  while (tokens[position]->get_type() == token::Type::whitespace) {
+  while (tokens[std::min(position, tokens.size() - 1)]->get_type() == token::Type::whitespace) {
     position++;
   }
   return tokens[std::min(position, tokens.size() - 1)];

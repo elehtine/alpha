@@ -7,6 +7,8 @@
 #include <regex>
 
 
+class Parser;
+
 namespace ast {
 
   class Expression;
@@ -35,13 +37,13 @@ namespace token {
 
       std::string parse_str();
 
-      virtual std::unique_ptr<ast::Expression> parse() const;
+      virtual std::unique_ptr<ast::Expression> parse(Parser* parser) const;
+      std::string message(std::vector<Type> need) const;
 
     protected:
       Type type;
       std::string content;
 
-      std::string message(std::vector<Type> need) const;
   };
 
   class Whitespace: public Token {
@@ -54,6 +56,7 @@ namespace token {
   class Punctuation: public Token {
     public:
       Punctuation(Type type, std::string content);
+      std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
 
       static const std::regex expression;
   };
@@ -68,7 +71,7 @@ namespace token {
   class Identifier: public Token {
     public:
       Identifier(Type type, std::string content);
-      std::unique_ptr<ast::Expression> parse() const override;
+      std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
 
       static const std::regex expression;
   };
@@ -76,7 +79,7 @@ namespace token {
   class Literal: public Token {
     public:
       Literal(Type type, std::string content);
-      std::unique_ptr<ast::Expression> parse() const override;
+      std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
 
       static const std::regex expression;
   };

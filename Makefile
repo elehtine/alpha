@@ -18,7 +18,7 @@ SRCS = main.cpp \
 test: $(builddir)/$(appname) | $(builddir)
 	./$(builddir)/$(appname) test
 
-$(builddir)/$(appname): $(SRCS)
+$(builddir)/$(appname): $(SRCS) | $(builddir)
 	$(CXX) $(CXXFLAGS) $(SRCS) $(BOOST) -o $(builddir)/$(appname)
 
 $(builddir):
