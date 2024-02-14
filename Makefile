@@ -1,5 +1,4 @@
 appname = alpha
-builddir = build
 
 CXX = g++
 BOOST = -lboost_system -lboost_filesystem
@@ -12,21 +11,19 @@ SRCS = main.cpp \
 	   src/types/token.cpp src/types/ast.cpp src/types/interpretation.cpp \
 	   src/types/type.cpp src/types/ir.cpp \
 	   src/tools/readwrite.cpp src/tools/exceptions.cpp
+OBJS = $(SRCS:.cpp=.o)
 
 
 .PHONY: test
-test: $(builddir)/$(appname) | $(builddir)
-	./$(builddir)/$(appname) test
+test: $(appname)
+	./$(appname) test
 
-$(builddir)/$(appname): $(SRCS) | $(builddir)
-	$(CXX) $(CXXFLAGS) $(SRCS) $(BOOST) -o $(builddir)/$(appname)
+$(appname): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) $(BOOST) -o $(appname)
 
-$(builddir):
-	mkdir $(builddir)
-	
 .PHONY: clean
 clean:
-	$(RM) $(builddir)/$(appname)
+	$(RM) $(appname) $(OBJS)
 
 .PHONY: help
 help:

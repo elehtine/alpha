@@ -16,14 +16,15 @@ class Parser {
     Parser(std::vector<token::Token*> tokens, Printer& printer);
     ast::Expression* get_ast();
 
+    std::unique_ptr<ast::Expression> parse(int level);
+
     std::unique_ptr<ast::Expression> parse_parenthesis();
-    std::unique_ptr<ast::Expression> parse_factor();
-    std::unique_ptr<ast::Expression> parse_term();
-    std::unique_ptr<ast::Expression> parse_expression();
 
   private:
     token::Token* peek();
     token::Token* consume();
+
+    std::unique_ptr<ast::Expression> parse_binary(int level);
 
     std::unique_ptr<ast::Expression> root;
 

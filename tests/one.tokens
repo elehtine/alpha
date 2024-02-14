@@ -1,3 +1,2 @@
-Token(literal, '1')
-Token(whitespace, '\n')
-Token(EOF, 'end')
+Token(literal, '1', primary)
+Token(EOF, 'end', unknown)

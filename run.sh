@@ -5,5 +5,5 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-make build/alpha
-./build/alpha run "$@"
+make alpha
+./alpha run "$@"

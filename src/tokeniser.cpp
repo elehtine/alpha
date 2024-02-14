@@ -14,8 +14,9 @@
 Tokeniser::Tokeniser(const std::string& source, Printer& printer
     ): source(escape(source)) {
   position = 0;
-  tokenise();
+  printer.print_source(source);
 
+  tokenise();
   printer.print_tokens(get_tokens());
 }
 
@@ -38,7 +39,8 @@ std::string Tokeniser::escape(const std::string& content) {
 
 void Tokeniser::tokenise() {
   while (position < source.size()) {
-    tokens.push_back(create_token());
+    std::unique_ptr<token::Token> token = create_token();
+    if (token) tokens.push_back(std::move(token));
   }
   tokens.push_back(std::make_unique<token::Eof>(token::Type::eof, "end"));
 }
@@ -46,29 +48,23 @@ void Tokeniser::tokenise() {
 std::unique_ptr<token::Token> Tokeniser::create_token() {
   std::size_t last = position;
   if (check(token::Whitespace::expression)) {
-    std::size_t d = position - last;
-    return std::make_unique<token::Whitespace>(token::Type::whitespace,
-        source.substr(last, d));
+    return std::unique_ptr<token::Whitespace>(nullptr);
   }
   if (check(token::Punctuation::expression)) {
-    std::size_t d = position - last;
-    return std::make_unique<token::Punctuation>(token::Type::punctuation,
-        source.substr(last, d));
+    std::string content = source.substr(last, position - last);
+    return std::make_unique<token::Punctuation>(token::Type::punctuation, content);
   }
   if (check(token::Oper::expression)) {
-    std::size_t d = position - last;
-    return std::make_unique<token::Oper>(token::Type::oper,
-        source.substr(last, d));
+    std::string content = source.substr(last, position - last);
+    return std::make_unique<token::Oper>(token::Type::oper, content);
   }
   if (check(token::Identifier::expression)) {
-    std::size_t d = position - last;
-    return std::make_unique<token::Identifier>(token::Type::identifier,
-        source.substr(last, d));
+    std::string content = source.substr(last, position - last);
+    return std::make_unique<token::Identifier>(token::Type::identifier, content);
   }
   if (check(token::Literal::expression)) {
-    std::size_t d = position - last;
-    return std::make_unique<token::Literal>(token::Type::literal,
-        source.substr(last, d));
+    std::string content = source.substr(last, position - last);
+    return std::make_unique<token::Literal>(token::Type::literal, content);
   }
 
   throw TokeniseException(source.substr(position, 10));
