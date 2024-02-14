@@ -19,11 +19,21 @@ namespace token {
     return "";
   }
 
+  std::string to_string(const Level& level) {
+    if (level == Level::skip) return "skip";
+    if (level == Level::primary) return "primary";
+    if (level == Level::factor) return "factor";
+    if (level == Level::term) return "term";
+    if (level == Level::expression) return "expression";
+    return "";
+  }
+
   Token::Token(Type type, std::string content):
     type(type), content(content) {}
 
   Token::operator std::string() const {
-    return "Token(" + to_string(type) + ", '" + content + "')";
+    return "Token(" + to_string(type) + ", '" + content + "', " +
+      to_string(level()) + "')";
   }
 
   Type Token::get_type() const {
@@ -55,6 +65,8 @@ namespace token {
     return result;
   }
 
+  Level Token::level() const { return Level::skip; }
+
   std::string Token::message(std::vector<Type> need) const {
     return std::string(*this) + " is not " + types_to_string(need);
   }
@@ -69,11 +81,21 @@ namespace token {
     return parser->parse_parenthesis();
   }
 
+  Level Punctuation::level() const { return Level::primary; }
+
   Oper::Oper(Type type, std::string content):
     Token(type, content) {}
 
+  Level Oper::level() const {
+    if (content == "*" || content == "/") return Level::factor;
+    if (content == "+" || content == "+") return Level::factor;
+    return Level::skip;
+  }
+
   Identifier::Identifier(Type type, std::string content):
     Token(type, content) {}
+
+  Level Identifier::level() const { return Level::primary; }
 
   std::unique_ptr<ast::Expression> Identifier::parse(Parser* parser) const {
     std::unique_ptr<ast::Identifier> result;
@@ -87,6 +109,8 @@ namespace token {
 
   Literal::Literal(Type type, std::string content):
     Token(type, content) {}
+
+  Level Literal::level() const { return Level::primary; }
 
   std::unique_ptr<ast::Expression> Literal::parse(Parser* parser) const {
     std::unique_ptr<ast::Literal> result;

@@ -26,6 +26,14 @@ namespace token {
     eof,
   };
 
+  enum class Level: int {
+    skip,
+    primary,
+    factor,
+    term,
+    expression,
+  };
+
   std::string to_string(const Type& type);
 
   class Token {
@@ -38,6 +46,7 @@ namespace token {
       std::string parse_str();
 
       virtual std::unique_ptr<ast::Expression> parse(Parser* parser) const;
+      virtual Level level() const;
       std::string message(std::vector<Type> need) const;
 
     protected:
@@ -57,6 +66,7 @@ namespace token {
     public:
       Punctuation(Type type, std::string content);
       std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
+      Level level() const override;
 
       static const std::regex expression;
   };
@@ -64,6 +74,7 @@ namespace token {
   class Oper: public Token {
     public:
       Oper(Type type, std::string content);
+      Level level() const override;
 
       static const std::regex expression;
   };
@@ -72,6 +83,7 @@ namespace token {
     public:
       Identifier(Type type, std::string content);
       std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
+      Level level() const override;
 
       static const std::regex expression;
   };
@@ -80,6 +92,7 @@ namespace token {
     public:
       Literal(Type type, std::string content);
       std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
+      Level level() const override;
 
       static const std::regex expression;
   };
