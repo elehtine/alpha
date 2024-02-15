@@ -24,7 +24,7 @@ int Locals::get_stack_size() {
 }
 
 AssemblyGenerator::AssemblyGenerator(
-    std::vector<Instruction*> instructions, Printer& printer
+    std::vector<Instruction*> instructions, Printer* printer
     ): locals(instructions) {
   std::string start = read("resources/start.s");
   std::string end = read("resources/end.s");
@@ -54,7 +54,7 @@ AssemblyGenerator::AssemblyGenerator(
     }
   }
 
-  printer.print_asm(lines);
+  printer->print_asm(lines);
 }
 
 std::vector<std::string> AssemblyGenerator::get_lines() const {

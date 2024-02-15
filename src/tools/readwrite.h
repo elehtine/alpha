@@ -14,6 +14,8 @@
 #include "exceptions.h"
 
 
+class Source;
+
 std::vector<std::string> test_files();
 
 bool user_approval(std::string prompt);
@@ -26,7 +28,7 @@ void write(const std::string& file, const std::string& content);
 
 class Printer {
   public:
-    virtual void print_source(std::string) = 0;
+    virtual void print_lines(Source* source) = 0;
     virtual void print_tokens(std::vector<token::Token*> tokens) = 0;
     virtual void print_tree(ast::Expression* root) = 0;
     virtual void print_ir(std::vector<Instruction*> ir) = 0;
@@ -37,11 +39,13 @@ class Printer {
     virtual void print_check(bool check) = 0;
 
     virtual void print_exception(const CompileException& exception) = 0;
+
+    virtual void print(std::string message) = 0;
 };
 
 class UserPrinter: public Printer  {
   public:
-    void print_source(std::string source) override;
+    void print_lines(Source* source) override;
     void print_tokens(std::vector<token::Token*> tokens) override;
     void print_tree(ast::Expression* root) override;
     void print_ir(std::vector<Instruction*> ir) override;
@@ -51,8 +55,9 @@ class UserPrinter: public Printer  {
         interpretation::Interpretation* interpretation) override;
     void print_check(bool check) override;
 
-
     void print_exception(const CompileException& exception) override;
+
+    void print(std::string message) override;
 };
 
 enum class FileType {
@@ -70,7 +75,7 @@ class FilePrinter: public Printer  {
   public:
     FilePrinter(std::string name);
 
-    void print_source(std::string source) override;
+    void print_lines(Source* source) override;
     void print_tokens(std::vector<token::Token*> tokens) override;
     void print_tree(ast::Expression* root) override;
     void print_ir(std::vector<Instruction*> ir) override;
@@ -82,9 +87,11 @@ class FilePrinter: public Printer  {
 
     void print_exception(const CompileException& exception) override;
 
+    void print(std::string message) override;
+
   private:
     std::string filename(const FileType type);
-    void print(const std::string& result, const std::string& file, bool save);
+    void print(const std::string& result, const std::string& file);
     bool accept(const std::string& result, const std::string& before);
 
     const std::string name;

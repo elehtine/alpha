@@ -1,6 +1,5 @@
 #include <vector>
 #include <memory>
-#include <iostream>
 
 #include "tools/readwrite.h"
 #include "tools/exceptions.h"
@@ -18,10 +17,10 @@
 bool binary(int level) { return level < token::primary; }
 bool unary(int level) { return token::primary <= level; }
 
-Parser::Parser(std::vector<token::Token*> tokens, Printer& printer
+Parser::Parser(std::vector<token::Token*> tokens, Printer* printer
     ): tokens(tokens) {
   root = parse(token::expression);
-  printer.print_tree(root.get());
+  printer->print_tree(root.get());
 }
 
 std::unique_ptr<ast::Expression> Parser::parse(int level) {

@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "ir.h"
 #include "../asm_generator.h"
 #include "../intrinsics.h"

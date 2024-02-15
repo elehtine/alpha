@@ -13,7 +13,7 @@
 
 class Parser {
   public:
-    Parser(std::vector<token::Token*> tokens, Printer& printer);
+    Parser(std::vector<token::Token*> tokens, Printer* printer);
     ast::Expression* get_ast();
 
     std::unique_ptr<ast::Expression> parse(int level);

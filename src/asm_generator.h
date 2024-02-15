@@ -24,7 +24,7 @@ class Locals {
 class AssemblyGenerator {
   public:
     AssemblyGenerator(std::vector<Instruction*> instructions,
-        Printer& printer);
+        Printer* printer);
     std::vector<std::string> get_lines() const;
     void emit(std::string line);
     std::string get_location(const IrVar& variable);

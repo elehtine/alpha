@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 
+#include "source.h"
 #include "tokeniser.h"
 #include "parser.h"
 #include "ir_generator.h"
@@ -17,10 +18,10 @@
 
 class Compiler {
   public:
-    Compiler(std::string source, Printer& printer);
+    Compiler(Source& source, Printer* printer);
 
   private:
-    std::string source;
+    Source source;
     Tokeniser tokeniser;
     Parser parser;
     IrGenerator ir_generator;

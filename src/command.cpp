@@ -1,11 +1,11 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include <regex>
 
 #include "command.h"
 #include "tools/readwrite.h"
 
+#include "source.h"
 #include "tokeniser.h"
 #include "parser.h"
 #include "compiler.h"
@@ -23,14 +23,15 @@ void Test::execute() {
     std::smatch match;
     if (!std::regex_match(file, match, file_expression)) continue;
     std::string name = match[1];
-    std::string source = read(name + ".alpha");
+    std::string content = read(name + ".alpha");
 
-    FilePrinter printer(name);
+    std::unique_ptr<FilePrinter> printer = std::make_unique<FilePrinter>(name);
+    Source source(content, printer.get());
 
     try {
-      Compiler compiler(source, printer);
+      Compiler compiler(source, printer.get());
     } catch (const CompileException& exception) {
-      printer.print_exception(exception);
+      printer->print_exception(exception);
     }
   }
 }
@@ -40,18 +41,19 @@ bool Test::check(int argc, char* argv[]) {
 }
 
 void Compile::execute() {
+  std::unique_ptr<UserPrinter> printer = std::make_unique<UserPrinter>();
+
   if (!is_file(filename)) {
-    std::cout << "File doesn't exist: " << filename << std::endl;
+    printer->print("File doesn't exist: " + filename);
     return;
   }
 
-  UserPrinter printer;
+  Source source(read(filename), printer.get());
 
-  std::string source = read(filename);
   try {
-    Compiler compiler(source, printer);
+    Compiler compiler(source, printer.get());
   } catch (const CompileException& exception) {
-    printer.print_exception(exception);
+    printer->print_exception(exception);
   }
 }
 
@@ -62,9 +64,10 @@ bool Compile::check(int argc, char* argv[]) {
 }
 
 void Help::execute() {
-  std::cout << "Usage:" << std::endl;
-  std::cout << "Run compiler: alpha run <file>" << std::endl;
-  std::cout << "Run tests: alpha test" << std::endl;
+  std::unique_ptr<UserPrinter> printer = std::make_unique<UserPrinter>();
+  printer->print("Usage:");
+  printer->print("Run compiler: alpha run <file>");
+  printer->print("Run tests: alpha test");
 }
 
 bool Help::check(int argc, char* argv[]) {

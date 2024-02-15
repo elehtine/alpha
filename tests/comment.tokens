@@ -1,4 +1,4 @@
 Token(// first, punctuation, unknown, (1,0))
-Token(# second, punctuation, unknown, (2,0))
-Token(integer, identifier, primary, (3,0))
-Token(end, EOF, unknown, (4,0))
+Token(# second, punctuation, unknown, (2,1))
+Token(integer, identifier, primary, (3,1))
+Token(end, EOF, unknown, (3,0))

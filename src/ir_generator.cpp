@@ -1,13 +1,11 @@
-#include <iostream>
-
 #include "ir_generator.h"
 
 #include "tools/exceptions.h"
 
 
-IrGenerator::IrGenerator(ast::Expression* root, Printer& printer) {
+IrGenerator::IrGenerator(ast::Expression* root, Printer* printer) {
   root->visit(this);
-  printer.print_ir(get_instructions());
+  printer->print_ir(get_instructions());
 }
 
 std::vector<Instruction*> IrGenerator::get_instructions() const {

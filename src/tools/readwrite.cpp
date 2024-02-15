@@ -6,6 +6,9 @@
 #include <boost/filesystem.hpp>
 
 #include "../types/token.h"
+
+#include "../source.h"
+
 #include "readwrite.h"
 
 
@@ -80,9 +83,9 @@ std::string bool_to_string(bool value) {
   return value ? "TRUE\n" : "FALSE\n";
 }
 
-void UserPrinter::print_source(std::string source) {
-  std::cout << "Source:" << std::endl;
-  std::cout << source << std::endl;
+void UserPrinter::print_lines(Source* source) {
+  std::cout << "Lines:" << std::endl;
+  std::cout << std::string(*source) << std::endl;
 }
 
 void UserPrinter::print_tokens(std::vector<token::Token*> tokens) {
@@ -120,38 +123,46 @@ void UserPrinter::print_exception(const CompileException& exception) {
   std::cout << exception.what() << std::endl;
 }
 
+void UserPrinter::print(std::string message) {
+  std::cout << message << std::endl;
+}
+
 FilePrinter::FilePrinter(std::string name): name(name) {}
 
-void FilePrinter::print_source(std::string source) {
-  input = source;
+void FilePrinter::print_lines(Source* source) {
+  input = *source;
 }
 
 void FilePrinter::print_tokens(std::vector<token::Token*> tokens) {
-  print(to_string(tokens), filename(FileType::tokens), true);
+  print(to_string(tokens), filename(FileType::tokens));
 }
 
 void FilePrinter::print_tree(ast::Expression* root) {
-  if (root != nullptr) print(root->print(0), filename(FileType::tree), true);
+  if (root != nullptr) print(root->print(0), filename(FileType::tree));
 }
 
 void FilePrinter::print_ir(std::vector<Instruction*> ir) {
-  print(to_string(ir), filename(FileType::internal), true);
+  print(to_string(ir), filename(FileType::internal));
 }
 
 void FilePrinter::print_asm(std::vector<std::string> lines) {
-  print(to_string(lines), filename(FileType::assembly), true);
+  print(to_string(lines), filename(FileType::assembly));
 }
 
 void FilePrinter::print_interpretation(interpretation::Interpretation* interpretation) {
-  print(std::string(*interpretation), filename(FileType::interpret), false);
+  print(std::string(*interpretation), filename(FileType::interpret));
 }
 
 void FilePrinter::print_check(bool check) {
-  print(bool_to_string(check), filename(FileType::check), false);
+  print(bool_to_string(check), filename(FileType::check));
 }
 
 void FilePrinter::print_exception(const CompileException& exception) {
-  print(exception.what(), filename(FileType::exception), false);
+  print(exception.what(), filename(FileType::exception));
+}
+
+void FilePrinter::print(std::string message) {
+  std::cout << message << std::endl;
 }
 
 std::string FilePrinter::filename(const FileType type) {
@@ -167,7 +178,7 @@ std::string FilePrinter::filename(const FileType type) {
   return name + suffix;
 }
 
-void FilePrinter::print(const std::string& result, const std::string& file, bool save) {
+void FilePrinter::print(const std::string& result, const std::string& file) {
   std::string before = read(file);
   if (accept(result, before)) {
     std::cout << "File passed: " << file << std::endl;
@@ -175,7 +186,6 @@ void FilePrinter::print(const std::string& result, const std::string& file, bool
   } else {
     std::cout << "File failed: " << file << std::endl;
   }
-  if (save) input = result;
 }
 
 bool FilePrinter::accept(const std::string& result, const std::string& before) {
