@@ -22,7 +22,10 @@ class Tokeniser {
     bool check(const std::regex& expression);
 
     std::string source;
-    std::size_t position;
+    std::size_t position = 0;
+    std::size_t line_start = 0;
+    int line_number = 1;
+
     std::vector<std::unique_ptr<token::Token>> tokens;
 };
 

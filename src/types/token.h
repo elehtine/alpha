@@ -17,8 +17,19 @@ namespace ast {
 
 namespace token {
 
+  class Location {
+    public:
+      Location(int line, int column);
+      operator std::string() const;
+
+    private:
+      int line;
+      int column;
+  };
+
   enum class Type {
     whitespace,
+    comment,
     punctuation,
     oper,
     identifier,
@@ -36,7 +47,7 @@ namespace token {
 
   class Token {
     public:
-      Token(Type type, std::string content);
+      Token(Type type, std::string content, Location location);
       operator std::string() const;
       Type get_type() const;
       std::string get_content() const;
@@ -50,19 +61,26 @@ namespace token {
     protected:
       Type type;
       std::string content;
-
+      Location location;
   };
 
   class Whitespace: public Token {
     public:
-      Whitespace(Type type, std::string content);
+      Whitespace(Type type, std::string content, Location location);
+
+      static const std::regex expression;
+  };
+
+  class Comment: public Token {
+    public:
+      Comment(Type type, std::string content, Location location);
 
       static const std::regex expression;
   };
 
   class Punctuation: public Token {
     public:
-      Punctuation(Type type, std::string content);
+      Punctuation(Type type, std::string content, Location location);
       std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
 
       static const std::regex expression;
@@ -70,7 +88,7 @@ namespace token {
 
   class Oper: public Token {
     public:
-      Oper(Type type, std::string content);
+      Oper(Type type, std::string content, Location location);
       int level() const override;
 
       static const std::regex expression;
@@ -78,7 +96,7 @@ namespace token {
 
   class Identifier: public Token {
     public:
-      Identifier(Type type, std::string content);
+      Identifier(Type type, std::string content, Location location);
       std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
       int level() const override;
 
@@ -87,7 +105,7 @@ namespace token {
 
   class Literal: public Token {
     public:
-      Literal(Type type, std::string content);
+      Literal(Type type, std::string content, Location location);
       std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
       int level() const override;
 
@@ -96,7 +114,7 @@ namespace token {
 
   class Eof: public Token {
     public:
-      Eof(Type type, std::string content);
+      Eof(Type type, std::string content, Location location);
   };
 
 } /* token */

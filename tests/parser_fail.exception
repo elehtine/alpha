@@ -1,1 +1,1 @@
-Token(operator, '+', term) is not literal or identifier
+Token(+, operator, term, (1,4)) is not literal or identifier

@@ -9,8 +9,15 @@
 
 namespace token {
 
+  Location::Location(int line, int column): line(line), column(column) {}
+
+  Location::operator std::string() const {
+    return "(" + std::to_string(line) + "," + std::to_string(column) + ")";
+  }
+
   std::string to_string(const Type& type) {
     if (type == Type::whitespace) return "whitespace";
+    if (type == Type::comment) return "comment";
     if (type == Type::punctuation) return "punctuation";
     if (type == Type::oper) return "operator";
     if (type == Type::identifier) return "identifier";
@@ -28,12 +35,16 @@ namespace token {
     return "";
   }
 
-  Token::Token(Type type, std::string content):
-    type(type), content(content) {}
+  Token::Token(Type type, std::string content, Location location):
+    type(type), content(content), location(location) {}
 
   Token::operator std::string() const {
-    return "Token(" + to_string(type) + ", '" + content + "', " +
-      to_string(level()) + ")";
+    std::string result = "Token(";
+    result += content + ", ";
+    result += to_string(type) + ", ";
+    result += to_string(level()) + ", ";
+    result += std::string(location) + ")";
+    return result;
   }
 
   Type Token::get_type() const {
@@ -71,18 +82,21 @@ namespace token {
     return std::string(*this) + " is not " + types_to_string(need);
   }
 
-  Whitespace::Whitespace(Type type, std::string content):
-    Token(type, content) {}
+  Whitespace::Whitespace(Type type, std::string content, Location location):
+    Token(type, content, location) {}
 
-  Punctuation::Punctuation(Type type, std::string content):
-    Token(type, content) {}
+  Comment::Comment(Type type, std::string content, Location location):
+    Token(type, content, location) {}
+
+  Punctuation::Punctuation(Type type, std::string content, Location location):
+    Token(type, content, location) {}
 
   std::unique_ptr<ast::Expression> Punctuation::parse(Parser* parser) const {
     return parser->parse_parenthesis();
   }
 
-  Oper::Oper(Type type, std::string content):
-    Token(type, content) {}
+  Oper::Oper(Type type, std::string content, Location location):
+    Token(type, content, location) {}
 
   int Oper::level() const {
     if (content == "+" || content == "-") return term;
@@ -90,8 +104,8 @@ namespace token {
     return unknown;
   }
 
-  Identifier::Identifier(Type type, std::string content):
-    Token(type, content) {}
+  Identifier::Identifier(Type type, std::string content, Location location):
+    Token(type, content, location) {}
 
   int Identifier::level() const { return primary; }
 
@@ -105,8 +119,8 @@ namespace token {
     return result;
   }
 
-  Literal::Literal(Type type, std::string content):
-    Token(type, content) {}
+  Literal::Literal(Type type, std::string content, Location location):
+    Token(type, content, location) {}
 
   int Literal::level() const { return primary; }
 
@@ -120,10 +134,11 @@ namespace token {
     return result;
   }
 
-  Eof::Eof(Type type, std::string content):
-    Token(type, content) {}
+  Eof::Eof(Type type, std::string content, Location location):
+    Token(type, content, location) {}
 
   const std::regex Whitespace::expression { "^[\\s|\\\\n]+" };
+  const std::regex Comment::expression { "^\\s*(//|#)[^\\\\]+" };
   const std::regex Punctuation::expression { "^(\\(|\\))" };
   const std::regex Oper::expression { "^(\\+|-|\\*|/)" };
   const std::regex Identifier::expression { "^[a-zA-Z]\\w*" };
