@@ -33,6 +33,7 @@ namespace token {
     punctuation,
     oper,
     identifier,
+    keyword,
     literal,
     eof,
   };
@@ -98,6 +99,15 @@ namespace token {
   class Identifier: public Token {
     public:
       Identifier(Type type, std::string content, Location location);
+      std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
+      int level() const override;
+
+      static const std::regex expression;
+  };
+
+  class Keyword: public Token {
+    public:
+      Keyword(Type type, std::string content, Location location);
       std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
       int level() const override;
 

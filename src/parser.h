@@ -19,6 +19,7 @@ class Parser {
     std::unique_ptr<ast::Expression> parse(int level);
 
     std::unique_ptr<ast::Expression> parse_parenthesis();
+    std::unique_ptr<ast::Expression> parse_condition();
 
   private:
     token::Token* peek();

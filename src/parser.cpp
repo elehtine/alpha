@@ -9,12 +9,14 @@
 
 
 bool statement(int level) { return level == token::statement; }
-bool binary(int level) { return token::statement < level && level < token::primary; }
+bool binary(int level) {
+  return token::statement < level && level < token::primary;
+}
 bool unary(int level) { return token::primary <= level; }
 
 Parser::Parser(std::vector<token::Token*> tokens, Printer* printer
     ): tokens(tokens) {
-  root = parse(token::expression);
+  root = parse(token::statement);
   printer->print_tree(root.get());
 }
 
@@ -38,6 +40,29 @@ std::unique_ptr<ast::Expression> Parser::parse_parenthesis() {
   return result;
 }
 
+std::unique_ptr<ast::Expression> Parser::parse_condition() {
+  token::Token* if_token = consume();
+  std::unique_ptr<ast::Expression> condition = parse(token::statement);
+  token::Token* then_token = consume();
+  std::unique_ptr<ast::Expression> then_expression =
+    parse(token::statement);
+  token::Token* else_token = consume();
+  std::unique_ptr<ast::Expression> else_expression =
+    parse(token::statement);
+
+  if (if_token->get_content() != "if") {
+    throw ParseException("Expected if, got "+if_token->get_content());
+  }
+  if (then_token->get_content() != "then") {
+    throw ParseException("Expected then, got "+then_token->get_content());
+  }
+  if (else_token->get_content() != "else") {
+    throw ParseException("Expected else, got "+else_token->get_content());
+  }
+  return std::make_unique<ast::IfThenElse>(std::move(condition),
+        std::move(then_expression), std::move(else_expression));
+}
+
 token::Token* Parser::peek() {
   while (tokens[std::min(position, tokens.size() - 1)]->get_type() == token::Type::whitespace) {
     position++;
@@ -52,7 +77,9 @@ token::Token* Parser::consume() {
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_statement(int level) {
-  return parse(level + 1);
+  token::Token* token = peek();
+  if (token->level() != token::statement) return parse(level + 1);
+  return token->parse(this);
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_binary(int level) {

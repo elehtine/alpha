@@ -62,6 +62,11 @@ std::unique_ptr<token::Token> Tokens::create_token() {
   }
   if (check(token::Identifier::expression)) {
     std::string content = source.line(line, last, column);
+    std::smatch match;
+    if (std::regex_match(content, token::Keyword::expression)) {
+      return std::make_unique<token::Keyword>(token::Type::keyword,
+          content, token::Location(line, last));
+    }
     return std::make_unique<token::Identifier>(token::Type::identifier, content,
         token::Location(line, last));
   }

@@ -100,4 +100,33 @@ namespace ast {
     return result;
   }
 
+  IfThenElse::IfThenElse(std::unique_ptr<Expression> condition,
+      std::unique_ptr<Expression> then_expression,
+      std::unique_ptr<Expression> else_expression
+      ): condition(std::move(condition)),
+  then_expression(std::move(then_expression)),
+  else_expression(std::move(else_expression)) {}
+
+  std::string IfThenElse::print(int level) const {
+    std::string result = condition->print(level+1);
+    result += std::string(level * space, ' ');
+    result += "if-then-else\n";
+    result += then_expression->print(level+1);
+    result += else_expression->print(level+1);
+    return result;
+  }
+
+  std::unique_ptr<interpretation::Interpretation> IfThenElse::interpret(
+      ) const {
+    throw InterpretException("not implemented if");
+  }
+
+  type::Type IfThenElse::check() {
+    throw TypeException("not implemented if");
+  }
+
+  IrVar IfThenElse::visit(IrGenerator* generator) const {
+    throw IrGenerateException("not implemented if");
+  }
+
 } /* ast */ 

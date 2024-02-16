@@ -73,6 +73,23 @@ namespace ast {
       std::unique_ptr<Expression> right;
   };
 
+  class IfThenElse : public Expression {
+    public:
+      IfThenElse(std::unique_ptr<Expression> condition,
+          std::unique_ptr<Expression> then_expression,
+          std::unique_ptr<Expression> else_expression);
+      std::string print(int level) const override;
+      std::unique_ptr<interpretation::Interpretation> interpret() const override;
+      type::Type check() override;
+
+      IrVar visit(IrGenerator* generator) const override;
+
+    private:
+      std::unique_ptr<Expression> condition;
+      std::unique_ptr<Expression> then_expression;
+      std::unique_ptr<Expression> else_expression;
+  };
+
 } /* ast  */ 
 
 #endif

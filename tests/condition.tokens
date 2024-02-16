@@ -1,0 +1,7 @@
+Token(if, keyword, statement, (1,0))
+Token(1, literal, primary, (1,3))
+Token(then, keyword, statement, (1,5))
+Token(1, literal, primary, (1,10))
+Token(else, keyword, statement, (1,12))
+Token(0, literal, primary, (1,17))
+Token(end, EOF, unknown, (1,0))

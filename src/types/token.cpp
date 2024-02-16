@@ -21,17 +21,19 @@ namespace token {
     if (type == Type::punctuation) return "punctuation";
     if (type == Type::oper) return "operator";
     if (type == Type::identifier) return "identifier";
+    if (type == Type::keyword) return "keyword";
     if (type == Type::literal) return "literal";
     if (type == Type::eof) return "EOF";
     return "";
   }
 
   std::string to_string(const int level) {
-    if (level == unknown) return "unknown";
-    if (level == primary) return "primary";
-    if (level == factor) return "factor";
-    if (level == term) return "term";
+    if (level == statement) return "statement";
     if (level == expression) return "expression";
+    if (level == term) return "term";
+    if (level == factor) return "factor";
+    if (level == primary) return "primary";
+    if (level == unknown) return "unknown";
     return "";
   }
 
@@ -104,12 +106,13 @@ namespace token {
     return unknown;
   }
 
-  Identifier::Identifier(Type type, std::string content, Location location):
-    Token(type, content, location) {}
+  Identifier::Identifier(Type type, std::string content,
+      Location location): Token(type, content, location) {}
 
   int Identifier::level() const { return primary; }
 
-  std::unique_ptr<ast::Expression> Identifier::parse(Parser* parser) const {
+  std::unique_ptr<ast::Expression> Identifier::parse(
+      Parser* parser) const {
     std::unique_ptr<ast::Identifier> result;
     try {
       result = std::make_unique<ast::Identifier>(content);
@@ -118,6 +121,18 @@ namespace token {
     }
     return result;
   }
+
+  Keyword::Keyword(Type type, std::string content,
+      Location location): Token(type, content, location) {}
+
+  int Keyword::level() const { return statement; }
+
+  std::unique_ptr<ast::Expression> Keyword::parse(
+      Parser* parser) const {
+    if (content == "if") return parser->parse_condition();
+    throw ParseException("Unknown keyword: " + content);
+  }
+
 
   Literal::Literal(Type type, std::string content, Location location):
     Token(type, content, location) {}
@@ -141,7 +156,8 @@ namespace token {
   const std::regex Comment::expression { "^\\s*(//|#)[^\\\\]+" };
   const std::regex Punctuation::expression { "^(\\(|\\)|\\{|\\}|,|:|;)" };
   const std::regex Oper::expression { "^(\\+|-|\\*|/|%|=|==|!=|<|<=|>|>=)" };
-  const std::regex Identifier::expression { "^[a-zA-Z]\\w*" };
+  const std::regex Keyword::expression { "(var|if|then|else|while)" };
+  const std::regex Identifier::expression { "^[a-zA-Z_]+" };
   const std::regex Literal::expression { "^\\d+" };
 
 } /* token */
