@@ -24,9 +24,9 @@ class Compiler {
     Source source;
     Tokens tokeniser;
     Parser parser;
+    Interpreter interpreter;
     IrGenerator ir_generator;
     AssemblyGenerator asm_generator;
-    Interpreter interpreter;
 };
 
 #endif

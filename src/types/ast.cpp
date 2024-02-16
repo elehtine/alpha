@@ -118,7 +118,9 @@ namespace ast {
 
   std::unique_ptr<interpretation::Interpretation> IfThenElse::interpret(
       ) const {
-    throw InterpretException("not implemented if");
+    int cond = *condition->interpret();
+    if (cond == 0) return else_expression->interpret();
+    return then_expression->interpret();
   }
 
   type::Type IfThenElse::check() {
