@@ -24,6 +24,7 @@ class Parser {
     token::Token* peek();
     token::Token* consume();
 
+    std::unique_ptr<ast::Expression> parse_statement(int level);
     std::unique_ptr<ast::Expression> parse_binary(int level);
 
     std::unique_ptr<ast::Expression> root;

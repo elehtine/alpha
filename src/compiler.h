@@ -22,7 +22,7 @@ class Compiler {
 
   private:
     Source source;
-    Tokeniser tokeniser;
+    Tokens tokeniser;
     Parser parser;
     IrGenerator ir_generator;
     AssemblyGenerator asm_generator;

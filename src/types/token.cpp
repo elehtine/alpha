@@ -137,10 +137,10 @@ namespace token {
   Eof::Eof(Type type, std::string content, Location location):
     Token(type, content, location) {}
 
-  const std::regex Whitespace::expression { "^[\\s|\\\\n]+" };
+  const std::regex Whitespace::expression { "^(\\s)+" };
   const std::regex Comment::expression { "^\\s*(//|#)[^\\\\]+" };
-  const std::regex Punctuation::expression { "^(\\(|\\))" };
-  const std::regex Oper::expression { "^(\\+|-|\\*|/)" };
+  const std::regex Punctuation::expression { "^(\\(|\\)|\\{|\\}|,|:|;)" };
+  const std::regex Oper::expression { "^(\\+|-|\\*|/|%|=|==|!=|<|<=|>|>=)" };
   const std::regex Identifier::expression { "^[a-zA-Z]\\w*" };
   const std::regex Literal::expression { "^\\d+" };
 

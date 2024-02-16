@@ -10,13 +10,13 @@
 #include "tools/exceptions.h"
 
 
-Tokeniser::Tokeniser(const Source& source, Printer* printer
+Tokens::Tokens(const Source& source, Printer* printer
     ): source(source), printer(printer) {
   tokenise();
   printer->print_tokens(get_tokens());
 }
 
-std::vector<token::Token*> Tokeniser::get_tokens() {
+std::vector<token::Token*> Tokens::get_tokens() {
   std::vector<token::Token*> result;
   for (std::unique_ptr<token::Token>& token: tokens) {
     result.push_back(token.get());
@@ -24,16 +24,7 @@ std::vector<token::Token*> Tokeniser::get_tokens() {
   return result;
 }
 
-std::string Tokeniser::escape(const std::string& content) {
-  std::string result = "";
-  for (std::size_t index = 0; index < content.size(); index++) {
-    if (content[index] == '\n') result += "\\n";
-    else result += content[index];
-  }
-  return result;
-}
-
-void Tokeniser::tokenise() {
+void Tokens::tokenise() {
   for (line = 1; line <= source.size(); line++) {
     column = 0;
     while (column < (int) source.line(line).size()) {
@@ -46,7 +37,7 @@ void Tokeniser::tokenise() {
         token::Location(source.size(), 0)));
 }
 
-std::unique_ptr<token::Token> Tokeniser::create_token() {
+std::unique_ptr<token::Token> Tokens::create_token() {
   int last = column;
 
   if (check(token::Whitespace::expression)) {
@@ -83,7 +74,7 @@ std::unique_ptr<token::Token> Tokeniser::create_token() {
   throw TokeniseException(source.line(line, column, column + 10));
 }
 
-bool Tokeniser::check(const std::regex& expression) {
+bool Tokens::check(const std::regex& expression) {
   std::string current = source.line(line).substr(column);
   std::smatch match;
   if (!std::regex_search(current, match, expression)) return false;

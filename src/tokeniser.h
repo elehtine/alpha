@@ -12,13 +12,12 @@
 #include "tools/readwrite.h"
 
 
-class Tokeniser {
+class Tokens {
   public:
-    Tokeniser(const Source& source, Printer* printer);
+    Tokens(const Source& source, Printer* printer);
     std::vector<token::Token*> get_tokens();
 
   private:
-    std::string escape(const std::string& content);
     void tokenise();
     std::unique_ptr<token::Token> create_token();
     bool check(const std::regex& expression);

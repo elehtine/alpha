@@ -30,7 +30,7 @@ std::vector<std::string> Source::split(std::string content) {
   for (int index = 0; index < (int) content.size(); index++) {
     if (content[index] != '\n') continue;
     result.push_back(content.substr(last, index - last));
-    last = index;
+    last = index + 1;
   }
   return result;
 }

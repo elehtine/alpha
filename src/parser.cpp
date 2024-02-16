@@ -8,13 +8,8 @@
 #include "interpreter.h"
 
 
-  const int expression = 0;
-  const int term = 1;
-  const int factor = 2;
-  const int primary = 3;
-  const int unknown = 4;
-
-bool binary(int level) { return level < token::primary; }
+bool statement(int level) { return level == token::statement; }
+bool binary(int level) { return token::statement < level && level < token::primary; }
 bool unary(int level) { return token::primary <= level; }
 
 Parser::Parser(std::vector<token::Token*> tokens, Printer* printer
@@ -24,6 +19,7 @@ Parser::Parser(std::vector<token::Token*> tokens, Printer* printer
 }
 
 std::unique_ptr<ast::Expression> Parser::parse(int level) {
+  if (statement(level)) return parse_statement(level);
   if (binary(level)) return parse_binary(level);
   if (unary(level)) return consume()->parse(this);
   throw ParseException("Invalid parse level: " + std::string(*peek()));
@@ -53,6 +49,10 @@ token::Token* Parser::consume() {
   token::Token* token = peek();
   position++;
   return token;
+}
+
+std::unique_ptr<ast::Expression> Parser::parse_statement(int level) {
+  return parse(level + 1);
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_binary(int level) {
