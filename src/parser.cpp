@@ -8,23 +8,20 @@
 #include "interpreter.h"
 
 
-bool statement(int level) { return level == token::statement; }
 bool binary(int level) {
-  return token::statement < level && level < token::primary;
+  return level < token::primary;
 }
 bool unary(int level) { return token::primary <= level; }
 
 Parser::Parser(std::vector<token::Token*> tokens, Printer* printer
     ): tokens(tokens) {
-  root = parse(token::statement);
+  root = parse();
   printer->print_tree(root.get());
 }
 
-std::unique_ptr<ast::Expression> Parser::parse(int level) {
-  if (statement(level)) return parse_statement(level);
-  if (binary(level)) return parse_binary(level);
-  if (unary(level)) return consume()->parse(this);
-  throw ParseException("Invalid parse level: " + std::string(*peek()));
+std::unique_ptr<ast::Expression> Parser::parse() {
+  if (peek()->get_content() == "if") return parse_condition();
+  return parse_binary(token::expression);
 }
 
 ast::Expression* Parser::get_ast() {
@@ -32,7 +29,7 @@ ast::Expression* Parser::get_ast() {
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_parenthesis() {
-  std::unique_ptr<ast::Expression> result = parse(token::expression);
+  std::unique_ptr<ast::Expression> result = parse();
   token::Token* token = consume();
   if (token->get_content() != ")") {
     throw ParseException(token->message({ token::Type::punctuation }));
@@ -42,13 +39,11 @@ std::unique_ptr<ast::Expression> Parser::parse_parenthesis() {
 
 std::unique_ptr<ast::Expression> Parser::parse_condition() {
   token::Token* if_token = consume();
-  std::unique_ptr<ast::Expression> condition = parse(token::statement);
+  std::unique_ptr<ast::Expression> condition = parse();
   token::Token* then_token = consume();
-  std::unique_ptr<ast::Expression> then_expression =
-    parse(token::statement);
+  std::unique_ptr<ast::Expression> then_expression = parse();
   token::Token* else_token = consume();
-  std::unique_ptr<ast::Expression> else_expression =
-    parse(token::statement);
+  std::unique_ptr<ast::Expression> else_expression = parse();
 
   if (if_token->get_content() != "if") {
     throw ParseException("Expected if, got "+if_token->get_content());
@@ -64,9 +59,6 @@ std::unique_ptr<ast::Expression> Parser::parse_condition() {
 }
 
 token::Token* Parser::peek() {
-  while (tokens[std::min(position, tokens.size() - 1)]->get_type() == token::Type::whitespace) {
-    position++;
-  }
   return tokens[std::min(position, tokens.size() - 1)];
 }
 
@@ -76,17 +68,12 @@ token::Token* Parser::consume() {
   return token;
 }
 
-std::unique_ptr<ast::Expression> Parser::parse_statement(int level) {
-  token::Token* token = peek();
-  if (token->level() != token::statement) return parse(level + 1);
-  return token->parse(this);
-}
-
 std::unique_ptr<ast::Expression> Parser::parse_binary(int level) {
-  std::unique_ptr<ast::Expression> left = parse(level + 1);
+  if (level == token::primary) return consume()->parse(this);
+  std::unique_ptr<ast::Expression> left = parse_binary(level + 1);
   while (peek()->level() == level) {
     token::Token* token = consume();
-    std::unique_ptr<ast::Expression> right = parse(level + 1);
+    std::unique_ptr<ast::Expression> right = parse_binary(level + 1);
     left = std::make_unique<ast::BinaryOp>(std::move(left),
         token->parse_str(), std::move(right));
   }

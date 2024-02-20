@@ -28,7 +28,6 @@ namespace token {
   }
 
   std::string to_string(const int level) {
-    if (level == statement) return "statement";
     if (level == expression) return "expression";
     if (level == term) return "term";
     if (level == factor) return "factor";
@@ -125,7 +124,7 @@ namespace token {
   Keyword::Keyword(Type type, std::string content,
       Location location): Token(type, content, location) {}
 
-  int Keyword::level() const { return statement; }
+  int Keyword::level() const { return unknown; }
 
   std::unique_ptr<ast::Expression> Keyword::parse(
       Parser* parser) const {

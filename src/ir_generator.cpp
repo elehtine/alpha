@@ -26,3 +26,9 @@ IrVar IrGenerator::create_var() {
   number++;
   return variable;
 }
+
+std::unique_ptr<Instruction> IrGenerator::create_label() {
+  std::unique_ptr<Instruction> label = std::make_unique<Label>(number);
+  number++;
+  return label;
+}

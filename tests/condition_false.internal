@@ -1,0 +1,2 @@
+LoadIntConst(0, x3)
+CondJump(x3, 1, 2)

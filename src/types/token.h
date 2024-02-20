@@ -13,7 +13,7 @@ namespace ast {
 
   class Expression;
 
-} /* ast  */
+} /* ast */
 
 namespace token {
 
@@ -38,12 +38,11 @@ namespace token {
     eof,
   };
 
-  const int statement = 0;
-  const int expression = 1;
-  const int term = 2;
-  const int factor = 3;
-  const int primary = 4;
-  const int unknown = 5;
+  const int expression = 0;
+  const int term = 1;
+  const int factor = 2;
+  const int primary = 3;
+  const int unknown = 4;
 
   std::string to_string(const Type& type);
 

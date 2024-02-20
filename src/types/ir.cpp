@@ -106,3 +106,34 @@ void Call::to_asm(AssemblyGenerator* asm_generator) const {
   if (std::string(function) == "/") intrinsics::divide(args, result, asm_generator);
   asm_generator->emit("movq " + result + ", %rsi");
 }
+
+Label::Label(int value): value(value) {}
+
+Label::operator std::string() const { return std::to_string(value); }
+
+void Label::add_variables(Locals* locals) const {}
+
+void Label::to_asm(AssemblyGenerator* asm_generator) const {
+  asm_generator->emit(".L" + std::string(*this));
+}
+
+CondJump::CondJump(IrVar condition,
+    std::unique_ptr<Instruction> then_label,
+    std::unique_ptr<Instruction> else_label):
+  condition(condition),
+  then_label(std::move(then_label)),
+  else_label(std::move(else_label)) {}
+
+CondJump::operator std::string() const {
+  std::string result = "CondJump(";
+  result += std::string(condition) + ", ";
+  result += std::string(*then_label) + ", ";
+  result += std::string(*else_label) + ")";
+  return result;
+}
+
+void CondJump::add_variables(Locals* locals) const {}
+
+void CondJump::to_asm(AssemblyGenerator* asm_generator) const {
+  throw IrGenerateException("CondJump not implemented");
+}

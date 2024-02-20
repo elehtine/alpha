@@ -128,7 +128,18 @@ namespace ast {
   }
 
   IrVar IfThenElse::visit(IrGenerator* generator) const {
-    throw IrGenerateException("not implemented if");
+    std::unique_ptr<Instruction> then_label = generator->create_label();
+    std::unique_ptr<Instruction> else_label = generator->create_label();
+    IrVar cond = condition->visit(generator);
+    generator->add_instruction(std::make_unique<CondJump>(
+          cond, std::move(then_label), std::move(else_label)));
+    /*
+    generator->add_instruction(std::move(then_label));
+    then_expression->visit(generator);
+    generator->add_instruction(std::move(else_label));
+    else_expression->visit(generator);
+    */
+    return IrVar("null");
   }
 
 } /* ast */ 

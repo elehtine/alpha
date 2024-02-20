@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 
 
 class IrVar {
@@ -70,6 +71,33 @@ class Call : public Instruction {
     IrVar function;
     std::vector<IrVar> arguments;
     IrVar destination;
+};
+
+class Label : public Instruction {
+  public:
+    Label(int value);
+    operator std::string() const override;
+
+    void add_variables(Locals* locals) const override;
+    void to_asm(AssemblyGenerator* asm_generator) const override;
+
+  private:
+    int value;
+};
+
+class CondJump : public Instruction {
+  public:
+    CondJump(IrVar condition, std::unique_ptr<Instruction> then_label,
+        std::unique_ptr<Instruction> else_label);
+    operator std::string() const override;
+
+    void add_variables(Locals* locals) const override;
+    void to_asm(AssemblyGenerator* asm_generator) const override;
+
+  private:
+    IrVar condition;
+    std::unique_ptr<Instruction> then_label;
+    std::unique_ptr<Instruction> else_label;
 };
 
 #endif
