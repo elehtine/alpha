@@ -109,20 +109,20 @@ void Call::to_asm(AssemblyGenerator* asm_generator) const {
 
 Label::Label(int value): value(value) {}
 
-Label::operator std::string() const { return std::to_string(value); }
+Label::operator std::string() const { return "L" + std::to_string(value); }
 
 void Label::add_variables(Locals* locals) const {}
 
 void Label::to_asm(AssemblyGenerator* asm_generator) const {
-  asm_generator->emit(".L" + std::string(*this));
+  asm_generator->emit("." + std::string(*this));
 }
 
 CondJump::CondJump(IrVar condition,
-    std::unique_ptr<Instruction> then_label,
-    std::unique_ptr<Instruction> else_label):
+    Instruction* then_label,
+    Instruction* else_label):
   condition(condition),
-  then_label(std::move(then_label)),
-  else_label(std::move(else_label)) {}
+  then_label(then_label),
+  else_label(else_label) {}
 
 CondJump::operator std::string() const {
   std::string result = "CondJump(";

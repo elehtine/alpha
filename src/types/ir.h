@@ -87,8 +87,8 @@ class Label : public Instruction {
 
 class CondJump : public Instruction {
   public:
-    CondJump(IrVar condition, std::unique_ptr<Instruction> then_label,
-        std::unique_ptr<Instruction> else_label);
+    CondJump(IrVar condition, Instruction* then_label,
+        Instruction* else_label);
     operator std::string() const override;
 
     void add_variables(Locals* locals) const override;
@@ -96,8 +96,8 @@ class CondJump : public Instruction {
 
   private:
     IrVar condition;
-    std::unique_ptr<Instruction> then_label;
-    std::unique_ptr<Instruction> else_label;
+    Instruction* then_label;
+    Instruction* else_label;
 };
 
 #endif

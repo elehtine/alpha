@@ -132,13 +132,11 @@ namespace ast {
     std::unique_ptr<Instruction> else_label = generator->create_label();
     IrVar cond = condition->visit(generator);
     generator->add_instruction(std::make_unique<CondJump>(
-          cond, std::move(then_label), std::move(else_label)));
-    /*
+          cond, then_label.get(), else_label.get()));
     generator->add_instruction(std::move(then_label));
     then_expression->visit(generator);
     generator->add_instruction(std::move(else_label));
     else_expression->visit(generator);
-    */
     return IrVar("null");
   }
 
