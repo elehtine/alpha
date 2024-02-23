@@ -7,5 +7,5 @@ namespace type {
     if (type == Type::boolean) return "boolean";
     return "unknown";
   }
-  
-} /* type */ 
+
+} /* type */

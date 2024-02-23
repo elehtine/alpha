@@ -33,7 +33,7 @@ namespace ast {
   }
 
   Identifier::Identifier(token::Token token):
-    name(token.parse_str()) {}
+    name(token.get_content()) {}
 
   Identifier::Identifier(std::string name): name(name) {}
 
@@ -56,14 +56,14 @@ namespace ast {
     return IrVar(name);
   }
 
-  BinaryOp::BinaryOp(std::unique_ptr<Expression> left, std::string op,
+  BinaryOp::BinaryOp(std::unique_ptr<Expression> left, token::Token* op,
       std::unique_ptr<Expression> right):
     left(std::move(left)), op(op), right(std::move(right)) {}
 
   std::string BinaryOp::print(int level) const {
     std::string result = left->print(level+1);
     result += std::string(level * space, ' ');
-    result += op;
+    result += op->get_content();
     result += "\n";
     result += right->print(level+1);
     return result;
@@ -72,10 +72,18 @@ namespace ast {
   std::unique_ptr<interpretation::Interpretation> BinaryOp::interpret() const {
     int left_value = *left->interpret();
     int right_value = *right->interpret();
-    if (op == "+") return std::make_unique<interpretation::Integer>(left_value + right_value);
-    if (op == "-") return std::make_unique<interpretation::Integer>(left_value - right_value);
-    if (op == "*") return std::make_unique<interpretation::Integer>(left_value * right_value);
-    if (op == "/") return std::make_unique<interpretation::Integer>(left_value / right_value);
+    if (op->match({ token::Type::plus })) {
+      return std::make_unique<interpretation::Integer>(left_value + right_value);
+    }
+    if (op->match({ token::Type::minus })) {
+      return std::make_unique<interpretation::Integer>(left_value - right_value);
+    }
+    if (op->match({ token::Type::product })) {
+      return std::make_unique<interpretation::Integer>(left_value * right_value);
+    }
+    if (op->match({ token::Type::division })) {
+      return std::make_unique<interpretation::Integer>(left_value / right_value);
+    }
     return std::make_unique<interpretation::Integer>(1);
   }
 
@@ -94,7 +102,7 @@ namespace ast {
       left->visit(generator),
       right->visit(generator),
     };
-    IrVar function = IrVar(op);
+    IrVar function = IrVar(op->get_content());
     IrVar result = generator->create_var();
     generator->add_instruction(std::make_unique<Call>(function, arguments, result));
     return result;
@@ -140,4 +148,4 @@ namespace ast {
     return IrVar("null");
   }
 
-} /* ast */ 
+} /* ast */

@@ -17,7 +17,7 @@ namespace intrinsics {
 
   void divide(std::vector<std::string> args, std::string result,
       AssemblyGenerator* asm_generator);
-  
-} /* intrinsics */ 
+
+} /* intrinsics */
 
 #endif

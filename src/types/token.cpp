@@ -16,13 +16,31 @@ namespace token {
   }
 
   std::string to_string(const Type& type) {
-    if (type == Type::whitespace) return "whitespace";
-    if (type == Type::comment) return "comment";
-    if (type == Type::punctuation) return "punctuation";
-    if (type == Type::oper) return "operator";
-    if (type == Type::identifier) return "identifier";
-    if (type == Type::keyword) return "keyword";
-    if (type == Type::literal) return "literal";
+    if (type == Type::whitespace) return "WHITESPACE";
+    if (type == Type::left_parenthesis) return "LEFT_PARENTHESIS";
+    if (type == Type::right_parenthesis) return "RIGHT_PARENTHESIS";
+    if (type == Type::left_brace) return "LEFT_BRACE";
+    if (type == Type::right_brace) return "RIGHT_BRACE";
+    if (type == Type::dot) return "DOT";
+    if (type == Type::comma) return "COMMA";
+    if (type == Type::colon) return "COLON";
+    if (type == Type::semicolon) return "SEMICOLON";
+    if (type == Type::plus) return "PLUS";
+    if (type == Type::minus) return "MINUS";
+    if (type == Type::product) return "PRODUCT";
+    if (type == Type::division) return "DIVISION";
+    if (type == Type::modulo) return "MODULO";
+    if (type == Type::bang) return "BANG";
+    if (type == Type::equal) return "EQUAL";
+    if (type == Type::equal_equal) return "EQUAL_EQUAL";
+    if (type == Type::not_equal) return "NOT_EQUAL";
+    if (type == Type::less) return "LESS";
+    if (type == Type::less_or_equal) return "LESS_OR_EQUAL";
+    if (type == Type::greater) return "GREATER";
+    if (type == Type::greater_or_equal) return "GREATER_OR_EQUAL";
+    if (type == Type::keyword) return "KEYWORD";
+    if (type == Type::identifier) return "IDENTIFIER";
+    if (type == Type::literal) return "LITERAL";
     if (type == Type::eof) return "EOF";
     return "";
   }
@@ -48,22 +66,20 @@ namespace token {
     return result;
   }
 
-  Type Token::get_type() const {
-    return type;
-  }
-
   std::string Token::get_content() const {
     return content;
   }
 
   std::string Token::parse_str() {
     if (type == Type::identifier) return content;
-    if (type == Type::oper) return content;
-    throw ParseException(message({ Type::oper, Type::identifier }));
+    throw ParseException(message({ Type::identifier }));
   }
 
-  std::unique_ptr<ast::Expression> Token::parse(Parser* parser) const {
-    throw ParseException(message({ Type::literal, Type::identifier }));
+  bool Token::match(std::vector<Type> types) {
+    for (Type match_type: types) {
+      if (type == match_type) return true;
+    }
+    return false;
   }
 
   int Token::level() const {

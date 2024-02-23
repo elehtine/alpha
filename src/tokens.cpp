@@ -35,6 +35,13 @@ token::Token* Tokens::consume() {
   return result;
 }
 
+bool Tokens::match(std::vector<token::Type> types) {
+  token::Token* token = peek();
+  if (!token->match(types)) return false;
+  consume();
+  return true;
+}
+
 void Tokens::tokenise() {
   for (line = 1; line <= source.size(); line++) {
     column = 0;
@@ -57,12 +64,12 @@ std::unique_ptr<token::Token> Tokens::create_token() {
 
   if (check(punctuation)) {
     std::string content = source.line(line, last, column);
-    return std::make_unique<token::Token>(token::Type::punctuation, content,
+    return std::make_unique<token::Token>(str_to_type[content], content,
         token::Location(line, last));
   }
   if (check(oper)) {
     std::string content = source.line(line, last, column);
-    return std::make_unique<token::Token>(token::Type::oper, content,
+    return std::make_unique<token::Token>(str_to_type[content], content,
         token::Location(line, last));
   }
   if (check(identifier)) {

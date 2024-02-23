@@ -6,7 +6,7 @@
 
 
 namespace interpretation {
-  
+
   Integer::Integer(int value): value(value) {}
 
   Integer::operator int() { return value; }
@@ -27,4 +27,4 @@ namespace interpretation {
     return "TRUE\n";
   }
 
-} /* value */ 
+} /* value */

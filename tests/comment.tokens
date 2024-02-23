@@ -1,2 +1,2 @@
-Token(integer, identifier, primary, (3,0))
+Token(integer, IDENTIFIER, primary, (3,0))
 Token(end, EOF, unknown, (3,0))

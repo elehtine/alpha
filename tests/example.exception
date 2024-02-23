@@ -1,1 +1,1 @@
-Expected literal or identifier, got Token(var, keyword, unknown, (1,0))
+Expected literal or identifier, got Token(var, KEYWORD, unknown, (1,0))

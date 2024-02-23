@@ -1,10 +1,10 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include <string>
-#include <vector>
-#include <memory>
 #include <regex>
+#include <vector>
+#include <map>
+#include <memory>
 
 
 class Parser;
@@ -29,12 +29,21 @@ namespace token {
 
   enum class Type {
     whitespace,
-    comment,
-    punctuation,
-    oper,
-    identifier,
-    keyword,
-    literal,
+
+    left_parenthesis, right_parenthesis,
+    left_brace, right_brace,
+    dot, comma,
+    colon, semicolon,
+
+    plus, minus, product, division, modulo,
+
+    bang, equal,
+    equal_equal, not_equal,
+    less, less_or_equal,
+    greater, greater_or_equal,
+
+    keyword, identifier, literal,
+
     eof,
   };
 
@@ -50,12 +59,11 @@ namespace token {
     public:
       Token(Type type, std::string content, Location location);
       operator std::string() const;
-      Type get_type() const;
       std::string get_content() const;
 
       std::string parse_str();
+      bool match(std::vector<Type> types);
 
-      virtual std::unique_ptr<ast::Expression> parse(Parser* parser) const;
       virtual int level() const;
       std::string message(std::vector<Type> need) const;
 

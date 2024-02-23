@@ -1,2 +1,2 @@
-Token(1, literal, primary, (1,0))
+Token(1, LITERAL, primary, (1,0))
 Token(end, EOF, unknown, (1,0))

@@ -9,5 +9,5 @@ namespace checker {
     if (tree != nullptr) tree->check();
     return true;
   }
-  
-} /* checker */ 
+
+} /* checker */

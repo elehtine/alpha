@@ -1,1 +1,1 @@
-Expected literal or identifier, got Token(+, operator, term, (1,4))
+Expected literal or identifier, got Token(+, PLUS, term, (1,4))

@@ -5,7 +5,7 @@
 
 
 namespace interpretation {
-  
+
   class Interpretation {
     public:
       virtual operator int() = 0;
@@ -35,6 +35,6 @@ namespace interpretation {
       bool value;
   };
 
-} /* value */ 
+} /* value */
 
 #endif

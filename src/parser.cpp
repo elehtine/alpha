@@ -29,9 +29,8 @@ ast::Expression* Parser::get_ast() {
 
 std::unique_ptr<ast::Expression> Parser::parse_parenthesis() {
   std::unique_ptr<ast::Expression> result = parse();
-  token::Token* token = tokens.consume();
-  if (token->get_content() != ")") {
-    throw ParseException(token->message({ token::Type::punctuation }));
+  if (!tokens.match({ token::Type::right_parenthesis })) {
+    throw ParseException(tokens.peek()->message({ token::Type::right_parenthesis }));
   }
   return result;
 }
@@ -64,20 +63,18 @@ std::unique_ptr<ast::Expression> Parser::parse_binary(int level) {
     token::Token* token = tokens.consume();
     std::unique_ptr<ast::Expression> right = parse_binary(level + 1);
     left = std::make_unique<ast::BinaryOp>(std::move(left),
-        token->parse_str(), std::move(right));
+        token, std::move(right));
   }
   return left;
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_primary() {
-  token::Token* token = tokens.consume();
-  if (token->get_type() == token::Type::punctuation) {
-    return parse_parenthesis();
+  token::Token* token = tokens.peek();
+  if (tokens.match({ token::Type::left_parenthesis })) return parse_parenthesis();
+  if (tokens.match({ token::Type::literal })) {
+    return std::make_unique<ast::Literal>(std::stoi(token->get_content()));
   }
-  if (token->get_type() == token::Type::literal) {
-      return std::make_unique<ast::Literal>(std::stoi(token->get_content()));
-  }
-  if (token->get_type() == token::Type::identifier) {
+  if (tokens.match({ token::Type::identifier })) {
       return std::make_unique<ast::Identifier>(*token);
   }
   throw ParseException("Expected literal or identifier, got " + std::string(*token));

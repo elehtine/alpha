@@ -59,7 +59,7 @@ namespace ast {
 
   class BinaryOp : public Expression {
     public:
-      BinaryOp(std::unique_ptr<Expression> left, std::string op,
+      BinaryOp(std::unique_ptr<Expression> left, token::Token* op,
           std::unique_ptr<Expression> right);
       std::string print(int level) const override;
       std::unique_ptr<interpretation::Interpretation> interpret() const override;
@@ -69,7 +69,7 @@ namespace ast {
 
     private:
       std::unique_ptr<Expression> left;
-      std::string op;
+      token::Token* op;
       std::unique_ptr<Expression> right;
   };
 
@@ -90,6 +90,6 @@ namespace ast {
       std::unique_ptr<Expression> else_expression;
   };
 
-} /* ast  */ 
+} /* ast  */
 
 #endif
