@@ -6,7 +6,7 @@
 #include <map>
 #include <memory>
 
-#include "../source.h"
+#include "source.h"
 
 #include "../tools/exceptions.h"
 
