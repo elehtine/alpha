@@ -1,4 +1,3 @@
-#include <string>
 #include <vector>
 #include <regex>
 
@@ -6,8 +5,6 @@
 #include "tools/readwrite.h"
 
 #include "source.h"
-#include "tokeniser.h"
-#include "parser.h"
 #include "compiler.h"
 
 

@@ -65,68 +65,6 @@ namespace token {
       Location location;
   };
 
-  class Whitespace: public Token {
-    public:
-      Whitespace(Type type, std::string content, Location location);
-
-      static const std::regex expression;
-  };
-
-  class Comment: public Token {
-    public:
-      Comment(Type type, std::string content, Location location);
-
-      static const std::regex expression;
-  };
-
-  class Punctuation: public Token {
-    public:
-      Punctuation(Type type, std::string content, Location location);
-      std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
-
-      static const std::regex expression;
-  };
-
-  class Oper: public Token {
-    public:
-      Oper(Type type, std::string content, Location location);
-      int level() const override;
-
-      static const std::regex expression;
-  };
-
-  class Identifier: public Token {
-    public:
-      Identifier(Type type, std::string content, Location location);
-      std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
-      int level() const override;
-
-      static const std::regex expression;
-  };
-
-  class Keyword: public Token {
-    public:
-      Keyword(Type type, std::string content, Location location);
-      std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
-      int level() const override;
-
-      static const std::regex expression;
-  };
-
-  class Literal: public Token {
-    public:
-      Literal(Type type, std::string content, Location location);
-      std::unique_ptr<ast::Expression> parse(Parser* parser) const override;
-      int level() const override;
-
-      static const std::regex expression;
-  };
-
-  class Eof: public Token {
-    public:
-      Eof(Type type, std::string content, Location location);
-  };
-
 } /* token */
 
 #endif

@@ -7,8 +7,8 @@
 
 Compiler::Compiler(Source& source, Printer* printer):
   source(source),
-  tokeniser(source, printer),
-  parser(tokeniser.get_tokens(), printer),
+  tokens(source, printer),
+  parser(tokens, printer),
   interpreter(parser.get_ast(), printer),
   ir_generator(parser.get_ast(), printer),
   asm_generator(ir_generator.get_instructions(), printer) {

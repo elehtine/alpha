@@ -66,6 +66,14 @@ namespace token {
     throw ParseException(message({ Type::literal, Type::identifier }));
   }
 
+  int Token::level() const {
+    if (type == Type::identifier) return primary;
+    if (type == Type::literal) return primary;
+    if (content == "+" || content == "-") return term;
+    if (content == "*" || content == "/") return factor;
+    return unknown;
+  }
+
   std::string types_to_string(std::vector<Type> vec) {
     std::string result = "";
     bool inter;
@@ -77,86 +85,9 @@ namespace token {
     return result;
   }
 
-  int Token::level() const { return unknown; }
-
   std::string Token::message(std::vector<Type> need) const {
     return std::string(*this) + " is not " + types_to_string(need);
   }
 
-  Whitespace::Whitespace(Type type, std::string content, Location location):
-    Token(type, content, location) {}
-
-  Comment::Comment(Type type, std::string content, Location location):
-    Token(type, content, location) {}
-
-  Punctuation::Punctuation(Type type, std::string content, Location location):
-    Token(type, content, location) {}
-
-  std::unique_ptr<ast::Expression> Punctuation::parse(Parser* parser) const {
-    return parser->parse_parenthesis();
-  }
-
-  Oper::Oper(Type type, std::string content, Location location):
-    Token(type, content, location) {}
-
-  int Oper::level() const {
-    if (content == "+" || content == "-") return term;
-    if (content == "*" || content == "/") return factor;
-    return unknown;
-  }
-
-  Identifier::Identifier(Type type, std::string content,
-      Location location): Token(type, content, location) {}
-
-  int Identifier::level() const { return primary; }
-
-  std::unique_ptr<ast::Expression> Identifier::parse(
-      Parser* parser) const {
-    std::unique_ptr<ast::Identifier> result;
-    try {
-      result = std::make_unique<ast::Identifier>(content);
-    } catch (const std::exception& exceptino) {
-      throw ParseException(message({ Type::identifier }));
-    }
-    return result;
-  }
-
-  Keyword::Keyword(Type type, std::string content,
-      Location location): Token(type, content, location) {}
-
-  int Keyword::level() const { return unknown; }
-
-  std::unique_ptr<ast::Expression> Keyword::parse(
-      Parser* parser) const {
-    if (content == "if") return parser->parse_condition();
-    throw ParseException("Unknown keyword: " + content);
-  }
-
-
-  Literal::Literal(Type type, std::string content, Location location):
-    Token(type, content, location) {}
-
-  int Literal::level() const { return primary; }
-
-  std::unique_ptr<ast::Expression> Literal::parse(Parser* parser) const {
-    std::unique_ptr<ast::Literal> result;
-    try {
-      result = std::make_unique<ast::Literal>(stoi(content));
-    } catch (const std::exception& exceptino) {
-      throw ParseException(message({ Type::literal }));
-    }
-    return result;
-  }
-
-  Eof::Eof(Type type, std::string content, Location location):
-    Token(type, content, location) {}
-
-  const std::regex Whitespace::expression { "^(\\s)+" };
-  const std::regex Comment::expression { "^\\s*(//|#)[^\\\\]+" };
-  const std::regex Punctuation::expression { "^(\\(|\\)|\\{|\\}|,|:|;)" };
-  const std::regex Oper::expression { "^(\\+|-|\\*|/|%|=|==|!=|<|<=|>|>=)" };
-  const std::regex Keyword::expression { "(var|if|then|else|while)" };
-  const std::regex Identifier::expression { "^[a-zA-Z_]+" };
-  const std::regex Literal::expression { "^\\d+" };
 
 } /* token */

@@ -4,7 +4,7 @@
 #include <iterator>
 #include <utility>
 
-#include "tokeniser.h"
+#include "tokens.h"
 
 #include "tools/readwrite.h"
 #include "tools/exceptions.h"
@@ -24,6 +24,17 @@ std::vector<token::Token*> Tokens::get_tokens() {
   return result;
 }
 
+token::Token* Tokens::peek() const {
+  int index = std::min(position, tokens.size() - 1);
+  return tokens[index].get();
+}
+
+token::Token* Tokens::consume() {
+  token::Token* result = peek();
+  if (position < tokens.size()) position++;
+  return result;
+}
+
 void Tokens::tokenise() {
   for (line = 1; line <= source.size(); line++) {
     column = 0;
@@ -33,46 +44,40 @@ void Tokens::tokenise() {
     }
   }
 
-  tokens.push_back(std::make_unique<token::Eof>(token::Type::eof, "end",
+  tokens.push_back(std::make_unique<token::Token>(token::Type::eof, "end",
         token::Location(source.size(), 0)));
 }
 
 std::unique_ptr<token::Token> Tokens::create_token() {
   int last = column;
 
-  if (check(token::Whitespace::expression)) {
-    return std::unique_ptr<token::Whitespace>(nullptr);
+  if (check(whitespace) || check(comment)) {
+    return std::unique_ptr<token::Token>(nullptr);
   }
 
-  if (check(token::Comment::expression)) {
+  if (check(punctuation)) {
     std::string content = source.line(line, last, column);
-    return std::make_unique<token::Comment>(token::Type::punctuation, content,
+    return std::make_unique<token::Token>(token::Type::punctuation, content,
         token::Location(line, last));
   }
-
-  if (check(token::Punctuation::expression)) {
+  if (check(oper)) {
     std::string content = source.line(line, last, column);
-    return std::make_unique<token::Punctuation>(token::Type::punctuation, content,
+    return std::make_unique<token::Token>(token::Type::oper, content,
         token::Location(line, last));
   }
-  if (check(token::Oper::expression)) {
-    std::string content = source.line(line, last, column);
-    return std::make_unique<token::Oper>(token::Type::oper, content,
-        token::Location(line, last));
-  }
-  if (check(token::Identifier::expression)) {
+  if (check(identifier)) {
     std::string content = source.line(line, last, column);
     std::smatch match;
-    if (std::regex_match(content, token::Keyword::expression)) {
-      return std::make_unique<token::Keyword>(token::Type::keyword,
+    if (std::regex_match(content, keyword)) {
+      return std::make_unique<token::Token>(token::Type::keyword,
           content, token::Location(line, last));
     }
-    return std::make_unique<token::Identifier>(token::Type::identifier, content,
+    return std::make_unique<token::Token>(token::Type::identifier, content,
         token::Location(line, last));
   }
-  if (check(token::Literal::expression)) {
+  if (check(literal)) {
     std::string content = source.line(line, last, column);
-    return std::make_unique<token::Literal>(token::Type::literal, content,
+    return std::make_unique<token::Token>(token::Type::literal, content,
         token::Location(line, last));
   }
 

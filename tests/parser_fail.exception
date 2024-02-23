@@ -1,1 +1,1 @@
-Token(+, operator, term, (1,4)) is not literal or identifier
+Expected literal or identifier, got Token(+, operator, term, (1,4))

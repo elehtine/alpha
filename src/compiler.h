@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "source.h"
-#include "tokeniser.h"
+#include "tokens.h"
 #include "parser.h"
 #include "ir_generator.h"
 #include "asm_generator.h"
@@ -22,7 +22,7 @@ class Compiler {
 
   private:
     Source source;
-    Tokens tokeniser;
+    Tokens tokens;
     Parser parser;
     Interpreter interpreter;
     IrGenerator ir_generator;
