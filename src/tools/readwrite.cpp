@@ -95,7 +95,7 @@ void UserPrinter::print_tokens(std::vector<token::Token*> tokens) {
 
 void UserPrinter::print_tree(ast::Expression* root) {
   std::cout << "AST:" << std::endl;
-  std::cout << root->print(0) << std::endl;
+  if (root != nullptr) std::cout << root->print(0) << std::endl;
 }
 
 void UserPrinter::print_ir(std::vector<Instruction*> ir) {

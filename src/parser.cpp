@@ -14,12 +14,27 @@ bool binary(int level) {
 bool unary(int level) { return token::primary <= level; }
 
 Parser::Parser(Tokens& tokens, Printer* printer): tokens(tokens) {
-  root = parse();
-  printer->print_tree(root.get());
+  std::vector<std::unique_ptr<ast::Expression>> expressions;
+  while (!tokens.match({ token::Type::eof})) {
+    expressions.push_back(parse_statement());
+  }
+  if (expressions.size() == 0) {
+    throw ParseException("File cannot be empty");
+  }
+
+  root = std::make_unique<ast::Block>(std::move(expressions));
+  printer->print_tree(get_ast());
 }
 
-std::unique_ptr<ast::Expression> Parser::parse() {
+std::unique_ptr<ast::Expression> Parser::parse_statement() {
+  std::unique_ptr<ast::Expression> result = parse_expression();
+  tokens.match({ token::Type::semicolon });
+  return result;
+}
+
+std::unique_ptr<ast::Expression> Parser::parse_expression() {
   if (tokens.peek()->get_content() == "if") return parse_condition();
+  if (tokens.match({ token::Type::left_brace})) return parse_block();
   return parse_binary(token::expression);
 }
 
@@ -28,7 +43,7 @@ ast::Expression* Parser::get_ast() {
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_parenthesis() {
-  std::unique_ptr<ast::Expression> result = parse();
+  std::unique_ptr<ast::Expression> result = parse_expression();
   if (!tokens.match({ token::Type::right_parenthesis })) {
     throw ParseException(tokens.peek()->message({ token::Type::right_parenthesis }));
   }
@@ -37,11 +52,11 @@ std::unique_ptr<ast::Expression> Parser::parse_parenthesis() {
 
 std::unique_ptr<ast::Expression> Parser::parse_condition() {
   token::Token* if_token = tokens.consume();
-  std::unique_ptr<ast::Expression> condition = parse();
+  std::unique_ptr<ast::Expression> condition = parse_expression();
   token::Token* then_token = tokens.consume();
-  std::unique_ptr<ast::Expression> then_expression = parse();
+  std::unique_ptr<ast::Expression> then_expression = parse_expression();
   token::Token* else_token = tokens.consume();
-  std::unique_ptr<ast::Expression> else_expression = parse();
+  std::unique_ptr<ast::Expression> else_expression = parse_expression();
 
   if (if_token->get_content() != "if") {
     throw ParseException("Expected if, got "+if_token->get_content());
@@ -54,6 +69,14 @@ std::unique_ptr<ast::Expression> Parser::parse_condition() {
   }
   return std::make_unique<ast::IfThenElse>(std::move(condition),
         std::move(then_expression), std::move(else_expression));
+}
+
+std::unique_ptr<ast::Expression> Parser::parse_block() {
+  std::vector<std::unique_ptr<ast::Expression>> expressions;
+  while (!tokens.match({ token::Type::right_brace })) {
+    expressions.push_back(std::move(parse_statement()));
+  }
+  return std::make_unique<ast::Block>(std::move(expressions));
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_binary(int level) {

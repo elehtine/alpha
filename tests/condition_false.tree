@@ -1,4 +1,7 @@
-  0
-if-then-else
-  1
-  0
+block
+  if
+    0
+  then
+    1
+  else
+    0

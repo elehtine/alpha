@@ -116,10 +116,11 @@ namespace ast {
   else_expression(std::move(else_expression)) {}
 
   std::string IfThenElse::print(int level) const {
-    std::string result = condition->print(level+1);
-    result += std::string(level * space, ' ');
-    result += "if-then-else\n";
+    std::string result = std::string(level * space, ' ') + "if\n";
+    result += condition->print(level+1);
+    result += std::string(level * space, ' ') + "then\n";
     result += then_expression->print(level+1);
+    result += std::string(level * space, ' ') + "else\n";
     result += else_expression->print(level+1);
     return result;
   }
@@ -146,6 +147,31 @@ namespace ast {
     generator->add_instruction(std::move(else_label));
     else_expression->visit(generator);
     return IrVar("null");
+  }
+
+  Block::Block(std::vector<std::unique_ptr<Expression>> expressions
+      ): expressions(std::move(expressions)) {}
+
+  std::string Block::print(int level) const {
+    std::string result = std::string(level * space, ' ') + "block\n";
+    for (const std::unique_ptr<Expression>& expression: expressions) {
+      result += expression->print(level + 1);
+    }
+    return result;
+  }
+
+  std::unique_ptr<interpretation::Interpretation> Block::interpret() const
+  {
+    if (expressions.size() == 0) throw InterpretException("Empty file");
+    return expressions[0]->interpret();
+  }
+
+  type::Type Block::check() {
+    return expressions[0]->check();
+  }
+
+  IrVar Block::visit(IrGenerator* generator) const {
+    return expressions[0]->visit(generator);
   }
 
 } /* ast */

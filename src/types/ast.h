@@ -90,6 +90,19 @@ namespace ast {
       std::unique_ptr<Expression> else_expression;
   };
 
+  class Block : public Expression {
+    public:
+      Block(std::vector<std::unique_ptr<Expression>> expressions);
+      std::string print(int level) const;
+      std::unique_ptr<interpretation::Interpretation> interpret() const;
+      type::Type check();
+
+      IrVar visit(IrGenerator* generator) const;
+
+    private:
+      std::vector<std::unique_ptr<Expression>> expressions;
+  };
+
 } /* ast  */
 
 #endif

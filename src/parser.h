@@ -17,10 +17,12 @@ class Parser {
     Parser(Tokens& tokens, Printer* printer);
     ast::Expression* get_ast();
 
-    std::unique_ptr<ast::Expression> parse();
+    std::unique_ptr<ast::Expression> parse_statement();
+    std::unique_ptr<ast::Expression> parse_expression();
 
     std::unique_ptr<ast::Expression> parse_parenthesis();
     std::unique_ptr<ast::Expression> parse_condition();
+    std::unique_ptr<ast::Expression> parse_block();
 
   private:
     std::unique_ptr<ast::Expression> parse_binary(int level);

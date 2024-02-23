@@ -1,1 +1,2 @@
-integer
+block
+  integer

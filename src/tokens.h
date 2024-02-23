@@ -48,7 +48,7 @@ class Tokens {
       { "(", token::Type::left_parenthesis },
       { ")", token::Type::right_parenthesis },
       { "{", token::Type::left_brace },
-      { "},", token::Type::right_brace },
+      { "}", token::Type::right_brace },
       { ".", token::Type::dot },
       { ",", token::Type::comma },
       { ":", token::Type::colon },
