@@ -153,10 +153,11 @@ namespace ast {
       ): expressions(std::move(expressions)) {}
 
   std::string Block::print(int level) const {
-    std::string result = std::string(level * space, ' ') + "block\n";
+    std::string result = std::string(level * space, ' ') + "{\n";
     for (const std::unique_ptr<Expression>& expression: expressions) {
       result += expression->print(level + 1);
     }
+    result += std::string(level * space, ' ') + "}\n";
     return result;
   }
 

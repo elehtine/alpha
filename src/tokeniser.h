@@ -28,7 +28,7 @@ class Tokeniser {
     const std::regex comment { "^\\s*(//|#)[^\\\\]+" };
     const std::regex punctuation { "^(\\(|\\)|\\{|\\}|,|:|;)" };
     const std::regex oper { "^(\\+|-|\\*|/|%|=|==|!=|<|<=|>|>=)" };
-    const std::regex keyword { "^(var|if|then|else|while|do)" };
+    const std::regex keyword { "^(var|Int|Bool|if|then|else|while|do|read_int|print_int)" };
     const std::regex identifier { "^[a-zA-Z_]+" };
     const std::regex literal { "^\\d+" };
 
