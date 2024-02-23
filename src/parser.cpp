@@ -9,11 +9,11 @@
 
 
 bool binary(int level) {
-  return level < token::primary;
+  return level < primary;
 }
-bool unary(int level) { return token::primary <= level; }
+bool unary(int level) { return primary <= level; }
 
-Parser::Parser(token::Tokens& tokens, Printer* printer): tokens(tokens) {
+Parser::Parser(Tokens& tokens, Printer* printer): tokens(tokens) {
   std::vector<std::unique_ptr<ast::Expression>> expressions;
   while (!tokens.match({ token::Type::eof})) {
     expressions.push_back(parse_statement());
@@ -35,7 +35,7 @@ std::unique_ptr<ast::Expression> Parser::parse_statement() {
 std::unique_ptr<ast::Expression> Parser::parse_expression() {
   if (tokens.peek()->get_content() == "if") return parse_condition();
   if (tokens.match({ token::Type::left_brace})) return parse_block();
-  return parse_binary(token::expression);
+  return parse_binary(expression);
 }
 
 ast::Expression* Parser::get_ast() {
@@ -51,11 +51,11 @@ std::unique_ptr<ast::Expression> Parser::parse_parenthesis() {
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_condition() {
-  token::Token* if_token = tokens.consume();
+  Token* if_token = tokens.consume();
   std::unique_ptr<ast::Expression> condition = parse_expression();
-  token::Token* then_token = tokens.consume();
+  Token* then_token = tokens.consume();
   std::unique_ptr<ast::Expression> then_expression = parse_expression();
-  token::Token* else_token = tokens.consume();
+  Token* else_token = tokens.consume();
   std::unique_ptr<ast::Expression> else_expression = parse_expression();
 
   if (if_token->get_content() != "if") {
@@ -80,10 +80,10 @@ std::unique_ptr<ast::Expression> Parser::parse_block() {
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_binary(int level) {
-  if (level == token::primary) return parse_primary();
+  if (level == primary) return parse_primary();
   std::unique_ptr<ast::Expression> left = parse_binary(level + 1);
   while (tokens.peek()->level() == level) {
-    token::Token* token = tokens.consume();
+    Token* token = tokens.consume();
     std::unique_ptr<ast::Expression> right = parse_binary(level + 1);
     left = std::make_unique<ast::BinaryOp>(std::move(left),
         token, std::move(right));
@@ -92,7 +92,7 @@ std::unique_ptr<ast::Expression> Parser::parse_binary(int level) {
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_primary() {
-  token::Token* token = tokens.peek();
+  Token* token = tokens.peek();
   if (tokens.match({ token::Type::left_parenthesis })) return parse_parenthesis();
   if (tokens.match({ token::Type::literal })) {
     return std::make_unique<ast::Literal>(std::stoi(token->get_content()));

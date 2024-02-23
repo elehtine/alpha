@@ -32,7 +32,7 @@ namespace ast {
     return type::Type::integer;
   }
 
-  Identifier::Identifier(token::Token token):
+  Identifier::Identifier(Token token):
     name(token.get_content()) {}
 
   Identifier::Identifier(std::string name): name(name) {}
@@ -56,7 +56,7 @@ namespace ast {
     return IrVar(name);
   }
 
-  BinaryOp::BinaryOp(std::unique_ptr<Expression> left, token::Token* op,
+  BinaryOp::BinaryOp(std::unique_ptr<Expression> left, Token* op,
       std::unique_ptr<Expression> right):
     left(std::move(left)), op(op), right(std::move(right)) {}
 

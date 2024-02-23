@@ -13,7 +13,7 @@
 
 class Parser {
   public:
-    Parser(token::Tokens& tokens, Printer* printer);
+    Parser(Tokens& tokens, Printer* printer);
     ast::Expression* get_ast();
 
     std::unique_ptr<ast::Expression> parse_statement();
@@ -29,7 +29,7 @@ class Parser {
 
     std::unique_ptr<ast::Expression> root;
 
-    token::Tokens& tokens;
+    Tokens& tokens;
     size_t position = 0;
 
 };

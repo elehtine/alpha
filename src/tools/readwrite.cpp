@@ -6,8 +6,7 @@
 #include <boost/filesystem.hpp>
 
 #include "../types/token.h"
-
-#include "../source.h"
+#include "../types/source.h"
 
 #include "readwrite.h"
 
@@ -63,9 +62,9 @@ std::string to_string(std::vector<T> vec) {
   return result;
 }
 
-std::string to_string(const std::vector<token::Token*> vec) {
+std::string to_string(const std::vector<Token*> vec) {
   std::string result = "";
-  for (const token::Token* element: vec) {
+  for (const Token* element: vec) {
     result += std::string(*element) + "\n";
   }
   return result;
@@ -88,7 +87,7 @@ void UserPrinter::print_lines(Source* source) {
   std::cout << std::string(*source) << std::endl;
 }
 
-void UserPrinter::print_tokens(std::vector<token::Token*> tokens) {
+void UserPrinter::print_tokens(std::vector<Token*> tokens) {
   std::cout << "Tokens:" << std::endl;
   std::cout << to_string(tokens) << std::endl;
 }
@@ -133,7 +132,7 @@ void FilePrinter::print_lines(Source* source) {
   input = *source;
 }
 
-void FilePrinter::print_tokens(std::vector<token::Token*> tokens) {
+void FilePrinter::print_tokens(std::vector<Token*> tokens) {
   print(to_string(tokens), filename(FileType::tokens));
 }
 

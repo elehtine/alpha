@@ -44,7 +44,7 @@ namespace ast {
 
   class Identifier : public Expression {
     public:
-      Identifier(token::Token token);
+      Identifier(Token token);
       Identifier(std::string name);
 
       std::string print(int level) const override;
@@ -59,7 +59,7 @@ namespace ast {
 
   class BinaryOp : public Expression {
     public:
-      BinaryOp(std::unique_ptr<Expression> left, token::Token* op,
+      BinaryOp(std::unique_ptr<Expression> left, Token* op,
           std::unique_ptr<Expression> right);
       std::string print(int level) const override;
       std::unique_ptr<interpretation::Interpretation> interpret() const override;
@@ -69,7 +69,7 @@ namespace ast {
 
     private:
       std::unique_ptr<Expression> left;
-      token::Token* op;
+      Token* op;
       std::unique_ptr<Expression> right;
   };
 

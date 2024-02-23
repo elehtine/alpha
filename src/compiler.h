@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-#include "source.h"
+#include "types/source.h"
 #include "types/token.h"
 #include "parser.h"
 #include "ir_generator.h"
@@ -22,7 +22,7 @@ class Compiler {
 
   private:
     Source source;
-    token::Tokens tokens;
+    std::unique_ptr<Tokens> tokens;
     Parser parser;
     Interpreter interpreter;
     IrGenerator ir_generator;
