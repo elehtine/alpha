@@ -13,18 +13,8 @@ bool binary(int level) {
 }
 bool unary(int level) { return primary <= level; }
 
-Parser::Parser(Tokens& tokens, Printer* printer): tokens(tokens) {
-  std::vector<std::unique_ptr<ast::Expression>> expressions;
-  while (!tokens.match({ token::Type::eof})) {
-    expressions.push_back(parse_statement());
-  }
-  if (expressions.size() == 0) {
-    throw ParseException("File cannot be empty");
-  }
-
-  root = std::make_unique<ast::Block>(std::move(expressions));
-  printer->print_tree(get_ast());
-}
+Parser::Parser(Tokens& tokens, Printer* printer):
+  tokens(tokens), printer(printer) {}
 
 std::unique_ptr<ast::Expression> Parser::parse_statement() {
   std::unique_ptr<ast::Expression> result = parse_expression();
@@ -38,8 +28,19 @@ std::unique_ptr<ast::Expression> Parser::parse_expression() {
   return parse_binary(expression);
 }
 
-ast::Expression* Parser::get_ast() {
-  return root.get();
+std::unique_ptr<ast::Expression> Parser::parse() {
+  std::vector<std::unique_ptr<ast::Expression>> expressions;
+  while (!tokens.match({ token::Type::eof})) {
+    expressions.push_back(parse_statement());
+  }
+  if (expressions.size() == 0) {
+    throw ParseException("File cannot be empty");
+  }
+
+  std::unique_ptr<ast::Expression> root =
+    std::make_unique<ast::Block>(std::move(expressions));
+  printer->print_tree(root.get());
+  return root;
 }
 
 std::unique_ptr<ast::Expression> Parser::parse_parenthesis() {

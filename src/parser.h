@@ -14,24 +14,22 @@
 class Parser {
   public:
     Parser(Tokens& tokens, Printer* printer);
-    ast::Expression* get_ast();
+    std::unique_ptr<ast::Expression> parse();
 
-    std::unique_ptr<ast::Expression> parse_statement();
-    std::unique_ptr<ast::Expression> parse_expression();
-
-    std::unique_ptr<ast::Expression> parse_parenthesis();
-    std::unique_ptr<ast::Expression> parse_condition();
     std::unique_ptr<ast::Expression> parse_block();
 
   private:
+    std::unique_ptr<ast::Expression> parse_statement();
+    std::unique_ptr<ast::Expression> parse_expression();
     std::unique_ptr<ast::Expression> parse_binary(int level);
     std::unique_ptr<ast::Expression> parse_primary();
 
-    std::unique_ptr<ast::Expression> root;
+    std::unique_ptr<ast::Expression> parse_parenthesis();
+    std::unique_ptr<ast::Expression> parse_condition();
 
     Tokens& tokens;
+    Printer* printer;
     size_t position = 0;
-
 };
 
 #endif
