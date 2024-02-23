@@ -7,14 +7,13 @@
 #include "types/token.h"
 #include "types/ast.h"
 #include "interpreter.h"
-#include "tokens.h"
 
 #include "tools/readwrite.h"
 
 
 class Parser {
   public:
-    Parser(Tokens& tokens, Printer* printer);
+    Parser(token::Tokens& tokens, Printer* printer);
     ast::Expression* get_ast();
 
     std::unique_ptr<ast::Expression> parse_statement();
@@ -30,7 +29,7 @@ class Parser {
 
     std::unique_ptr<ast::Expression> root;
 
-    Tokens& tokens;
+    token::Tokens& tokens;
     size_t position = 0;
 
 };

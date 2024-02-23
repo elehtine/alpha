@@ -6,14 +6,9 @@
 #include <map>
 #include <memory>
 
+#include "../source.h"
 
-class Parser;
-
-namespace ast {
-
-  class Expression;
-
-} /* ast */
+#include "../tools/exceptions.h"
 
 namespace token {
 
@@ -47,30 +42,87 @@ namespace token {
     eof,
   };
 
+  std::string to_string(const Type& type);
+
   const int expression = 0;
   const int term = 1;
   const int factor = 2;
   const int primary = 3;
   const int unknown = 4;
 
-  std::string to_string(const Type& type);
-
   class Token {
     public:
       Token(Type type, std::string content, Location location);
       operator std::string() const;
-      std::string get_content() const;
-
-      std::string parse_str();
       bool match(std::vector<Type> types);
-
       virtual int level() const;
+
+      std::string get_content() const;
+      std::string parse_str();
+
       std::string message(std::vector<Type> need) const;
 
-    protected:
+    private:
       Type type;
       std::string content;
       Location location;
+  };
+
+  class Tokens {
+    public:
+      Tokens(const Source& source, Printer* printer);
+      std::vector<Token*> get_tokens();
+
+      Token* peek() const;
+      Token* consume();
+      bool match(std::vector<Type> types);
+
+    private:
+      void tokenise();
+      std::unique_ptr<Token> create_token();
+      bool check(const std::regex& expression);
+
+      const Source& source;
+      Printer* printer;
+
+      int line;
+      int column;
+
+      std::vector<std::unique_ptr<Token>> tokens;
+      size_t position = 0;
+
+      const std::regex whitespace { "^(\\s)+" };
+      const std::regex comment { "^\\s*(//|#)[^\\\\]+" };
+      const std::regex punctuation { "^(\\(|\\)|\\{|\\}|,|:|;)" };
+      const std::regex oper { "^(\\+|-|\\*|/|%|=|==|!=|<|<=|>|>=)" };
+      const std::regex keyword { "(var|if|then|else|while|do)" };
+      const std::regex identifier { "^[a-zA-Z_]+" };
+      const std::regex literal { "^\\d+" };
+
+      std::map<std::string, Type> str_to_type {
+        { "(", Type::left_parenthesis },
+          { ")", Type::right_parenthesis },
+          { "{", Type::left_brace },
+          { "}", Type::right_brace },
+          { ".", Type::dot },
+          { ",", Type::comma },
+          { ":", Type::colon },
+          { ";", Type::semicolon },
+          { "+", Type::plus },
+          { "-", Type::minus },
+          { "*", Type::product },
+          { "/", Type::division },
+          { "%", Type::modulo },
+          { "!", Type::bang },
+          { "=", Type::equal },
+          { "==", Type::equal },
+          { "!=", Type::not_equal },
+          { "<", Type::less },
+          { "<=", Type::less_or_equal },
+          { ">", Type::greater },
+          { ">=", Type::greater_or_equal },
+      };
+
   };
 
 } /* token */

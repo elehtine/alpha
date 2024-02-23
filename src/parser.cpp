@@ -13,7 +13,7 @@ bool binary(int level) {
 }
 bool unary(int level) { return token::primary <= level; }
 
-Parser::Parser(Tokens& tokens, Printer* printer): tokens(tokens) {
+Parser::Parser(token::Tokens& tokens, Printer* printer): tokens(tokens) {
   std::vector<std::unique_ptr<ast::Expression>> expressions;
   while (!tokens.match({ token::Type::eof})) {
     expressions.push_back(parse_statement());

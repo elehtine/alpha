@@ -2,9 +2,10 @@
 #define SOURCE_H
 
 #include <string>
+#include <vector>
 
-#include "tools/readwrite.h"
 
+class Printer;
 
 class Source {
   public:
