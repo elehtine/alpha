@@ -25,10 +25,7 @@ std::unique_ptr<Expression> Parser::parse_statement() {
 std::unique_ptr<Expression> Parser::parse_expression() {
   if (tokens.peek()->get_content() == "if") return parse_condition();
   if (tokens.match({ token::Type::left_brace})) return parse_block();
-
-  std::unique_ptr<Expression> expr = parse_binary(expression);
-  if (!tokens.match({ token::Type::left_parenthesis })) return expr;
-  return std::make_unique<Function>(std::move(expr), parse_arguments());
+  return parse_binary(expression);
 }
 
 std::unique_ptr<Expression> Parser::parse() {
@@ -115,7 +112,9 @@ std::unique_ptr<Expression> Parser::parse_primary() {
     return std::make_unique<Literal>(token->get_content(), type::Type::integer);
   }
   if (tokens.match({ token::Type::identifier })) {
-      return std::make_unique<Identifier>(*token);
+    std::unique_ptr<Identifier> id = std::make_unique<Identifier>(*token);
+    if (!tokens.match({ token::Type::left_parenthesis })) return id;
+    return std::make_unique<Function>(std::move(id), parse_arguments());
   }
   throw ParseException("Expected literal or identifier, got " + std::string(*token));
 }

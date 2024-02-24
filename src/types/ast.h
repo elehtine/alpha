@@ -44,13 +44,14 @@ class Literal : public Expression {
 class Identifier : public Expression {
   public:
     Identifier(Token token);
-    Identifier(std::string name);
 
     std::string print(int level) const override;
     std::unique_ptr<interpretation::Interpretation> interpret() const override;
     type::Type check() override;
 
     IrVar visit(IrGenerator* generator) const override;
+
+    bool is_name(std::string guess) const;
 
   private:
     std::string name;
@@ -117,7 +118,7 @@ class Arguments: public Expression {
 
 class Function: public Expression {
   public:
-    Function(std::unique_ptr<Expression> fun, std::unique_ptr<Arguments> arguments);
+    Function(std::unique_ptr<Identifier> fun, std::unique_ptr<Arguments> arguments);
 
     std::string print(int level) const override;
     std::unique_ptr<interpretation::Interpretation> interpret() const override;
@@ -125,7 +126,7 @@ class Function: public Expression {
     IrVar visit(IrGenerator* generator) const override;
 
   private:
-    std::unique_ptr<Expression> fun;
+    std::unique_ptr<Identifier> fun;
     std::unique_ptr<Arguments> arguments;
 };
 

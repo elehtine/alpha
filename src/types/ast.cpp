@@ -7,8 +7,8 @@
 Expression::Expression() {}
 Expression::~Expression() {}
 
-Literal::Literal(std::string value, type::Type type):
-  value(value), type(type) {}
+Literal::Literal(std::string value, type::Type type
+    ): value(value), type(type) {}
 
 std::string Literal::print(int level) const {
   std::string result = std::string(level * space, ' ');
@@ -31,17 +31,14 @@ type::Type Literal::check() {
   return type::Type::integer;
 }
 
-Identifier::Identifier(Token token):
-  name(token.get_content()) {}
+Identifier::Identifier(Token token): name(token.get_content()) {}
 
-  Identifier::Identifier(std::string name): name(name) {}
-
-  std::string Identifier::print(int level) const {
-    std::string result = std::string(level * space, ' ');
-    result += name;
-    result += "\n";
-    return result;
-  }
+std::string Identifier::print(int level) const {
+  std::string result = std::string(level * space, ' ');
+  result += name;
+  result += "\n";
+  return result;
+}
 
 std::unique_ptr<interpretation::Interpretation> Identifier::interpret() const {
   return std::make_unique<interpretation::Integer>(1);
@@ -53,6 +50,10 @@ type::Type Identifier::check() {
 
 IrVar Identifier::visit(IrGenerator* generator) const {
   return IrVar(name);
+}
+
+bool Identifier::is_name(std::string guess) const {
+  return name == guess;
 }
 
 BinaryOp::BinaryOp(std::unique_ptr<Expression> left, Token* op,
@@ -109,23 +110,24 @@ IrVar BinaryOp::visit(IrGenerator* generator) const {
 
 IfThenElse::IfThenElse(std::unique_ptr<Expression> condition,
     std::unique_ptr<Expression> then_expression,
-    std::unique_ptr<Expression> else_expression
-    ): condition(std::move(condition)),
+    std::unique_ptr<Expression> else_expression):
+  condition(std::move(condition)),
   then_expression(std::move(then_expression)),
-  else_expression(std::move(else_expression)) {}
+  else_expression(std::move(else_expression))
+{}
 
-  std::string IfThenElse::print(int level) const {
-    std::string result = std::string(level * space, ' ') + "if\n";
-    result += condition->print(level+1);
-    result += std::string(level * space, ' ') + "then\n";
-    result += then_expression->print(level+1);
-    result += std::string(level * space, ' ') + "else\n";
-    result += else_expression->print(level+1);
-    return result;
-  }
+std::string IfThenElse::print(int level) const {
+  std::string result = std::string(level * space, ' ') + "if\n";
+  result += condition->print(level+1);
+  result += std::string(level * space, ' ') + "then\n";
+  result += then_expression->print(level+1);
+  result += std::string(level * space, ' ') + "else\n";
+  result += else_expression->print(level+1);
+  return result;
+}
 
-std::unique_ptr<interpretation::Interpretation> IfThenElse::interpret(
-    ) const {
+std::unique_ptr<interpretation::Interpretation> IfThenElse::interpret() const
+{
   int cond = *condition->interpret();
   if (cond == 0) return else_expression->interpret();
   return then_expression->interpret();
@@ -148,8 +150,9 @@ IrVar IfThenElse::visit(IrGenerator* generator) const {
   return IrVar("null");
 }
 
-Block::Block(std::vector<std::unique_ptr<Expression>> expressions
-    ): expressions(std::move(expressions)) {}
+Block::Block(std::vector<std::unique_ptr<Expression>> expressions):
+  expressions(std::move(expressions))
+{}
 
 std::string Block::print(int level) const {
   std::string result = std::string(level * space, ' ') + "{\n";
@@ -175,7 +178,8 @@ IrVar Block::visit(IrGenerator* generator) const {
 }
 
 Arguments::Arguments(std::vector<std::unique_ptr<Expression>>& arguments):
-  arguments(std::move(arguments)) {}
+  arguments(std::move(arguments))
+{}
 
 std::string Arguments::print(int level) const {
   std::string result = std::string(level * space, ' ') + "(\n";
@@ -200,8 +204,9 @@ IrVar Arguments::visit(IrGenerator* generator) const {
   throw IrGenerateException("Arguments not implemented");
 }
 
-Function::Function(std::unique_ptr<Expression> fun, std::unique_ptr<Arguments> arguments):
-  fun(std::move(fun)), arguments(std::move(arguments)) {}
+Function::Function(std::unique_ptr<Identifier> fun, std::unique_ptr<Arguments> arguments):
+  fun(std::move(fun)), arguments(std::move(arguments))
+{}
 
 std::string Function::print(int level) const {
   std::string result = std::string(level * space, ' ') + "fun\n";
@@ -211,7 +216,8 @@ std::string Function::print(int level) const {
 }
 
 std::unique_ptr<interpretation::Interpretation> Function::interpret() const {
-  return arguments->interpret();
+  if (fun->is_name("print_int")) return arguments->interpret();
+  throw InterpretException("Unknown function");
 }
 
 type::Type Function::check() {
