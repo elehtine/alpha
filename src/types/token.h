@@ -81,6 +81,7 @@ class Tokens {
     Tokens(Printer* printer, std::vector<std::unique_ptr<Token>>& tokens);
     std::vector<Token*> get_tokens();
 
+    Token* previous() const;
     Token* peek() const;
     Token* consume();
     bool match(token::Type match_type);

@@ -20,7 +20,7 @@ std::unique_ptr<Expression> Parser::parse() {
   std::vector<std::unique_ptr<Expression>> expressions;
   while (!tokens.match(token::Type::eof)) {
     expressions.push_back(parse_expression());
-    if (!tokens.match(token::Type::semicolon)) {
+    if (!tokens.match(token::Type::semicolon) && !tokens.previous()->match(token::Type::right_brace)) {
       throw ParseException("Expected semicolon, got " + std::string(*tokens.peek()));
     }
   }
@@ -70,7 +70,7 @@ std::unique_ptr<Expression> Parser::parse_block() {
   while (true) {
     expressions.push_back(std::move(parse_expression()));
 
-    if (!tokens.match(token::Type::semicolon)) {
+    if (!tokens.match(token::Type::semicolon) && !tokens.previous()->match(token::Type::right_brace)) {
       if (tokens.match(token::Type::right_brace)) break;
       throw ParseException("Expected semicolon or closing brace, got " + std::string(*tokens.peek()));
     }

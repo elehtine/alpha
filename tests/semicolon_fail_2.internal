@@ -1,5 +1,0 @@
-LoadIntConst(1, x3)
-CondJump(x3, L1, L2)
-L1
-L2
-LoadIntConst(0, x4)

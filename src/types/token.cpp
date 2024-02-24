@@ -124,6 +124,12 @@ std::vector<Token*> Tokens::get_tokens() {
   return result;
 }
 
+Token* Tokens::previous() const {
+  int index = std::min(position - 1, tokens.size() - 1);
+  index = std::max(index, 0);
+  return tokens[index].get();
+}
+
 Token* Tokens::peek() const {
   int index = std::min(position, tokens.size() - 1);
   return tokens[index].get();

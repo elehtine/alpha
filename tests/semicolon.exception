@@ -1,1 +1,1 @@
-Expected semicolon or closing brace, got Token({, LEFT_BRACE, unknown, (1,8))
+Expected semicolon, got Token(=, EQUAL, unknown, (6,2))
