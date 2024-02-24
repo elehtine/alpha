@@ -18,12 +18,19 @@ std::string Literal::print(int level) const {
 }
 
 std::unique_ptr<interpretation::Interpretation> Literal::interpret() const {
+  if (value == "true") return std::make_unique<interpretation::Integer>(1);
+  if (value == "false" || value == "null") {
+    return std::make_unique<interpretation::Integer>(0);
+  }
   return std::make_unique<interpretation::Integer>(std::stoi(value));
 }
 
 IrVar Literal::visit(IrGenerator* generator) const {
   IrVar variable = generator->create_var();
-  generator->add_instruction(std::make_unique<LoadIntConst>(std::stoi(value), variable));
+  int v = 0;
+  if (value == "true") v = 1;
+  else if (value != "false" && value != "null") v = std::stoi(value);
+  generator->add_instruction(std::make_unique<LoadIntConst>(v, variable));
   return variable;
 }
 
@@ -72,16 +79,16 @@ BinaryOp::BinaryOp(std::unique_ptr<Expression> left, Token* op,
 std::unique_ptr<interpretation::Interpretation> BinaryOp::interpret() const {
   int left_value = *left->interpret();
   int right_value = *right->interpret();
-  if (op->match({ token::Type::plus })) {
+  if (op->match(token::Type::plus)) {
     return std::make_unique<interpretation::Integer>(left_value + right_value);
   }
-  if (op->match({ token::Type::minus })) {
+  if (op->match(token::Type::minus)) {
     return std::make_unique<interpretation::Integer>(left_value - right_value);
   }
-  if (op->match({ token::Type::product })) {
+  if (op->match(token::Type::product)) {
     return std::make_unique<interpretation::Integer>(left_value * right_value);
   }
-  if (op->match({ token::Type::division })) {
+  if (op->match(token::Type::division)) {
     return std::make_unique<interpretation::Integer>(left_value / right_value);
   }
   return std::make_unique<interpretation::Integer>(1);

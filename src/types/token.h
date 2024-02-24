@@ -38,7 +38,12 @@ namespace token {
     less, less_or_equal,
     greater, greater_or_equal,
 
-    keyword, identifier, literal,
+    var, integer, boolean, keyword_true, keyword_false,
+    keyword_if, keyword_then, keyword_else,
+    keyword_while, keyword_do,
+    read_int, print_int,
+
+    identifier, literal,
 
     eof,
   };

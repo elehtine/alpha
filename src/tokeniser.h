@@ -56,6 +56,18 @@ class Tokeniser {
       { "<=", token::Type::less_or_equal },
       { ">", token::Type::greater },
       { ">=", token::Type::greater_or_equal },
+      { "var", token::Type::var },
+      { "Int", token::Type::integer },
+      { "Bool", token::Type::boolean },
+      { "true", token::Type::keyword_true },
+      { "false", token::Type::keyword_false },
+      { "if", token::Type::keyword_if },
+      { "then", token::Type::keyword_then },
+      { "else", token::Type::keyword_else },
+      { "while", token::Type::keyword_while },
+      { "do", token::Type::keyword_do },
+      { "read_int", token::Type::read_int },
+      { "print_int", token::Type::print_int },
     };
 
 };

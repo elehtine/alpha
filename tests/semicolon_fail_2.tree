@@ -1,0 +1,14 @@
+{
+  {
+    if
+      true
+    then
+      {
+        a
+      }
+    else
+      null
+    b
+    c
+  }
+}

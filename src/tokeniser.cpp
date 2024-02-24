@@ -34,15 +34,11 @@ std::unique_ptr<Token> Tokeniser::scan_token() {
     return std::unique_ptr<Token>(nullptr);
   }
 
-  if (check(punctuation) || check(oper)) {
+  if (check(punctuation) || check(oper) || check(keyword)) {
     std::string content = source.line(line, last_column, column);
     return create_token(str_to_type[content], content);
   }
 
-  if (check(keyword)) {
-    std::string content = source.line(line, last_column, column);
-    return create_token(token::Type::keyword, content);
-  }
   if (check(identifier)) {
     std::string content = source.line(line, last_column, column);
     return create_token(token::Type::identifier, content);
