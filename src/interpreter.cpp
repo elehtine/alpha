@@ -4,7 +4,7 @@
 #include "types/interpretation.h"
 
 
-Interpreter::Interpreter(ast::Expression* tree, Printer* printer) {
+Interpreter::Interpreter(Expression* tree, Printer* printer) {
   if (tree == nullptr) return;
   interpretation = tree->interpret();
   printer->print_interpretation(interpretation.get());

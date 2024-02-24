@@ -5,7 +5,7 @@
 
 namespace checker {
 
-  bool check(ast::Expression* tree) {
+  bool check(Expression* tree) {
     if (tree != nullptr) tree->check();
     return true;
   }

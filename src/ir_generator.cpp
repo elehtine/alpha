@@ -3,7 +3,7 @@
 #include "tools/exceptions.h"
 
 
-IrGenerator::IrGenerator(ast::Expression* root, Printer* printer) {
+IrGenerator::IrGenerator(Expression* root, Printer* printer) {
   if (root == nullptr) return;
   root->visit(this);
   printer->print_ir(get_instructions());

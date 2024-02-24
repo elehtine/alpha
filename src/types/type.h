@@ -9,7 +9,7 @@ namespace type {
   enum class Type {
     integer,
     boolean,
-    unknown,
+    unit,
   };
 
   std::string type_to_string(const Type& type);

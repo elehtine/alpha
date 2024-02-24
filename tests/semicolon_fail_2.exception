@@ -1,1 +1,1 @@
-Expected else, got b
+Expected literal or identifier, got Token(true, KEYWORD, unknown, (1,5))

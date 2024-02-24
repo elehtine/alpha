@@ -12,7 +12,7 @@
 
 class Interpreter {
   public:
-    Interpreter(ast::Expression* tree, Printer* printer);
+    Interpreter(Expression* tree, Printer* printer);
     interpretation::Interpretation* get_interpretation();
 
   private:

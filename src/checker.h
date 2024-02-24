@@ -6,7 +6,7 @@
 
 namespace checker {
 
-  bool check(ast::Expression* tree);
+  bool check(Expression* tree);
 
 } /* checker */
 

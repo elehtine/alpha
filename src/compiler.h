@@ -23,7 +23,7 @@ class Compiler {
   private:
     Source source;
     std::unique_ptr<Tokens> tokens;
-    std::unique_ptr<ast::Expression> tree;
+    std::unique_ptr<Expression> tree;
     Interpreter interpreter;
     IrGenerator ir_generator;
     AssemblyGenerator asm_generator;
