@@ -1,2 +1,3 @@
 Token(1, LITERAL, primary, (1,0))
+Token(;, SEMICOLON, unknown, (1,1))
 Token(end, EOF, unknown, (1,0))
