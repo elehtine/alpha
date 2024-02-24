@@ -23,10 +23,12 @@ std::unique_ptr<Expression> Parser::parse_statement() {
 }
 
 std::unique_ptr<Expression> Parser::parse_expression() {
-  if (tokens.peek()->get_content() == "print_int") return parse_print();
   if (tokens.peek()->get_content() == "if") return parse_condition();
   if (tokens.match({ token::Type::left_brace})) return parse_block();
-  return parse_binary(expression);
+
+  std::unique_ptr<Expression> expr = parse_binary(expression);
+  if (!tokens.match({ token::Type::left_parenthesis })) return expr;
+  return std::make_unique<Function>(std::move(expr), parse_arguments());
 }
 
 std::unique_ptr<Expression> Parser::parse() {
@@ -81,8 +83,7 @@ std::unique_ptr<Expression> Parser::parse_block() {
   return std::make_unique<Block>(std::move(expressions));
 }
 
-std::unique_ptr<Expression> Parser::parse_print() {
-  tokens.consume();
+std::unique_ptr<Arguments> Parser::parse_arguments() {
   tokens.match({ token::Type::left_parenthesis });
   std::vector<std::unique_ptr<Expression>> args;
   while (true) {
@@ -92,7 +93,7 @@ std::unique_ptr<Expression> Parser::parse_print() {
   if (!tokens.match({ token::Type::right_parenthesis })) {
     throw ParseException("Expected right parenthesis, got " + std::string(*tokens.peek()));
   }
-  return std::make_unique<Function>("print_int", std::make_unique<Arguments>(args));
+  return std::make_unique<Arguments>(args);
 }
 
 std::unique_ptr<Expression> Parser::parse_binary(int level) {

@@ -22,7 +22,7 @@ class Parser {
     std::unique_ptr<Expression> parse_parenthesis();
     std::unique_ptr<Expression> parse_condition();
     std::unique_ptr<Expression> parse_block();
-    std::unique_ptr<Expression> parse_print();
+    std::unique_ptr<Arguments> parse_arguments();
 
     Tokens& tokens;
     Printer* printer;

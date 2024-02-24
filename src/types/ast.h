@@ -117,7 +117,7 @@ class Arguments: public Expression {
 
 class Function: public Expression {
   public:
-    Function(std::string fun, std::unique_ptr<Arguments> arguments);
+    Function(std::unique_ptr<Expression> fun, std::unique_ptr<Arguments> arguments);
 
     std::string print(int level) const override;
     std::unique_ptr<interpretation::Interpretation> interpret() const override;
@@ -125,7 +125,7 @@ class Function: public Expression {
     IrVar visit(IrGenerator* generator) const override;
 
   private:
-    std::string fun;
+    std::unique_ptr<Expression> fun;
     std::unique_ptr<Arguments> arguments;
 };
 

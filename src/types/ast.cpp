@@ -200,19 +200,18 @@ IrVar Arguments::visit(IrGenerator* generator) const {
   throw IrGenerateException("Arguments not implemented");
 }
 
-Function::Function(std::string fun, std::unique_ptr<Arguments> arguments):
-  fun(fun), arguments(std::move(arguments)) {}
+Function::Function(std::unique_ptr<Expression> fun, std::unique_ptr<Arguments> arguments):
+  fun(std::move(fun)), arguments(std::move(arguments)) {}
 
 std::string Function::print(int level) const {
   std::string result = std::string(level * space, ' ') + "fun\n";
-  result += std::string(level * (space+1), ' ') + fun + "\n";
+  result += fun->print(level+1);
   result += arguments->print(level + 1);
   return result;
 }
 
 std::unique_ptr<interpretation::Interpretation> Function::interpret() const {
-  if (fun == "print_int") return arguments->interpret();
-  throw InterpretException("Function not implemented");
+  return arguments->interpret();
 }
 
 type::Type Function::check() {
@@ -220,6 +219,6 @@ type::Type Function::check() {
 }
 
 IrVar Function::visit(IrGenerator* generator) const {
-  if (fun == "print_int") return arguments->visit(generator);
+  return arguments->visit(generator);
   throw IrGenerateException("Function not implemented");
 }
