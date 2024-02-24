@@ -73,11 +73,8 @@ std::string Token::parse_str() {
   throw ParseException(message({ token::Type::identifier }));
 }
 
-bool Token::match(std::vector<token::Type> types) {
-  for (token::Type match_type: types) {
-    if (type == match_type) return true;
-  }
-  return false;
+bool Token::match(token::Type match_type) {
+  return type == match_type;
 }
 
 int Token::level() const {
@@ -127,9 +124,9 @@ Token* Tokens::consume() {
   return result;
 }
 
-bool Tokens::match(std::vector<token::Type> types) {
+bool Tokens::match(token::Type match_type) {
   Token* token = peek();
-  if (!token->match(types)) return false;
+  if (!token->match(match_type)) return false;
   consume();
   return true;
 }

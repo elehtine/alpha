@@ -57,7 +57,7 @@ class Token {
   public:
     Token(token::Type type, std::string content, Location location);
     operator std::string() const;
-    bool match(std::vector<token::Type> types);
+    bool match(token::Type match_type);
     virtual int level() const;
 
     std::string get_content() const;
@@ -78,7 +78,7 @@ class Tokens {
 
     Token* peek() const;
     Token* consume();
-    bool match(std::vector<token::Type> types);
+    bool match(token::Type match_type);
 
   private:
     Printer* printer;
