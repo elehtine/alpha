@@ -23,6 +23,7 @@ std::unique_ptr<Expression> Parser::parse_statement() {
 }
 
 std::unique_ptr<Expression> Parser::parse_expression() {
+  if (tokens.peek()->get_content() == "print_int") return parse_print();
   if (tokens.peek()->get_content() == "if") return parse_condition();
   if (tokens.match({ token::Type::left_brace})) return parse_block();
   return parse_binary(expression);
@@ -78,6 +79,20 @@ std::unique_ptr<Expression> Parser::parse_block() {
     expressions.push_back(std::move(parse_statement()));
   }
   return std::make_unique<Block>(std::move(expressions));
+}
+
+std::unique_ptr<Expression> Parser::parse_print() {
+  tokens.consume();
+  tokens.match({ token::Type::left_parenthesis });
+  std::vector<std::unique_ptr<Expression>> args;
+  while (true) {
+    args.push_back(parse_expression());
+    if (!tokens.match({ token::Type::comma })) break;
+  }
+  if (!tokens.match({ token::Type::right_parenthesis })) {
+    throw ParseException("Expected right parenthesis, got " + std::string(*tokens.peek()));
+  }
+  return std::make_unique<Function>("print_int", std::make_unique<Arguments>(args));
 }
 
 std::unique_ptr<Expression> Parser::parse_binary(int level) {

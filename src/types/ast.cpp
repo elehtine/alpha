@@ -173,3 +173,53 @@ type::Type Block::check() {
 IrVar Block::visit(IrGenerator* generator) const {
   return expressions[0]->visit(generator);
 }
+
+Arguments::Arguments(std::vector<std::unique_ptr<Expression>>& arguments):
+  arguments(std::move(arguments)) {}
+
+std::string Arguments::print(int level) const {
+  std::string result = std::string(level * space, ' ') + "(\n";
+  for (const std::unique_ptr<Expression>& expression: arguments) {
+    result += expression->print(level + 1);
+  }
+  result += std::string(level * space, ' ') + ")\n";
+  return result;
+}
+
+std::unique_ptr<interpretation::Interpretation> Arguments::interpret() const {
+  if (arguments.size() == 1) return arguments[0]->interpret();
+  return std::make_unique<interpretation::Integer>(1);
+}
+
+type::Type Arguments::check() {
+  return type::Type::unit;
+}
+
+IrVar Arguments::visit(IrGenerator* generator) const {
+  if (arguments.size() == 1) return arguments[0]->visit(generator);
+  throw IrGenerateException("Arguments not implemented");
+}
+
+Function::Function(std::string fun, std::unique_ptr<Arguments> arguments):
+  fun(fun), arguments(std::move(arguments)) {}
+
+std::string Function::print(int level) const {
+  std::string result = std::string(level * space, ' ') + "fun\n";
+  result += std::string(level * (space+1), ' ') + fun + "\n";
+  result += arguments->print(level + 1);
+  return result;
+}
+
+std::unique_ptr<interpretation::Interpretation> Function::interpret() const {
+  if (fun == "print_int") return arguments->interpret();
+  throw InterpretException("Function not implemented");
+}
+
+type::Type Function::check() {
+  return type::Type::unit;
+}
+
+IrVar Function::visit(IrGenerator* generator) const {
+  if (fun == "print_int") return arguments->visit(generator);
+  throw IrGenerateException("Function not implemented");
+}

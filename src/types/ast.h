@@ -92,14 +92,41 @@ class IfThenElse : public Expression {
 class Block : public Expression {
   public:
     Block(std::vector<std::unique_ptr<Expression>> expressions);
-    std::string print(int level) const;
-    std::unique_ptr<interpretation::Interpretation> interpret() const;
-    type::Type check();
+    std::string print(int level) const override;
+    std::unique_ptr<interpretation::Interpretation> interpret() const override;
+    type::Type check() override;
 
-    IrVar visit(IrGenerator* generator) const;
+    IrVar visit(IrGenerator* generator) const override;
 
   private:
     std::vector<std::unique_ptr<Expression>> expressions;
+};
+
+class Arguments: public Expression {
+  public:
+    Arguments(std::vector<std::unique_ptr<Expression>>& arguments);
+
+    std::string print(int level) const override;
+    std::unique_ptr<interpretation::Interpretation> interpret() const override;
+    type::Type check() override;
+    IrVar visit(IrGenerator* generator) const override;
+
+  private:
+    std::vector<std::unique_ptr<Expression>> arguments;
+};
+
+class Function: public Expression {
+  public:
+    Function(std::string fun, std::unique_ptr<Arguments> arguments);
+
+    std::string print(int level) const override;
+    std::unique_ptr<interpretation::Interpretation> interpret() const override;
+    type::Type check() override;
+    IrVar visit(IrGenerator* generator) const override;
+
+  private:
+    std::string fun;
+    std::unique_ptr<Arguments> arguments;
 };
 
 #endif

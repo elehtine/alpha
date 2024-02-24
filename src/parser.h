@@ -6,17 +6,12 @@
 
 #include "types/token.h"
 #include "types/ast.h"
-#include "interpreter.h"
-
-#include "tools/readwrite.h"
 
 
 class Parser {
   public:
     Parser(Tokens& tokens, Printer* printer);
     std::unique_ptr<Expression> parse();
-
-    std::unique_ptr<Expression> parse_block();
 
   private:
     std::unique_ptr<Expression> parse_statement();
@@ -26,6 +21,8 @@ class Parser {
 
     std::unique_ptr<Expression> parse_parenthesis();
     std::unique_ptr<Expression> parse_condition();
+    std::unique_ptr<Expression> parse_block();
+    std::unique_ptr<Expression> parse_print();
 
     Tokens& tokens;
     Printer* printer;
