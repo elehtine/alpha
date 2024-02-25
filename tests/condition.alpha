@@ -2,3 +2,14 @@ if true then 1 else 0;
 if false then 1 else 0;
 if true then 1;
 if false then 1;
+
+if 1 < 2 then 1 else 2;
+if not (1 < 2) then 1 else 2;
+
+if 1 < 2 and 3 <= 3 then 1 else 2;
+if 1 < 2 or 3 <= 3 then 1 else 2;
+
+if 1 <= 2 and 3 < 3 then 1 else 2;
+if 1 <= 2 or 3 < 3 then 1 else 2;
+
+// if false and true or true then 1 else 2;

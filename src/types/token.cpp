@@ -28,7 +28,7 @@ std::string to_string(const token::Type& type) {
   if (type == token::Type::product) return "PRODUCT";
   if (type == token::Type::division) return "DIVISION";
   if (type == token::Type::modulo) return "MODULO";
-  if (type == token::Type::bang) return "BANG";
+  if (type == token::Type::keyword_not) return "NOT";
   if (type == token::Type::equal) return "EQUAL";
   if (type == token::Type::equal_equal) return "EQUAL_EQUAL";
   if (type == token::Type::not_equal) return "NOT_EQUAL";
@@ -89,10 +89,12 @@ bool Token::match(token::Type match_type) {
 }
 
 int Token::level() const {
+  if (content == "==" || content == "!=") return equality;
+  if (content[0] == '<' || content[0] == '>') return comparison;
+  if (content == "+" || content == "-") return term;
+  if (content == "*" || content == "/" || content == "%") return factor;
   if (type == token::Type::identifier) return primary;
   if (type == token::Type::literal) return primary;
-  if (content == "+" || content == "-") return term;
-  if (content == "*" || content == "/") return factor;
   return unknown;
 }
 
@@ -146,4 +148,11 @@ bool Tokens::match(token::Type match_type) {
   if (!token->match(match_type)) return false;
   consume();
   return true;
+}
+
+bool Tokens::match(std::vector<token::Type> types) {
+  for (token::Type match_type: types) {
+    if (match(match_type)) return true;
+  }
+  return false;
 }

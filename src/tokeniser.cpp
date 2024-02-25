@@ -17,7 +17,17 @@ std::unique_ptr<Tokens> Tokeniser::tokenise() {
     column = 0;
     while (column < (int) source.line(line).size()) {
       std::unique_ptr<Token> token = scan_token();
-      if (token) token_list.push_back(std::move(token));
+      if (!token) continue;
+      if (token->match(token::Type::equal)) {
+        if (token_list.size() > 0 && token_list.back()->match(token::Type::less)) {
+          token_list.erase(token_list.end() - 1);
+          token = create_token(token::Type::less_or_equal, "<=");
+        } else if (token_list.size() > 0 && token_list.back()->match(token::Type::greater)) {
+          token_list.erase(token_list.end() - 1);
+          token = create_token(token::Type::greater_or_equal, ">=");
+        }
+      }
+      token_list.push_back(std::move(token));
     }
   }
 

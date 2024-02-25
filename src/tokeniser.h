@@ -48,7 +48,7 @@ class Tokeniser {
       { "*", token::Type::product },
       { "/", token::Type::division },
       { "%", token::Type::modulo },
-      { "!", token::Type::bang },
+      { "!", token::Type::keyword_not },
       { "=", token::Type::equal },
       { "==", token::Type::equal },
       { "!=", token::Type::not_equal },

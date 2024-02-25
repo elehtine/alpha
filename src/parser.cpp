@@ -111,13 +111,13 @@ std::unique_ptr<Expression> Parser::parse_binary(int level) {
 std::unique_ptr<Expression> Parser::parse_primary() {
   Token* token = tokens.peek();
   if (tokens.match(token::Type::left_parenthesis)) return parse_parenthesis();
-  if (tokens.match(token::Type::keyword_true) || tokens.match(token::Type::keyword_false)) {
+  if (tokens.match({ token::Type::keyword_true, token::Type::keyword_false })) {
     return std::make_unique<Literal>(token->get_content(), type::Type::boolean);
   }
   if (tokens.match(token::Type::literal)) {
     return std::make_unique<Literal>(token->get_content(), type::Type::integer);
   }
-  if (tokens.match(token::Type::identifier)) {
+  if (tokens.match({ token::Type::identifier, token::Type::print_int })) {
     std::unique_ptr<Identifier> id = std::make_unique<Identifier>(*token);
     if (!tokens.match(token::Type::left_parenthesis)) return id;
     return std::make_unique<Function>(std::move(id), parse_arguments());

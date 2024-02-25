@@ -33,7 +33,7 @@ namespace token {
 
     plus, minus, product, division, modulo,
 
-    bang, equal,
+    keyword_not, equal,
     equal_equal, not_equal,
     less, less_or_equal,
     greater, greater_or_equal,
@@ -51,10 +51,12 @@ namespace token {
 } /* token */
 
 const int expression = 0;
-const int term = 1;
-const int factor = 2;
-const int primary = 3;
-const int unknown = 4;
+const int equality = 1;
+const int comparison = 2;
+const int term = 3;
+const int factor = 4;
+const int primary = 5;
+const int unknown = 6;
 
 std::string to_string(const token::Type& type);
 
@@ -85,6 +87,7 @@ class Tokens {
     Token* peek() const;
     Token* consume();
     bool match(token::Type match_type);
+    bool match(std::vector<token::Type> types);
 
   private:
     Printer* printer;
