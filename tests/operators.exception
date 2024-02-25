@@ -1,1 +1,1 @@
-Expected semicolon, got Token((, LEFT_PARENTHESIS, unknown, (1,9))
+Expected semicolon, got Token(), RIGHT_PARENTHESIS, unknown, (6,21))

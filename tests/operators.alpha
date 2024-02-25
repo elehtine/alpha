@@ -2,6 +2,8 @@ print_int(1 + 2);
 print_int(3 - 4);
 print_int(5 * 6);
 print_int(7 / 2);
+
+print_int((1 + 2) * 3);
 print_int(1 + 2 * 3 - 4 / 2);
 
 if 1 < 2 then print_int(1) else print_int(2);

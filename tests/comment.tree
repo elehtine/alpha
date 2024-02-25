@@ -1,3 +1,7 @@
 {
-  integer
+  fun
+    print_int
+    (
+      1
+    )
 }

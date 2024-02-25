@@ -1,3 +1,0 @@
-LoadIntConst(1, x1)
-LoadIntConst(2, x2)
-Call(+, [x1, x2], x3)
