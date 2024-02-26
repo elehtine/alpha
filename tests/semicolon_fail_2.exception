@@ -1,1 +1,3 @@
-Expected semicolon or closing brace, got Token(c, IDENTIFIER, primary, (1,23))
+ParseException: expected SEMICOLON, RIGHT_BRACE, got IDENTIFIER
+{ if true then { a } b c }
+                       ^- unexpected token

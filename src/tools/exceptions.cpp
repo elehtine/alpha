@@ -5,41 +5,31 @@
 #include "../types/token.h"
 
 
-TokeniseException::TokeniseException(Location location) {
-  message = prefix + location.line.substr(location.column, 10);
-  message += suffix + std::to_string(location.row) + "\n";
-  message += location.line + "\n";
-  message += std::string(location.column, ' ') + "^- unknown token\n";
-}
+CompileException::CompileException(
+    const std::string type, const std::string& message):
+  message(type + message + "\n")
+{}
 
-const char* TokeniseException::what() const throw() {
+const char* CompileException::what() const throw() {
   return message.c_str();
 }
+
+TokeniseException::TokeniseException(const std::string& message):
+  CompileException("TokeniseException: ", message)
+{}
 
 ParseException::ParseException(const std::string& message):
-  message(message + "\n") {}
-
-const char* ParseException::what() const throw() {
-  return message.c_str();
-}
+  CompileException("ParseException: ", message)
+{}
 
 InterpretException::InterpretException(const std::string& message):
-  message(message + "\n") {}
-
-const char* InterpretException::what() const throw() {
-  return message.c_str();
-}
+  CompileException("InterpretException: ", message)
+{}
 
 TypeException::TypeException(const std::string& message):
-  message(message + "\n") {}
-
-const char* TypeException::what() const throw() {
-  return message.c_str();
-}
+  CompileException("TypeException: ", message)
+{}
 
 IrGenerateException::IrGenerateException(const std::string& message):
-  message(message + "\n") {}
-
-const char* IrGenerateException::what() const throw() {
-  return message.c_str();
-}
+  CompileException("IrGenerateException: ", message)
+{}

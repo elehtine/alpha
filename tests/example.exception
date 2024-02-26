@@ -1,1 +1,3 @@
-Expected literal or identifier, got Token(var, KEYWORD, unknown, (1,0))
+ParseException: expected LITERAL, IDENTIFIER, got KEYWORD
+var n: Int = read_int();
+^- unexpected token

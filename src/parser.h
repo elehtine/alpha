@@ -7,6 +7,7 @@
 #include "types/token.h"
 #include "types/ast.h"
 
+class ParseException;
 
 class Parser {
   public:

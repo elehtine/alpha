@@ -1,1 +1,3 @@
-Expected literal or identifier, got Token(+, PLUS, term, (1,4))
+ParseException: expected LITERAL, IDENTIFIER, got PLUS
+1 + + 2;
+    ^- unexpected token

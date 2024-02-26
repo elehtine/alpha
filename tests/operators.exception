@@ -1,1 +1,3 @@
-Expected semicolon, got Token(), RIGHT_PARENTHESIS, unknown, (6,21))
+ParseException: expected SEMICOLON, got RIGHT_PARENTHESIS
+print_int((1 + 2) * 3);
+                     ^- unexpected token

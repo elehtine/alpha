@@ -59,7 +59,7 @@ std::unique_ptr<Token> Tokeniser::scan_token() {
   }
 
   Location location(line, column, source.line(line));
-  throw TokeniseException(location);
+  throw location.error();
 }
 
 std::unique_ptr<Token> Tokeniser::create_token(token::Type type, std::string content) {

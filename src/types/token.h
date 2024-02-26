@@ -6,16 +6,21 @@
 #include <map>
 #include <memory>
 
+#include "../tools/exceptions.h"
 
 class Printer;
 
-struct Location {
-  Location(int row, int column, std::string line);
-  operator std::string() const;
+class Location {
+  public:
+    Location(int row, int column, std::string line);
+    operator std::string() const;
+    TokeniseException error();
+    std::string error_mark();
 
-  const int row;
-  const int column;
-  const std::string line;
+  private:
+    const int row;
+    const int column;
+    const std::string line;
 };
 
 namespace token {
@@ -63,11 +68,10 @@ class Token {
     operator std::string() const;
     bool match(token::Type match_type);
     virtual int level() const;
+    ParseException error(std::vector<token::Type> types);
 
     std::string get_content() const;
     std::string parse_str();
-
-    std::string message(std::vector<token::Type> need) const;
 
   private:
     token::Type type;
@@ -85,6 +89,9 @@ class Tokens {
     Token* consume();
     bool match(token::Type match_type);
     bool match(std::vector<token::Type> types);
+
+    ParseException error(std::vector<token::Type> types);
+    ParseException error(token::Type type);
 
   private:
     Printer* printer;

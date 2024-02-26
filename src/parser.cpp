@@ -20,12 +20,11 @@ std::unique_ptr<Expression> Parser::parse() {
   std::vector<std::unique_ptr<Expression>> expressions;
   while (!tokens.match(token::Type::eof)) {
     expressions.push_back(parse_expression());
-    if (!tokens.match(token::Type::semicolon) && !tokens.previous()->match(token::Type::right_brace)) {
-      throw ParseException("Expected semicolon, got " + std::string(*tokens.peek()));
+    if (!tokens.match(token::Type::semicolon)) {
+      if (!tokens.previous()->match(token::Type::right_brace)) {
+        throw tokens.error(token::Type::semicolon);
+      }
     }
-  }
-  if (expressions.size() == 0) {
-    throw ParseException("File cannot be empty");
   }
 
   std::unique_ptr<Expression> root =
@@ -43,7 +42,7 @@ std::unique_ptr<Expression> Parser::parse_expression() {
 std::unique_ptr<Expression> Parser::parse_parenthesis() {
   std::unique_ptr<Expression> result = parse_expression();
   if (!tokens.match(token::Type::right_parenthesis)) {
-    throw ParseException(tokens.peek()->message({ token::Type::right_parenthesis }));
+    throw tokens.error(token::Type::right_parenthesis);
   }
   return result;
 }
@@ -52,7 +51,7 @@ std::unique_ptr<Expression> Parser::parse_condition() {
   std::unique_ptr<Expression> condition = parse_expression();
 
   if (!tokens.match(token::Type::keyword_then)) {
-    throw ParseException("Expected then, got "+ tokens.peek()->get_content());
+    throw tokens.error(token::Type::keyword_then);
   }
   std::unique_ptr<Expression> then_expression = parse_expression();
 
@@ -72,7 +71,7 @@ std::unique_ptr<Expression> Parser::parse_block() {
 
     if (!tokens.match(token::Type::semicolon) && !tokens.previous()->match(token::Type::right_brace)) {
       if (tokens.match(token::Type::right_brace)) break;
-      throw ParseException("Expected semicolon or closing brace, got " + std::string(*tokens.peek()));
+      throw tokens.error({ token::Type::semicolon, token::Type::right_brace });
     }
 
     if (tokens.match(token::Type::right_brace)) {
@@ -91,7 +90,7 @@ std::unique_ptr<Arguments> Parser::parse_arguments() {
     if (!tokens.match(token::Type::comma)) break;
   }
   if (!tokens.match(token::Type::right_parenthesis)) {
-    throw ParseException("Expected right parenthesis, got " + std::string(*tokens.peek()));
+    throw tokens.error(token::Type::right_parenthesis);
   }
   return std::make_unique<Arguments>(args);
 }
@@ -122,5 +121,5 @@ std::unique_ptr<Expression> Parser::parse_primary() {
     if (!tokens.match(token::Type::left_parenthesis)) return id;
     return std::make_unique<Function>(std::move(id), parse_arguments());
   }
-  throw ParseException("Expected literal or identifier, got " + std::string(*token));
+  throw tokens.error({ token::Type::literal, token::Type::identifier });
 }

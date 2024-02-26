@@ -14,6 +14,20 @@ Location::operator std::string() const {
   return "(" + std::to_string(row) + "," + std::to_string(column) + ")";
 }
 
+TokeniseException Location::error() {
+  std::string message = "'" + line.substr(column, 10) + "' in line ";
+  message += std::to_string(row) + "\n";
+  message += error_mark() + "unknown token";
+  return message;
+}
+
+std::string Location::error_mark() {
+  std::string result = "";
+  result += line + "\n";
+  result += std::string(column, ' ') + "^- ";
+  return result;
+}
+
 std::string to_string(const token::Type& type) {
   if (type == token::Type::whitespace) return "WHITESPACE";
   if (type == token::Type::left_parenthesis) return "LEFT_PARENTHESIS";
@@ -65,16 +79,17 @@ std::string to_string(const int level) {
 }
 
 Token::Token(token::Type type, std::string content, Location location):
-  type(type), content(content), location(location) {}
+  type(type), content(content), location(location)
+{}
 
-  Token::operator std::string() const {
-    std::string result = "Token(";
-    result += content + ", ";
-    result += to_string(type) + ", ";
-    result += to_string(level()) + ", ";
-    result += std::string(location) + ")";
-    return result;
-  }
+Token::operator std::string() const {
+  std::string result = "Token(";
+  result += content + ", ";
+  result += to_string(type) + ", ";
+  result += to_string(level()) + ", ";
+  result += std::string(location) + ")";
+  return result;
+}
 
 std::string Token::get_content() const {
   return content;
@@ -82,7 +97,7 @@ std::string Token::get_content() const {
 
 std::string Token::parse_str() {
   if (type == token::Type::identifier) return content;
-  throw ParseException(message({ token::Type::identifier }));
+  throw error({ token::Type::identifier });
 }
 
 bool Token::match(token::Type match_type) {
@@ -99,6 +114,16 @@ int Token::level() const {
   return unknown;
 }
 
+ParseException Token::error(std::vector<token::Type> types) {
+  std::string message = "expected ";
+  for (token::Type type: types) {
+    message += to_string(type) + ", ";
+  }
+  message += "got " + to_string(type) + "\n";
+  message += location.error_mark() + "unexpected token";
+  return ParseException(message);
+}
+
 std::string types_to_string(std::vector<token::Type> vec) {
   std::string result = "";
   bool inter;
@@ -108,10 +133,6 @@ std::string types_to_string(std::vector<token::Type> vec) {
     result += to_string(element);
   }
   return result;
-}
-
-std::string Token::message(std::vector<token::Type> need) const {
-  return std::string(*this) + " is not " + types_to_string(need);
 }
 
 Tokens::Tokens(Printer* printer, std::vector<std::unique_ptr<Token>>& tokens):
@@ -157,3 +178,13 @@ bool Tokens::match(std::vector<token::Type> types) {
   }
   return false;
 }
+
+ParseException Tokens::error(std::vector<token::Type> types) {
+  return peek()->error(types);
+}
+
+ParseException Tokens::error(token::Type type) {
+  return error(std::vector<token::Type>{ type });
+}
+
+
