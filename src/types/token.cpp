@@ -7,10 +7,11 @@
 #include "ast.h"
 
 
-Location::Location(int line, int column): line(line), column(column) {}
+Location::Location(int row, int column, std::string line):
+  row(row), column(column), line(line) {}
 
 Location::operator std::string() const {
-  return "(" + std::to_string(line) + "," + std::to_string(column) + ")";
+  return "(" + std::to_string(row) + "," + std::to_string(column) + ")";
 }
 
 std::string to_string(const token::Type& type) {

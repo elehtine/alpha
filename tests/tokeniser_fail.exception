@@ -1,0 +1,3 @@
+TokeniseException: '$);' in line 1
+print_int(1$);
+           ^- unknown token

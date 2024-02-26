@@ -4,18 +4,21 @@
 #include <exception>
 #include <string>
 
+#include "../types/token.h"
+
 
 class CompileException : public std::exception {};
 
 class TokeniseException : public CompileException {
   public:
-    TokeniseException(const std::string& message);
+    TokeniseException(Location location);
     const char* what() const throw() override;
 
   private:
-    const std::string prefix = "Unknown tokens: '";
-    const std::string suffix = "'\n";
-    const std::string message;
+    const std::string prefix = "TokeniseException: '";
+    const std::string suffix = "' in line ";
+
+    std::string message;
 };
 
 class ParseException : public CompileException {

@@ -6,19 +6,16 @@
 #include <map>
 #include <memory>
 
-#include "../tools/exceptions.h"
-
 
 class Printer;
 
-class Location {
-  public:
-    Location(int line, int column);
-    operator std::string() const;
+struct Location {
+  Location(int row, int column, std::string line);
+  operator std::string() const;
 
-  private:
-    int line;
-    int column;
+  const int row;
+  const int column;
+  const std::string line;
 };
 
 namespace token {
