@@ -29,7 +29,6 @@ std::string Location::error_mark() {
 }
 
 std::string to_string(const token::Type& type) {
-  if (type == token::Type::whitespace) return "WHITESPACE";
   if (type == token::Type::left_parenthesis) return "LEFT_PARENTHESIS";
   if (type == token::Type::right_parenthesis) return "RIGHT_PARENTHESIS";
   if (type == token::Type::left_brace) return "LEFT_BRACE";
@@ -51,6 +50,8 @@ std::string to_string(const token::Type& type) {
   if (type == token::Type::less_or_equal) return "LESS_OR_EQUAL";
   if (type == token::Type::greater) return "GREATER";
   if (type == token::Type::greater_or_equal) return "GREATER_OR_EQUAL";
+  if (type == token::Type::logical_and) return "LOGICAL_AND";
+  if (type == token::Type::logical_or) return "LOGICAL_OR";
   if (type == token::Type::var) return "KEYWORD";
   if (type == token::Type::integer) return "INTEGER";
   if (type == token::Type::boolean) return "BOOLEAN";
@@ -61,8 +62,6 @@ std::string to_string(const token::Type& type) {
   if (type == token::Type::keyword_else) return "ELSE";
   if (type == token::Type::keyword_while) return "WHILE";
   if (type == token::Type::keyword_do) return "DO";
-  if (type == token::Type::read_int) return "READ_INT";
-  if (type == token::Type::print_int) return "PRINT_INT";
   if (type == token::Type::identifier) return "IDENTIFIER";
   if (type == token::Type::literal) return "LITERAL";
   if (type == token::Type::eof) return "EOF";
@@ -71,6 +70,11 @@ std::string to_string(const token::Type& type) {
 
 std::string to_string(const int level) {
   if (level == expression) return "expression";
+  if (level == assignment) return "assignment";
+  if (level == logical_or) return "logical_or";
+  if (level == logical_and) return "logical_and";
+  if (level == equality) return "equality";
+  if (level == comparison) return "comparison";
   if (level == term) return "term";
   if (level == factor) return "factor";
   if (level == primary) return "primary";
@@ -105,6 +109,9 @@ bool Token::match(token::Type match_type) {
 }
 
 int Token::level() const {
+  if (content == "=") return assignment;
+  if (content == "or") return logical_or;
+  if (content == "and") return logical_and;
   if (content == "==" || content == "!=") return equality;
   if (content[0] == '<' || content[0] == '>') return comparison;
   if (content == "+" || content == "-") return term;
@@ -156,6 +163,11 @@ Token* Tokens::previous() const {
 
 Token* Tokens::peek() const {
   int index = std::min(position, tokens.size() - 1);
+  return tokens[index].get();
+}
+
+Token* Tokens::peek_second() const {
+  int index = std::min(position+1, tokens.size() - 1);
   return tokens[index].get();
 }
 

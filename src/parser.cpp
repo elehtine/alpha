@@ -88,6 +88,8 @@ std::unique_ptr<Expression> Parser::parse_block() {
 
 std::unique_ptr<Expression> Parser::parse_binary(int level) {
   if (level == primary) return parse_primary();
+  if (level == assignment) return parse_assignment();
+
   std::unique_ptr<Expression> left = parse_binary(level + 1);
   while (tokens.peek()->level() == level) {
     Token* token = tokens.consume();
@@ -107,12 +109,32 @@ std::unique_ptr<Expression> Parser::parse_primary() {
   if (tokens.match(token::Type::literal)) {
     return std::make_unique<Literal>(token->get_content(), type::Type::integer);
   }
-  if (tokens.match({ token::Type::identifier, token::Type::print_int })) {
+  if (tokens.match(token::Type::identifier)) {
     std::unique_ptr<Identifier> id = std::make_unique<Identifier>(*token);
     if (!tokens.match(token::Type::left_parenthesis)) return id;
     return std::make_unique<Function>(std::move(id), parse_arguments());
   }
   throw tokens.error({ token::Type::literal, token::Type::identifier });
+}
+
+std::unique_ptr<Identifier> Parser::parse_identifier() {
+  Token* token = tokens.peek();
+  if (!tokens.match(token::Type::identifier)) {
+    throw tokens.error(token::Type::identifier);
+  }
+  return std::make_unique<Identifier>(*token);
+}
+
+std::unique_ptr<Expression> Parser::parse_assignment() {
+  Token* equal = tokens.peek_second();
+  if (!equal->match(token::Type::equal)) {
+    return parse_binary(assignment + 1);
+  }
+  std::unique_ptr<Identifier> name = parse_identifier();
+  equal = tokens.consume();
+  std::unique_ptr<Expression> value = parse_assignment();
+
+  return std::make_unique<BinaryOp>(std::move(name), equal, std::move(value));
 }
 
 std::unique_ptr<Arguments> Parser::parse_arguments() {

@@ -24,15 +24,15 @@ class Tokeniser {
     int column;
     int last_column;
 
-    const std::regex whitespace { "^(\\s)+" };
-    const std::regex comment { "^\\s*(//|#)[^\\\\]+" };
+    const std::regex whitespace { "^\\s+" };
+    const std::regex comment { "^(//|#)[^(\\n)]+" };
     const std::regex punctuation { "^(\\(|\\)|\\{|\\}|,|:|;)" };
-    const std::regex oper { "^(\\+|-|\\*|/|%|=|==|!=|<|<=|>|>=)" };
+    const std::regex oper { "^(\\+|-|\\*|/|%|=|==|!=|<|<=|>|>=|and|or)" };
     const std::regex keyword {
       "^(var|true|false|if|then|else|while|do)"
     };
     const std::regex identifier { "^[a-zA-Z_][a-zA-Z_0-9]*" };
-    const std::regex literal { "^\\d+" };
+    const std::regex literal { "^(\\d)+" };
 
     std::map<std::string, token::Type> str_to_type = {
       { "(", token::Type::left_parenthesis },
@@ -56,6 +56,8 @@ class Tokeniser {
       { "<=", token::Type::less_or_equal },
       { ">", token::Type::greater },
       { ">=", token::Type::greater_or_equal },
+      { "and", token::Type::logical_and },
+      { "or", token::Type::logical_or },
       { "var", token::Type::var },
       { "Int", token::Type::integer },
       { "Bool", token::Type::boolean },
@@ -66,8 +68,6 @@ class Tokeniser {
       { "else", token::Type::keyword_else },
       { "while", token::Type::keyword_while },
       { "do", token::Type::keyword_do },
-      { "read_int", token::Type::read_int },
-      { "print_int", token::Type::print_int },
     };
 
 };

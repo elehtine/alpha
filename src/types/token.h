@@ -26,8 +26,6 @@ class Location {
 namespace token {
 
   enum class Type {
-    whitespace,
-
     left_parenthesis, right_parenthesis,
     left_brace, right_brace,
     dot, comma,
@@ -39,11 +37,11 @@ namespace token {
     equal_equal, not_equal,
     less, less_or_equal,
     greater, greater_or_equal,
+    logical_and, logical_or,
 
     var, integer, boolean, keyword_true, keyword_false,
     keyword_if, keyword_then, keyword_else,
     keyword_while, keyword_do,
-    read_int, print_int,
 
     identifier, literal,
 
@@ -53,12 +51,15 @@ namespace token {
 } /* token */
 
 const int expression = 0;
-const int equality = 1;
-const int comparison = 2;
-const int term = 3;
-const int factor = 4;
-const int primary = 5;
-const int unknown = 6;
+const int assignment = 1;
+const int logical_or = 2;
+const int logical_and = 3;
+const int equality = 4;
+const int comparison = 5;
+const int term = 6;
+const int factor = 7;
+const int primary = 8;
+const int unknown = 9;
 
 std::string to_string(const token::Type& type);
 
@@ -86,6 +87,7 @@ class Tokens {
 
     Token* previous() const;
     Token* peek() const;
+    Token* peek_second() const;
     Token* consume();
     bool match(token::Type match_type);
     bool match(std::vector<token::Type> types);

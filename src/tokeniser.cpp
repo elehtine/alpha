@@ -46,6 +46,9 @@ std::unique_ptr<Token> Tokeniser::scan_token() {
 
   if (check(punctuation) || check(oper) || check(keyword)) {
     std::string content = source.line(line, last_column, column);
+    if (!str_to_type.count(content)) {
+      throw Location(line, column, source.line(line)).error();
+    }
     return create_token(str_to_type[content], content);
   }
 

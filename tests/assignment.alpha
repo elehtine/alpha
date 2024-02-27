@@ -1,0 +1,24 @@
+var x_1: Int = 1;
+var x_2 = 2 * x_1;
+
+print_int(x_1 + x_2);
+print_int(x_2 - x_1);
+
+{
+    var x_1: Int = 3;
+    var x_3 = 4;
+
+    print_int(x_1);
+    print_int(x_2);
+    print_int(x_3);
+}
+
+print_int(x_1);
+print_int(x_2);
+
+var x_4 = x_3 = x_2 = x_1 = 42;
+
+print_int(x_1);
+print_int(x_2);
+print_int(x_3);
+print_int(x_4);
