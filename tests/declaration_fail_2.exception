@@ -1,0 +1,3 @@
+ParseException: expected LITERAL, IDENTIFIER, got KEYWORD
+print_int(var x = 42);
+          ^- unexpected token

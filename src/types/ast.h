@@ -130,4 +130,23 @@ class Function: public Expression {
     std::unique_ptr<Arguments> arguments;
 };
 
+class Declaration: public Expression {
+  public:
+    Declaration(
+        std::unique_ptr<Identifier> name,
+        std::unique_ptr<Identifier> type,
+        std::unique_ptr<Expression> value);
+
+    std::string print(int level) const override;
+    std::unique_ptr<interpretation::Interpretation> interpret() const
+      override;
+    type::Type check() override;
+    IrVar visit(IrGenerator* generator) const override;
+
+  private:
+    std::unique_ptr<Identifier> name;
+    std::unique_ptr<Identifier> type;
+    std::unique_ptr<Expression> value;
+};
+
 #endif

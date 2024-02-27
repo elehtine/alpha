@@ -17,7 +17,8 @@ std::string Literal::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Literal::interpret() const {
+std::unique_ptr<interpretation::Interpretation> Literal::interpret() const
+{
   if (value == "true") return std::make_unique<interpretation::Integer>(1);
   if (value == "false" || value == "null") {
     return std::make_unique<interpretation::Integer>(0);
@@ -233,5 +234,31 @@ type::Type Function::check() {
 
 IrVar Function::visit(IrGenerator* generator) const {
   return arguments->visit(generator);
-  throw IrGenerateException("Function not implemented");
+}
+
+Declaration::Declaration(
+    std::unique_ptr<Identifier> name,
+    std::unique_ptr<Identifier> type,
+    std::unique_ptr<Expression> value):
+  name(std::move(name)), type(std::move(type)), value(std::move(value))
+{}
+
+std::string Declaration::print(int level) const {
+  std::string result = std::string(level * space, ' ') + "var\n";
+  result += name->print(level + 1);
+  if (type) result += type->print(level + 1);
+  result += value->print(level + 1);
+  return result;
+}
+
+std::unique_ptr<interpretation::Interpretation> Declaration::interpret() const {
+  return std::make_unique<interpretation::Integer>(0);
+}
+
+type::Type Declaration::check() {
+  return type::Type::unit;
+}
+
+IrVar Declaration::visit(IrGenerator* generator) const {
+  return value->visit(generator);
 }

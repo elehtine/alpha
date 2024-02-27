@@ -1,0 +1,25 @@
+{
+  var
+    x_1
+    Int
+    1
+  var
+    y_2
+      2
+    *
+      x_1
+  fun
+    print_int
+    (
+        x_1
+      +
+        y_2
+    )
+  fun
+    print_int
+    (
+        y_2
+      -
+        x_1
+    )
+}

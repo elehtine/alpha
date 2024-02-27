@@ -1,4 +1,4 @@
-Token(print_int, PRINT_INT, unknown, (2,0))
+Token(print_int, IDENTIFIER, primary, (2,0))
 Token((, LEFT_PARENTHESIS, unknown, (2,9))
 Token(1, LITERAL, primary, (2,10))
 Token(), RIGHT_PARENTHESIS, unknown, (2,11))

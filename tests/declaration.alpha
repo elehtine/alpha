@@ -1,0 +1,5 @@
+var x_1: Int = 1;
+var y_2 = 2 * x_1;
+
+print_int(x_1 + y_2);
+print_int(y_2 - x_1);

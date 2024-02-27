@@ -15,6 +15,7 @@ class Parser {
     std::unique_ptr<Expression> parse();
 
   private:
+    std::unique_ptr<Expression> parse_expression_statement();
     std::unique_ptr<Expression> parse_expression();
     std::unique_ptr<Expression> parse_binary(int level);
     std::unique_ptr<Expression> parse_primary();
@@ -23,6 +24,7 @@ class Parser {
     std::unique_ptr<Expression> parse_condition();
     std::unique_ptr<Expression> parse_block();
     std::unique_ptr<Arguments> parse_arguments();
+    std::unique_ptr<Expression> parse_declaration();
 
     Tokens& tokens;
     Printer* printer;

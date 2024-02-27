@@ -8,18 +8,17 @@
 #include "interpreter.h"
 
 
-bool binary(int level) {
-  return level < primary;
-}
+bool binary(int level) { return level < primary; }
 bool unary(int level) { return primary <= level; }
 
 Parser::Parser(Tokens& tokens, Printer* printer):
-  tokens(tokens), printer(printer) {}
+  tokens(tokens), printer(printer)
+{}
 
 std::unique_ptr<Expression> Parser::parse() {
   std::vector<std::unique_ptr<Expression>> expressions;
   while (!tokens.match(token::Type::eof)) {
-    expressions.push_back(parse_expression());
+    expressions.push_back(parse_expression_statement());
     if (!tokens.match(token::Type::semicolon)) {
       if (!tokens.previous()->match(token::Type::right_brace)) {
         throw tokens.error(token::Type::semicolon);
@@ -31,6 +30,11 @@ std::unique_ptr<Expression> Parser::parse() {
     std::make_unique<Block>(std::move(expressions));
   printer->print_tree(root.get());
   return root;
+}
+
+std::unique_ptr<Expression> Parser::parse_expression_statement() {
+  if (tokens.match(token::Type::var)) return parse_declaration();
+  return parse_expression();
 }
 
 std::unique_ptr<Expression> Parser::parse_expression() {
@@ -61,13 +65,13 @@ std::unique_ptr<Expression> Parser::parse_condition() {
   }
 
   return std::make_unique<IfThenElse>(std::move(condition),
-        std::move(then_expression), std::move(else_expression));
+      std::move(then_expression), std::move(else_expression));
 }
 
 std::unique_ptr<Expression> Parser::parse_block() {
   std::vector<std::unique_ptr<Expression>> expressions;
   while (true) {
-    expressions.push_back(std::move(parse_expression()));
+    expressions.push_back(std::move(parse_expression_statement()));
 
     if (!tokens.match(token::Type::semicolon) && !tokens.previous()->match(token::Type::right_brace)) {
       if (tokens.match(token::Type::right_brace)) break;
@@ -80,19 +84,6 @@ std::unique_ptr<Expression> Parser::parse_block() {
     }
   }
   return std::make_unique<Block>(std::move(expressions));
-}
-
-std::unique_ptr<Arguments> Parser::parse_arguments() {
-  tokens.match(token::Type::left_parenthesis);
-  std::vector<std::unique_ptr<Expression>> args;
-  while (true) {
-    args.push_back(parse_expression());
-    if (!tokens.match(token::Type::comma)) break;
-  }
-  if (!tokens.match(token::Type::right_parenthesis)) {
-    throw tokens.error(token::Type::right_parenthesis);
-  }
-  return std::make_unique<Arguments>(args);
 }
 
 std::unique_ptr<Expression> Parser::parse_binary(int level) {
@@ -122,4 +113,45 @@ std::unique_ptr<Expression> Parser::parse_primary() {
     return std::make_unique<Function>(std::move(id), parse_arguments());
   }
   throw tokens.error({ token::Type::literal, token::Type::identifier });
+}
+
+std::unique_ptr<Arguments> Parser::parse_arguments() {
+  std::vector<std::unique_ptr<Expression>> args;
+  if (tokens.match(token::Type::right_parenthesis)) {
+    return std::make_unique<Arguments>(args);
+  }
+
+  while (true) {
+    args.push_back(parse_expression());
+    if (!tokens.match(token::Type::comma)) break;
+  }
+  if (!tokens.match(token::Type::right_parenthesis)) {
+    throw tokens.error(token::Type::right_parenthesis);
+  }
+  return std::make_unique<Arguments>(args);
+}
+
+std::unique_ptr<Expression> Parser::parse_declaration() {
+  Token* token = tokens.peek();
+  if (!tokens.match(token::Type::identifier)) {
+    throw tokens.error(token::Type::identifier);
+  }
+  std::unique_ptr<Identifier> name = std::make_unique<Identifier>(*token);
+
+  std::unique_ptr<Identifier> type = nullptr;
+  if (tokens.match(token::Type::colon)) {
+    Token* token = tokens.peek();
+    if (!tokens.match(token::Type::identifier)) {
+      throw tokens.error(token::Type::identifier);
+    }
+    type = std::make_unique<Identifier>(*token);
+  }
+
+  if (!tokens.match(token::Type::equal)) {
+    throw tokens.error(token::Type::equal);
+  }
+  std::unique_ptr<Expression> expr = parse_expression();
+
+  return std::make_unique<Declaration>(
+      std::move(name), std::move(type), std::move(expr));
 }

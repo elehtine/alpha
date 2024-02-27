@@ -1,0 +1,3 @@
+ParseException: expected EQUAL, got PLUS
+var x + 1 = 42;
+      ^- unexpected token
