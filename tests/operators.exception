@@ -1,3 +1,0 @@
-ParseException: expected SEMICOLON, got RIGHT_PARENTHESIS
-print_int((1 + 2) * 3);
-                     ^- unexpected token

@@ -3,4 +3,4 @@
 { if true then { a }; b }
 { if true then { a } b; c }
 { if true then { a } else { b } 3 }
-// x = { { f(a) } { b } }
+var x = { { f(a) } { b } }
