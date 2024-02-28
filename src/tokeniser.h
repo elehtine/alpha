@@ -14,7 +14,7 @@ class Tokeniser {
 
   private:
     std::unique_ptr<Token> scan_token();
-    std::unique_ptr<Token> create_token(token::Type type, std::string content);
+    std::unique_ptr<Token> create_token(TokenType type, std::string content);
     bool check(const std::regex& expression);
 
     Source source;
@@ -34,40 +34,40 @@ class Tokeniser {
     const std::regex identifier { "^[a-zA-Z_][a-zA-Z_0-9]*" };
     const std::regex literal { "^(\\d)+" };
 
-    std::map<std::string, token::Type> str_to_type = {
-      { "(", token::Type::left_parenthesis },
-      { ")", token::Type::right_parenthesis },
-      { "{", token::Type::left_brace },
-      { "}", token::Type::right_brace },
-      { ".", token::Type::dot },
-      { ",", token::Type::comma },
-      { ":", token::Type::colon },
-      { ";", token::Type::semicolon },
-      { "+", token::Type::plus },
-      { "-", token::Type::minus },
-      { "*", token::Type::product },
-      { "/", token::Type::division },
-      { "%", token::Type::modulo },
-      { "!", token::Type::keyword_not },
-      { "=", token::Type::equal },
-      { "==", token::Type::equal_equal },
-      { "!=", token::Type::not_equal },
-      { "<", token::Type::less },
-      { "<=", token::Type::less_or_equal },
-      { ">", token::Type::greater },
-      { ">=", token::Type::greater_or_equal },
-      { "and", token::Type::logical_and },
-      { "or", token::Type::logical_or },
-      { "var", token::Type::var },
-      { "Int", token::Type::integer },
-      { "Bool", token::Type::boolean },
-      { "true", token::Type::keyword_true },
-      { "false", token::Type::keyword_false },
-      { "if", token::Type::keyword_if },
-      { "then", token::Type::keyword_then },
-      { "else", token::Type::keyword_else },
-      { "while", token::Type::keyword_while },
-      { "do", token::Type::keyword_do },
+    std::map<std::string, TokenType> str_to_type = {
+      { "(", TokenType::left_parenthesis },
+      { ")", TokenType::right_parenthesis },
+      { "{", TokenType::left_brace },
+      { "}", TokenType::right_brace },
+      { ".", TokenType::dot },
+      { ",", TokenType::comma },
+      { ":", TokenType::colon },
+      { ";", TokenType::semicolon },
+      { "+", TokenType::plus },
+      { "-", TokenType::minus },
+      { "*", TokenType::product },
+      { "/", TokenType::division },
+      { "%", TokenType::modulo },
+      { "!", TokenType::keyword_not },
+      { "=", TokenType::equal },
+      { "==", TokenType::equal_equal },
+      { "!=", TokenType::not_equal },
+      { "<", TokenType::less },
+      { "<=", TokenType::less_or_equal },
+      { ">", TokenType::greater },
+      { ">=", TokenType::greater_or_equal },
+      { "and", TokenType::logical_and },
+      { "or", TokenType::logical_or },
+      { "var", TokenType::var },
+      { "Int", TokenType::integer },
+      { "Bool", TokenType::boolean },
+      { "true", TokenType::keyword_true },
+      { "false", TokenType::keyword_false },
+      { "if", TokenType::keyword_if },
+      { "then", TokenType::keyword_then },
+      { "else", TokenType::keyword_else },
+      { "while", TokenType::keyword_while },
+      { "do", TokenType::keyword_do },
     };
 
 };

@@ -7,43 +7,43 @@
 #include "ast.h"
 
 
-std::string to_string(const token::Type& type) {
-  if (type == token::Type::left_parenthesis) return "LEFT_PARENTHESIS";
-  if (type == token::Type::right_parenthesis) return "RIGHT_PARENTHESIS";
-  if (type == token::Type::left_brace) return "LEFT_BRACE";
-  if (type == token::Type::right_brace) return "RIGHT_BRACE";
-  if (type == token::Type::dot) return "DOT";
-  if (type == token::Type::comma) return "COMMA";
-  if (type == token::Type::colon) return "COLON";
-  if (type == token::Type::semicolon) return "SEMICOLON";
-  if (type == token::Type::plus) return "PLUS";
-  if (type == token::Type::minus) return "MINUS";
-  if (type == token::Type::product) return "PRODUCT";
-  if (type == token::Type::division) return "DIVISION";
-  if (type == token::Type::modulo) return "MODULO";
-  if (type == token::Type::keyword_not) return "NOT";
-  if (type == token::Type::equal) return "EQUAL";
-  if (type == token::Type::equal_equal) return "EQUAL_EQUAL";
-  if (type == token::Type::not_equal) return "NOT_EQUAL";
-  if (type == token::Type::less) return "LESS";
-  if (type == token::Type::less_or_equal) return "LESS_OR_EQUAL";
-  if (type == token::Type::greater) return "GREATER";
-  if (type == token::Type::greater_or_equal) return "GREATER_OR_EQUAL";
-  if (type == token::Type::logical_and) return "LOGICAL_AND";
-  if (type == token::Type::logical_or) return "LOGICAL_OR";
-  if (type == token::Type::var) return "KEYWORD";
-  if (type == token::Type::integer) return "INTEGER";
-  if (type == token::Type::boolean) return "BOOLEAN";
-  if (type == token::Type::keyword_true) return "TRUE";
-  if (type == token::Type::keyword_false) return "FALSE";
-  if (type == token::Type::keyword_if) return "IF";
-  if (type == token::Type::keyword_then) return "THEN";
-  if (type == token::Type::keyword_else) return "ELSE";
-  if (type == token::Type::keyword_while) return "WHILE";
-  if (type == token::Type::keyword_do) return "DO";
-  if (type == token::Type::identifier) return "IDENTIFIER";
-  if (type == token::Type::literal) return "LITERAL";
-  if (type == token::Type::eof) return "EOF";
+std::string to_string(const TokenType& type) {
+  if (type == TokenType::left_parenthesis) return "LEFT_PARENTHESIS";
+  if (type == TokenType::right_parenthesis) return "RIGHT_PARENTHESIS";
+  if (type == TokenType::left_brace) return "LEFT_BRACE";
+  if (type == TokenType::right_brace) return "RIGHT_BRACE";
+  if (type == TokenType::dot) return "DOT";
+  if (type == TokenType::comma) return "COMMA";
+  if (type == TokenType::colon) return "COLON";
+  if (type == TokenType::semicolon) return "SEMICOLON";
+  if (type == TokenType::plus) return "PLUS";
+  if (type == TokenType::minus) return "MINUS";
+  if (type == TokenType::product) return "PRODUCT";
+  if (type == TokenType::division) return "DIVISION";
+  if (type == TokenType::modulo) return "MODULO";
+  if (type == TokenType::keyword_not) return "NOT";
+  if (type == TokenType::equal) return "EQUAL";
+  if (type == TokenType::equal_equal) return "EQUAL_EQUAL";
+  if (type == TokenType::not_equal) return "NOT_EQUAL";
+  if (type == TokenType::less) return "LESS";
+  if (type == TokenType::less_or_equal) return "LESS_OR_EQUAL";
+  if (type == TokenType::greater) return "GREATER";
+  if (type == TokenType::greater_or_equal) return "GREATER_OR_EQUAL";
+  if (type == TokenType::logical_and) return "LOGICAL_AND";
+  if (type == TokenType::logical_or) return "LOGICAL_OR";
+  if (type == TokenType::var) return "KEYWORD";
+  if (type == TokenType::integer) return "INTEGER";
+  if (type == TokenType::boolean) return "BOOLEAN";
+  if (type == TokenType::keyword_true) return "TRUE";
+  if (type == TokenType::keyword_false) return "FALSE";
+  if (type == TokenType::keyword_if) return "IF";
+  if (type == TokenType::keyword_then) return "THEN";
+  if (type == TokenType::keyword_else) return "ELSE";
+  if (type == TokenType::keyword_while) return "WHILE";
+  if (type == TokenType::keyword_do) return "DO";
+  if (type == TokenType::identifier) return "IDENTIFIER";
+  if (type == TokenType::literal) return "LITERAL";
+  if (type == TokenType::eof) return "EOF";
   return "";
 }
 
@@ -61,7 +61,7 @@ std::string to_string(const int level) {
   return "";
 }
 
-Token::Token(token::Type type, std::string content, Location location):
+Token::Token(TokenType type, std::string content, Location location):
   type(type), content(content), location(location)
 {}
 
@@ -79,15 +79,15 @@ std::string Token::get_content() const {
 }
 
 std::string Token::parse_str() {
-  if (type == token::Type::identifier) return content;
-  throw error({ token::Type::identifier });
+  if (type == TokenType::identifier) return content;
+  throw error({ TokenType::identifier });
 }
 
 Location Token::copy_location() const {
   return location;
 }
 
-bool Token::match(token::Type match_type) {
+bool Token::match(TokenType match_type) {
   return type == match_type;
 }
 
@@ -99,14 +99,14 @@ int Token::level() const {
   if (content[0] == '<' || content[0] == '>') return comparison;
   if (content == "+" || content == "-") return term;
   if (content == "*" || content == "/" || content == "%") return factor;
-  if (type == token::Type::identifier) return primary;
-  if (type == token::Type::literal) return primary;
+  if (type == TokenType::identifier) return primary;
+  if (type == TokenType::literal) return primary;
   return unknown;
 }
 
-ParseException Token::error(std::vector<token::Type> types) {
+ParseException Token::error(std::vector<TokenType> types) {
   std::string message = "expected ";
-  for (token::Type type: types) {
+  for (TokenType type: types) {
     message += to_string(type) + ", ";
   }
   message += "got " + to_string(type) + "\n";
@@ -114,10 +114,10 @@ ParseException Token::error(std::vector<token::Type> types) {
   return ParseException(message);
 }
 
-std::string types_to_string(std::vector<token::Type> vec) {
+std::string types_to_string(std::vector<TokenType> vec) {
   std::string result = "";
   bool inter;
-  for (const token::Type& element: vec) {
+  for (const TokenType& element: vec) {
     if (inter) result += " or ";
     inter = true;
     result += to_string(element);
@@ -160,26 +160,26 @@ Token* Tokens::consume() {
   return result;
 }
 
-bool Tokens::match(token::Type match_type) {
+bool Tokens::match(TokenType match_type) {
   Token* token = peek();
   if (!token->match(match_type)) return false;
   consume();
   return true;
 }
 
-bool Tokens::match(std::vector<token::Type> types) {
-  for (token::Type match_type: types) {
+bool Tokens::match(std::vector<TokenType> types) {
+  for (TokenType match_type: types) {
     if (match(match_type)) return true;
   }
   return false;
 }
 
-ParseException Tokens::error(std::vector<token::Type> types) {
+ParseException Tokens::error(std::vector<TokenType> types) {
   return peek()->error(types);
 }
 
-ParseException Tokens::error(token::Type type) {
-  return error(std::vector<token::Type>{ type });
+ParseException Tokens::error(TokenType type) {
+  return error(std::vector<TokenType>{ type });
 }
 
 

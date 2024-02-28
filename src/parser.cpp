@@ -20,11 +20,11 @@ std::unique_ptr<Expression> Parser::parse() {
   std::vector<std::unique_ptr<Expression>> expressions;
   Location location = tokens.peek()->copy_location();
 
-  while (!tokens.match(token::Type::eof)) {
+  while (!tokens.match(TokenType::eof)) {
     expressions.push_back(parse_expression_statement());
-    if (!tokens.match(token::Type::semicolon)) {
-      if (!tokens.previous()->match(token::Type::right_brace)) {
-        throw tokens.error(token::Type::semicolon);
+    if (!tokens.match(TokenType::semicolon)) {
+      if (!tokens.previous()->match(TokenType::right_brace)) {
+        throw tokens.error(TokenType::semicolon);
       }
     }
   }
@@ -39,19 +39,19 @@ std::unique_ptr<Expression> Parser::parse() {
 }
 
 std::unique_ptr<Expression> Parser::parse_expression_statement() {
-  if (tokens.match(token::Type::var)) return parse_declaration();
+  if (tokens.match(TokenType::var)) return parse_declaration();
   return parse_expression();
 }
 
 std::unique_ptr<Expression> Parser::parse_expression() {
-  if (tokens.match(token::Type::left_brace)) return parse_block();
+  if (tokens.match(TokenType::left_brace)) return parse_block();
   return parse_binary(expression);
 }
 
 std::unique_ptr<Expression> Parser::parse_parenthesis() {
   std::unique_ptr<Expression> result = parse_expression();
-  if (!tokens.match(token::Type::right_parenthesis)) {
-    throw tokens.error(token::Type::right_parenthesis);
+  if (!tokens.match(TokenType::right_parenthesis)) {
+    throw tokens.error(TokenType::right_parenthesis);
   }
   return result;
 }
@@ -60,14 +60,14 @@ std::unique_ptr<Expression> Parser::parse_condition() {
   Location location = tokens.peek()->copy_location();
   std::unique_ptr<Expression> condition = parse_expression();
 
-  if (!tokens.match(token::Type::keyword_then)) {
-    throw tokens.error(token::Type::keyword_then);
+  if (!tokens.match(TokenType::keyword_then)) {
+    throw tokens.error(TokenType::keyword_then);
   }
   std::unique_ptr<Expression> then_expression = parse_expression();
 
   std::unique_ptr<Expression> else_expression =
     std::make_unique<Literal>(location, "null", type::Type::unit);
-  if (tokens.match(token::Type::keyword_else)) {
+  if (tokens.match(TokenType::keyword_else)) {
     else_expression = parse_expression();
   }
 
@@ -79,8 +79,8 @@ std::unique_ptr<Expression> Parser::parse_loop() {
   Location location = tokens.peek()->copy_location();
   std::unique_ptr<Expression> condition = parse_expression();
 
-  if (!tokens.match(token::Type::keyword_do)) {
-    throw tokens.error(token::Type::keyword_do);
+  if (!tokens.match(TokenType::keyword_do)) {
+    throw tokens.error(TokenType::keyword_do);
   }
   std::unique_ptr<Expression> do_expression = parse_expression();
 
@@ -92,7 +92,7 @@ std::unique_ptr<Expression> Parser::parse_block() {
   Location location = tokens.peek()->copy_location();
   std::vector<std::unique_ptr<Expression>> expressions;
   while (true) {
-    if (tokens.match(token::Type::right_brace)) {
+    if (tokens.match(TokenType::right_brace)) {
       expressions.push_back(
           std::make_unique<Literal>(location, "null", type::Type::unit));
       break;
@@ -100,9 +100,9 @@ std::unique_ptr<Expression> Parser::parse_block() {
 
     expressions.push_back(std::move(parse_expression_statement()));
 
-    if (!tokens.match(token::Type::semicolon) && !tokens.previous()->match(token::Type::right_brace)) {
-      if (tokens.match(token::Type::right_brace)) break;
-      throw tokens.error({ token::Type::semicolon, token::Type::right_brace });
+    if (!tokens.match(TokenType::semicolon) && !tokens.previous()->match(TokenType::right_brace)) {
+      if (tokens.match(TokenType::right_brace)) break;
+      throw tokens.error({ TokenType::semicolon, TokenType::right_brace });
     }
   }
   return std::make_unique<Block>(std::move(expressions), location);
@@ -125,37 +125,37 @@ std::unique_ptr<Expression> Parser::parse_binary(int level) {
 
 std::unique_ptr<Expression> Parser::parse_primary() {
   Token* token = tokens.peek();
-  if (tokens.match(token::Type::left_parenthesis)) return parse_parenthesis();
-  if (tokens.match(token::Type::keyword_if)) return parse_condition();
-  if (tokens.match(token::Type::keyword_while)) return parse_loop();
+  if (tokens.match(TokenType::left_parenthesis)) return parse_parenthesis();
+  if (tokens.match(TokenType::keyword_if)) return parse_condition();
+  if (tokens.match(TokenType::keyword_while)) return parse_loop();
 
-  if (tokens.match({ token::Type::keyword_true, token::Type::keyword_false })) {
+  if (tokens.match({ TokenType::keyword_true, TokenType::keyword_false })) {
     return std::make_unique<Literal>(token->copy_location(),
         token->get_content(), type::Type::boolean);
   }
-  if (tokens.match(token::Type::literal)) {
+  if (tokens.match(TokenType::literal)) {
     return std::make_unique<Literal>(token->copy_location(),
         token->get_content(), type::Type::integer);
   }
-  if (tokens.match(token::Type::identifier)) {
+  if (tokens.match(TokenType::identifier)) {
     std::unique_ptr<Identifier> id = std::make_unique<Identifier>(*token, token->copy_location());
-    if (!tokens.match(token::Type::left_parenthesis)) return id;
+    if (!tokens.match(TokenType::left_parenthesis)) return id;
     return std::make_unique<Function>(std::move(id), parse_arguments(), token->copy_location());
   }
-  throw tokens.error({ token::Type::literal, token::Type::identifier });
+  throw tokens.error({ TokenType::literal, TokenType::identifier });
 }
 
 std::unique_ptr<Identifier> Parser::parse_identifier() {
   Token* token = tokens.peek();
-  if (!tokens.match(token::Type::identifier)) {
-    throw tokens.error(token::Type::identifier);
+  if (!tokens.match(TokenType::identifier)) {
+    throw tokens.error(TokenType::identifier);
   }
   return std::make_unique<Identifier>(*token, token->copy_location());
 }
 
 std::unique_ptr<Expression> Parser::parse_assignment() {
   Token* equal = tokens.peek_second();
-  if (!equal->match(token::Type::equal)) {
+  if (!equal->match(TokenType::equal)) {
     return parse_binary(assignment + 1);
   }
   std::unique_ptr<Identifier> name = parse_identifier();
@@ -169,39 +169,39 @@ std::unique_ptr<Expression> Parser::parse_assignment() {
 std::unique_ptr<Arguments> Parser::parse_arguments() {
   Location location = tokens.peek()->copy_location();
   std::vector<std::unique_ptr<Expression>> args;
-  if (tokens.match(token::Type::right_parenthesis)) {
+  if (tokens.match(TokenType::right_parenthesis)) {
     return std::make_unique<Arguments>(args, location);
   }
 
   while (true) {
     args.push_back(parse_expression());
-    if (!tokens.match(token::Type::comma)) break;
+    if (!tokens.match(TokenType::comma)) break;
   }
-  if (!tokens.match(token::Type::right_parenthesis)) {
-    throw tokens.error(token::Type::right_parenthesis);
+  if (!tokens.match(TokenType::right_parenthesis)) {
+    throw tokens.error(TokenType::right_parenthesis);
   }
   return std::make_unique<Arguments>(args, location);
 }
 
 std::unique_ptr<Expression> Parser::parse_declaration() {
   Token* token = tokens.peek();
-  if (!tokens.match(token::Type::identifier)) {
-    throw tokens.error(token::Type::identifier);
+  if (!tokens.match(TokenType::identifier)) {
+    throw tokens.error(TokenType::identifier);
   }
   std::unique_ptr<Identifier> name =
     std::make_unique<Identifier>(*token, token->copy_location());
 
   std::unique_ptr<Identifier> type = nullptr;
-  if (tokens.match(token::Type::colon)) {
+  if (tokens.match(TokenType::colon)) {
     Token* token = tokens.peek();
-    if (!tokens.match(token::Type::identifier)) {
-      throw tokens.error(token::Type::identifier);
+    if (!tokens.match(TokenType::identifier)) {
+      throw tokens.error(TokenType::identifier);
     }
     type = std::make_unique<Identifier>(*token, token->copy_location());
   }
 
-  if (!tokens.match(token::Type::equal)) {
-    throw tokens.error(token::Type::equal);
+  if (!tokens.match(TokenType::equal)) {
+    throw tokens.error(TokenType::equal);
   }
   std::unique_ptr<Expression> expr = parse_expression();
 

@@ -23,7 +23,7 @@ std::unique_ptr<Tokens> Tokeniser::tokenise() {
     }
   }
 
-  token_list.push_back(std::make_unique<Token>(token::Type::eof, "end",
+  token_list.push_back(std::make_unique<Token>(TokenType::eof, "end",
         Location(source.size(), 0, "")));
 
   return std::make_unique<Tokens>(printer, token_list);
@@ -46,18 +46,18 @@ std::unique_ptr<Token> Tokeniser::scan_token() {
 
   if (check(identifier)) {
     std::string content = source.line(line, last_column, column);
-    return create_token(token::Type::identifier, content);
+    return create_token(TokenType::identifier, content);
   }
   if (check(literal)) {
     std::string content = source.line(line, last_column, column);
-    return create_token(token::Type::literal, content);
+    return create_token(TokenType::literal, content);
   }
 
   Location location(line, column, source.line(line));
   throw location.error();
 }
 
-std::unique_ptr<Token> Tokeniser::create_token(token::Type type, std::string content) {
+std::unique_ptr<Token> Tokeniser::create_token(TokenType type, std::string content) {
   Location location(line, last_column, source.line(line));
   return std::make_unique<Token>(type, content, location);
 }

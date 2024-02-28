@@ -86,16 +86,16 @@ std::string BinaryOp::print(int level) const {
 std::unique_ptr<Interpretation> BinaryOp::interpret(Interpreter* interpreter) const {
   int left_value = *left->interpret(interpreter);
   int right_value = *right->interpret(interpreter);
-  if (op->match(token::Type::plus)) {
+  if (op->match(TokenType::plus)) {
     return std::make_unique<Integer>(left_value + right_value);
   }
-  if (op->match(token::Type::minus)) {
+  if (op->match(TokenType::minus)) {
     return std::make_unique<Integer>(left_value - right_value);
   }
-  if (op->match(token::Type::product)) {
+  if (op->match(TokenType::product)) {
     return std::make_unique<Integer>(left_value * right_value);
   }
-  if (op->match(token::Type::division)) {
+  if (op->match(TokenType::division)) {
     return std::make_unique<Integer>(left_value / right_value);
   }
   return std::make_unique<Integer>(1);

@@ -13,32 +13,28 @@ class Printer;
 class TokeniseException;
 class ParseException;
 
-namespace token {
+enum class TokenType {
+  left_parenthesis, right_parenthesis,
+  left_brace, right_brace,
+  dot, comma,
+  colon, semicolon,
 
-  enum class Type {
-    left_parenthesis, right_parenthesis,
-    left_brace, right_brace,
-    dot, comma,
-    colon, semicolon,
+  plus, minus, product, division, modulo,
 
-    plus, minus, product, division, modulo,
+  keyword_not, equal,
+  equal_equal, not_equal,
+  less, less_or_equal,
+  greater, greater_or_equal,
+  logical_and, logical_or,
 
-    keyword_not, equal,
-    equal_equal, not_equal,
-    less, less_or_equal,
-    greater, greater_or_equal,
-    logical_and, logical_or,
+  var, integer, boolean, keyword_true, keyword_false,
+  keyword_if, keyword_then, keyword_else,
+  keyword_while, keyword_do,
 
-    var, integer, boolean, keyword_true, keyword_false,
-    keyword_if, keyword_then, keyword_else,
-    keyword_while, keyword_do,
+  identifier, literal,
 
-    identifier, literal,
-
-    eof,
-  };
-
-} /* token */
+  eof,
+};
 
 const int expression = 0;
 const int assignment = 1;
@@ -51,22 +47,22 @@ const int factor = 7;
 const int primary = 8;
 const int unknown = 9;
 
-std::string to_string(const token::Type& type);
+std::string to_string(const TokenType& type);
 
 class Token {
   public:
-    Token(token::Type type, std::string content, Location location);
+    Token(TokenType type, std::string content, Location location);
     operator std::string() const;
-    bool match(token::Type match_type);
+    bool match(TokenType match_type);
     virtual int level() const;
-    ParseException error(std::vector<token::Type> types);
+    ParseException error(std::vector<TokenType> types);
 
     std::string get_content() const;
     std::string parse_str();
     Location copy_location() const;
 
   private:
-    token::Type type;
+    TokenType type;
     std::string content;
     Location location;
 };
@@ -80,11 +76,11 @@ class Tokens {
     Token* peek() const;
     Token* peek_second() const;
     Token* consume();
-    bool match(token::Type match_type);
-    bool match(std::vector<token::Type> types);
+    bool match(TokenType match_type);
+    bool match(std::vector<TokenType> types);
 
-    ParseException error(std::vector<token::Type> types);
-    ParseException error(token::Type type);
+    ParseException error(std::vector<TokenType> types);
+    ParseException error(TokenType type);
 
   private:
     Printer* printer;
