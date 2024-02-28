@@ -2,6 +2,7 @@
 #include "type.h"
 #include "ir.h"
 
+#include "../interpreter.h"
 #include "../ir_generator.h"
 #include "../tools/exceptions.h"
 #include "../tools/readwrite.h"
@@ -98,6 +99,37 @@ std::unique_ptr<Interpretation> BinaryOp::interpret(Interpreter* interpreter) co
   if (op->match(TokenType::division)) {
     return std::make_unique<Integer>(left_value / right_value);
   }
+  if (op->match(TokenType::modulo)) {
+    return std::make_unique<Integer>(left_value % right_value);
+  }
+
+  if (op->match(TokenType::equal_equal)) {
+    return std::make_unique<Integer>(left_value == right_value);
+  }
+  if (op->match(TokenType::not_equal)) {
+    return std::make_unique<Integer>(left_value != right_value);
+  }
+
+  if (op->match(TokenType::less_or_equal)) {
+    return std::make_unique<Integer>(left_value <= right_value);
+  }
+  if (op->match(TokenType::greater_or_equal)) {
+    return std::make_unique<Integer>(left_value >= right_value);
+  }
+  if (op->match(TokenType::less)) {
+    return std::make_unique<Integer>(left_value < right_value);
+  }
+  if (op->match(TokenType::greater)) {
+    return std::make_unique<Integer>(left_value > right_value);
+  }
+
+  if (op->match(TokenType::logical_and)) {
+    return std::make_unique<Integer>(left_value && right_value);
+  }
+  if (op->match(TokenType::logical_or)) {
+    return std::make_unique<Integer>(left_value || right_value);
+  }
+
   return std::make_unique<Integer>(1);
 }
 
@@ -266,9 +298,9 @@ std::string Function::print(int level) const {
 
 std::unique_ptr<Interpretation> Function::interpret(Interpreter* interpreter) const {
   if (fun->is_name("print_int")) {
-    return nullptr;
+    interpreter->add_interpretation(std::move(arguments->interpret(interpreter)));
   }
-  throw InterpretException("Unknown function");
+  return std::make_unique<Integer>(1);
 }
 
 type::Type Function::check() {

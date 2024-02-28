@@ -11,7 +11,7 @@ Integer::operator bool() const {
   throw InterpretException("Expected bool, got int");
 }
 Integer::operator std::string() const {
-  return std::to_string(value) + "\n";
+  return std::to_string(value);
 }
 
 Boolean::Boolean(bool value): value(value) {}
@@ -21,5 +21,5 @@ Boolean::operator int() const {
   throw InterpretException("Expected int, got bool");
 }
 Boolean::operator std::string() const {
-  return "TRUE\n";
+  return "TRUE";
 }
