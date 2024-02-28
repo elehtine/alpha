@@ -35,7 +35,7 @@ class Printer {
     virtual void print_asm(std::vector<std::string> lines) = 0;
 
     virtual void print_interpretation(
-        interpretation::Interpretation* interpretation) = 0;
+        std::vector<Interpretation*> interpretations) = 0;
     virtual void print_check(bool check) = 0;
 
     virtual void print_exception(const CompileException& exception) = 0;
@@ -51,8 +51,8 @@ class UserPrinter: public Printer  {
     void print_ir(std::vector<Instruction*> ir) override;
     void print_asm(std::vector<std::string> lines) override;
 
-    void print_interpretation(
-        interpretation::Interpretation* interpretation) override;
+    virtual void print_interpretation(
+        std::vector<Interpretation*> interpretations) override;
     void print_check(bool check) override;
 
     void print_exception(const CompileException& exception) override;
@@ -81,8 +81,8 @@ class FilePrinter: public Printer  {
     void print_ir(std::vector<Instruction*> ir) override;
     void print_asm(std::vector<std::string> lines) override;
 
-    void print_interpretation(
-        interpretation::Interpretation* interpretation) override;
+    virtual void print_interpretation(
+        std::vector<Interpretation*> interpretations) override;
     void print_check(bool check) override;
 
     void print_exception(const CompileException& exception) override;

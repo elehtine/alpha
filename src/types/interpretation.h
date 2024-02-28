@@ -4,37 +4,33 @@
 #include <string>
 
 
-namespace interpretation {
+class Interpretation {
+  public:
+    virtual operator int() const = 0;
+    virtual operator bool() const = 0;
+    virtual operator std::string() const = 0;
+};
 
-  class Interpretation {
-    public:
-      virtual operator int() = 0;
-      virtual operator bool() = 0;
-      virtual operator std::string() = 0;
-  };
+class Integer: public Interpretation {
+  public:
+    Integer(int value);
+    operator int() const override;
+    operator bool() const override;
+    operator std::string() const override;
 
-  class Integer: public Interpretation {
-    public:
-      Integer(int value);
-      operator int() override;
-      operator bool() override;
-      operator std::string() override;
+  private:
+    int value;
+};
 
-    private:
-      int value;
-  };
+class Boolean: public Interpretation {
+  public:
+    Boolean(bool value);
+    operator int() const override;
+    operator bool() const override;
+    operator std::string() const override;
 
-  class Boolean: public Interpretation {
-    public:
-      Boolean(bool value);
-      operator int() override;
-      operator bool() override;
-      operator std::string() override;
-
-    private:
-      bool value;
-  };
-
-} /* value */
+  private:
+    bool value;
+};
 
 #endif

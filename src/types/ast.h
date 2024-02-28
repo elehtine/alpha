@@ -9,12 +9,11 @@
 
 
 class Token;
-namespace interpretation {
-  class Interpretation;
-}
+class Interpretation;
 namespace type {
   enum class Type;
 }
+class Interpreter;
 class IrGenerator;
 class IrVar;
 class Printer;
@@ -24,7 +23,7 @@ class Expression {
   public:
     virtual ~Expression();
     virtual std::string print(int level) const = 0;
-    virtual std::unique_ptr<interpretation::Interpretation> interpret(Printer* printer) const = 0;
+    virtual std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const = 0;
     virtual type::Type check() = 0;
 
     virtual IrVar visit(IrGenerator* generator) const = 0;
@@ -40,7 +39,7 @@ class Literal : public Expression {
     Literal(Location location, std::string value, type::Type type);
 
     std::string print(int level) const override;
-    std::unique_ptr<interpretation::Interpretation> interpret(Printer* printer) const override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
     type::Type check() override;
 
     IrVar visit(IrGenerator* generator) const override;
@@ -55,7 +54,7 @@ class Identifier : public Expression {
     Identifier(Token token, Location location);
 
     std::string print(int level) const override;
-    std::unique_ptr<interpretation::Interpretation> interpret(Printer* printer) const override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
     type::Type check() override;
 
     IrVar visit(IrGenerator* generator) const override;
@@ -71,7 +70,7 @@ class BinaryOp : public Expression {
     BinaryOp(std::unique_ptr<Expression> left, Token* op,
         std::unique_ptr<Expression> right, Location location);
     std::string print(int level) const override;
-    std::unique_ptr<interpretation::Interpretation> interpret(Printer* printer) const override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
     type::Type check() override;
 
     IrVar visit(IrGenerator* generator) const override;
@@ -89,7 +88,7 @@ class IfThenElse : public Expression {
         std::unique_ptr<Expression> else_expression,
         Location location);
     std::string print(int level) const override;
-    std::unique_ptr<interpretation::Interpretation> interpret(Printer* printer) const override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
     type::Type check() override;
 
     IrVar visit(IrGenerator* generator) const override;
@@ -106,7 +105,7 @@ class While : public Expression {
         std::unique_ptr<Expression> do_expression,
         Location location);
     std::string print(int level) const override;
-    std::unique_ptr<interpretation::Interpretation> interpret(Printer* printer) const override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
     type::Type check() override;
     IrVar visit(IrGenerator* generator) const override;
 
@@ -119,7 +118,7 @@ class Block : public Expression {
   public:
     Block(std::vector<std::unique_ptr<Expression>> expressions, Location location);
     std::string print(int level) const override;
-    std::unique_ptr<interpretation::Interpretation> interpret(Printer* printer) const override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
     type::Type check() override;
 
     IrVar visit(IrGenerator* generator) const override;
@@ -134,7 +133,7 @@ class Arguments: public Expression {
         Location location);
 
     std::string print(int level) const override;
-    std::unique_ptr<interpretation::Interpretation> interpret(Printer* printer) const override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
     type::Type check() override;
     IrVar visit(IrGenerator* generator) const override;
 
@@ -149,7 +148,7 @@ class Function: public Expression {
         Location location);
 
     std::string print(int level) const override;
-    std::unique_ptr<interpretation::Interpretation> interpret(Printer* printer) const override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
     type::Type check() override;
     IrVar visit(IrGenerator* generator) const override;
 
@@ -167,8 +166,7 @@ class Declaration: public Expression {
         Location location);
 
     std::string print(int level) const override;
-    std::unique_ptr<interpretation::Interpretation> interpret(Printer* printer) const
-      override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
     type::Type check() override;
     IrVar visit(IrGenerator* generator) const override;
 

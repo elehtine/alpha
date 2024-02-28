@@ -3,21 +3,24 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 class Expression;
-namespace interpretation {
-  class Interpretation;
-}
+class Interpretation;
 class Printer;
 
 class Interpreter {
   public:
     Interpreter(Expression* tree, Printer* printer);
-    std::unique_ptr<interpretation::Interpretation> interpret();
+    void add_interpretation(std::unique_ptr<Interpretation> value);
 
   private:
+    std::vector<Interpretation*> get_interpretations();
+
     Expression* tree;
     Printer* printer;
+
+    std::vector<std::unique_ptr<Interpretation>> interpretations;
 };
 
 #endif

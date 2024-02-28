@@ -53,7 +53,7 @@ void write(const std::string& file, const std::string& content) {
   out.close();
 }
 
-template<typename T>
+template<class T>
 std::string to_string(std::vector<T> vec) {
   std::string result = "";
   for (const T& element: vec) {
@@ -62,9 +62,10 @@ std::string to_string(std::vector<T> vec) {
   return result;
 }
 
-std::string to_string(const std::vector<Token*> vec) {
+template<class T>
+std::string to_string(const std::vector<T*> vec) {
   std::string result = "";
-  for (const Token* element: vec) {
+  for (const T* element: vec) {
     result += std::string(*element) + "\n";
   }
   return result;
@@ -107,9 +108,9 @@ void UserPrinter::print_asm(std::vector<std::string> lines) {
   std::cout << to_string(lines) << std::endl;
 }
 
-void UserPrinter::print_interpretation(interpretation::Interpretation* interpretation) {
+void UserPrinter::print_interpretation(std::vector<Interpretation*> interpretations) {
   std::cout << "Interpretation:" << std::endl;
-  std::cout << std::string(*interpretation) << std::endl;
+  std::cout << to_string(interpretations) << std::endl;
 }
 
 void UserPrinter::print_check(bool check) {
@@ -148,8 +149,8 @@ void FilePrinter::print_asm(std::vector<std::string> lines) {
   print(to_string(lines), filename(FileType::assembly));
 }
 
-void FilePrinter::print_interpretation(interpretation::Interpretation* interpretation) {
-  print(std::string(*interpretation), filename(FileType::interpret));
+void FilePrinter::print_interpretation(std::vector<Interpretation*> interpretations) {
+  print(to_string(interpretations), filename(FileType::interpret));
 }
 
 void FilePrinter::print_check(bool check) {

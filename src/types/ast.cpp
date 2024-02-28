@@ -21,13 +21,12 @@ std::string Literal::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Literal::interpret(Printer* printer) const
-{
-  if (value == "true") return std::make_unique<interpretation::Integer>(1);
+std::unique_ptr<Interpretation> Literal::interpret(Interpreter* interpreter) const {
+  if (value == "true") return std::make_unique<Integer>(1);
   if (value == "false" || value == "null") {
-    return std::make_unique<interpretation::Integer>(0);
+    return std::make_unique<Integer>(0);
   }
-  return std::make_unique<interpretation::Integer>(std::stoi(value));
+  return std::make_unique<Integer>(std::stoi(value));
 }
 
 IrVar Literal::visit(IrGenerator* generator) const {
@@ -54,8 +53,8 @@ std::string Identifier::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Identifier::interpret(Printer* printer) const {
-  return std::make_unique<interpretation::Integer>(1);
+std::unique_ptr<Interpretation> Identifier::interpret(Interpreter* interpreter) const {
+  return std::make_unique<Integer>(1);
 }
 
 type::Type Identifier::check() {
@@ -72,33 +71,34 @@ bool Identifier::is_name(std::string guess) const {
 
 BinaryOp::BinaryOp(std::unique_ptr<Expression> left, Token* op,
     std::unique_ptr<Expression> right, Location location):
-  Expression(location), left(std::move(left)), op(op), right(std::move(right)) {}
+  Expression(location), left(std::move(left)), op(op), right(std::move(right))
+{}
 
-  std::string BinaryOp::print(int level) const {
-    std::string result = left->print(level+1);
-    result += std::string(level * space, ' ');
-    result += op->get_content();
-    result += "\n";
-    result += right->print(level+1);
-    return result;
-  }
+std::string BinaryOp::print(int level) const {
+  std::string result = left->print(level+1);
+  result += std::string(level * space, ' ');
+  result += op->get_content();
+  result += "\n";
+  result += right->print(level+1);
+  return result;
+}
 
-std::unique_ptr<interpretation::Interpretation> BinaryOp::interpret(Printer* printer) const {
-  int left_value = *left->interpret(printer);
-  int right_value = *right->interpret(printer);
+std::unique_ptr<Interpretation> BinaryOp::interpret(Interpreter* interpreter) const {
+  int left_value = *left->interpret(interpreter);
+  int right_value = *right->interpret(interpreter);
   if (op->match(token::Type::plus)) {
-    return std::make_unique<interpretation::Integer>(left_value + right_value);
+    return std::make_unique<Integer>(left_value + right_value);
   }
   if (op->match(token::Type::minus)) {
-    return std::make_unique<interpretation::Integer>(left_value - right_value);
+    return std::make_unique<Integer>(left_value - right_value);
   }
   if (op->match(token::Type::product)) {
-    return std::make_unique<interpretation::Integer>(left_value * right_value);
+    return std::make_unique<Integer>(left_value * right_value);
   }
   if (op->match(token::Type::division)) {
-    return std::make_unique<interpretation::Integer>(left_value / right_value);
+    return std::make_unique<Integer>(left_value / right_value);
   }
-  return std::make_unique<interpretation::Integer>(1);
+  return std::make_unique<Integer>(1);
 }
 
 type::Type BinaryOp::check() {
@@ -142,11 +142,10 @@ std::string IfThenElse::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> IfThenElse::interpret(Printer* printer) const
-{
-  int cond = *condition->interpret(printer);
-  if (cond == 0) return else_expression->interpret(printer);
-  return then_expression->interpret(printer);
+std::unique_ptr<Interpretation> IfThenElse::interpret(Interpreter* interpreter) const {
+  int cond = *condition->interpret(interpreter);
+  if (cond == 0) return else_expression->interpret(interpreter);
+  return then_expression->interpret(interpreter);
 }
 
 type::Type IfThenElse::check() {
@@ -182,9 +181,8 @@ std::string While::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> While::interpret(Printer* printer) const
-{
-  return do_expression->interpret(printer);
+std::unique_ptr<Interpretation> While::interpret(Interpreter* interpreter) const {
+  return do_expression->interpret(interpreter);
 }
 
 type::Type While::check() {
@@ -209,11 +207,10 @@ std::string Block::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Block::interpret(Printer* printer) const
-{
-  std::unique_ptr<interpretation::Interpretation> result;
+std::unique_ptr<Interpretation> Block::interpret(Interpreter* interpreter) const {
+  std::unique_ptr<Interpretation> result;
   for (const std::unique_ptr<Expression>& expr: expressions) {
-    result = expr->interpret(printer);
+    result = expr->interpret(interpreter);
   }
   return result;
 }
@@ -240,9 +237,9 @@ std::string Arguments::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Arguments::interpret(Printer* printer) const {
-  if (arguments.size() == 1) return arguments[0]->interpret(printer);
-  return std::make_unique<interpretation::Integer>(1);
+std::unique_ptr<Interpretation> Arguments::interpret(Interpreter* interpreter) const {
+  if (arguments.size() == 1) return arguments[0]->interpret(interpreter);
+  return std::make_unique<Integer>(1);
 }
 
 type::Type Arguments::check() {
@@ -267,9 +264,8 @@ std::string Function::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Function::interpret(Printer* printer) const {
+std::unique_ptr<Interpretation> Function::interpret(Interpreter* interpreter) const {
   if (fun->is_name("print_int")) {
-    printer->print_interpretation(arguments->interpret(printer).get());
     return nullptr;
   }
   throw InterpretException("Unknown function");
@@ -300,8 +296,8 @@ std::string Declaration::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Declaration::interpret(Printer* printer) const {
-  return std::make_unique<interpretation::Integer>(0);
+std::unique_ptr<Interpretation> Declaration::interpret(Interpreter* interpreter) const {
+  return std::make_unique<Integer>(0);
 }
 
 type::Type Declaration::check() {
