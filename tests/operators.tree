@@ -116,25 +116,29 @@
   fun
     print_int
     (
-      if
+        3
+      +
+        if
+            1
+          <
+            2
+        then
           1
-        <
+        else
           2
-      then
-        1
-      else
-        2
     )
   fun
     print_int
     (
-      if
+        3
+      +
+        if
+            1
+          >
+            2
+        then
           1
-        >
+        else
           2
-      then
-        1
-      else
-        2
     )
 }

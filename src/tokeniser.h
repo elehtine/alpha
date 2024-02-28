@@ -27,7 +27,7 @@ class Tokeniser {
     const std::regex whitespace { "^\\s+" };
     const std::regex comment { "^(//|#)[^(\\n)]+" };
     const std::regex punctuation { "^(\\(|\\)|\\{|\\}|,|:|;)" };
-    const std::regex oper { "^(\\+|-|\\*|/|%|=|==|!=|<|<=|>|>=|and|or)" };
+    const std::regex oper { "^(\\+|-|\\*|/|%|==|!=|<=|>=|=|<|>|and|or)" };
     const std::regex keyword {
       "^(var|true|false|if|then|else|while|do)"
     };
@@ -50,7 +50,7 @@ class Tokeniser {
       { "%", token::Type::modulo },
       { "!", token::Type::keyword_not },
       { "=", token::Type::equal },
-      { "==", token::Type::equal },
+      { "==", token::Type::equal_equal },
       { "!=", token::Type::not_equal },
       { "<", token::Type::less },
       { "<=", token::Type::less_or_equal },

@@ -24,6 +24,7 @@ class Parser {
     std::unique_ptr<Expression> parse_assignment();
     std::unique_ptr<Expression> parse_parenthesis();
     std::unique_ptr<Expression> parse_condition();
+    std::unique_ptr<Expression> parse_loop();
     std::unique_ptr<Expression> parse_block();
     std::unique_ptr<Arguments> parse_arguments();
     std::unique_ptr<Expression> parse_declaration();

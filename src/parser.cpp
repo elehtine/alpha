@@ -38,7 +38,6 @@ std::unique_ptr<Expression> Parser::parse_expression_statement() {
 }
 
 std::unique_ptr<Expression> Parser::parse_expression() {
-  if (tokens.match(token::Type::keyword_if)) return parse_condition();
   if (tokens.match(token::Type::left_brace)) return parse_block();
   return parse_binary(expression);
 }
@@ -66,6 +65,18 @@ std::unique_ptr<Expression> Parser::parse_condition() {
 
   return std::make_unique<IfThenElse>(std::move(condition),
       std::move(then_expression), std::move(else_expression));
+}
+
+std::unique_ptr<Expression> Parser::parse_loop() {
+  std::unique_ptr<Expression> condition = parse_expression();
+
+  if (!tokens.match(token::Type::keyword_do)) {
+    throw tokens.error(token::Type::keyword_do);
+  }
+  std::unique_ptr<Expression> do_expression = parse_expression();
+
+  return std::make_unique<While>(
+      std::move(condition), std::move(do_expression));
 }
 
 std::unique_ptr<Expression> Parser::parse_block() {
@@ -103,6 +114,9 @@ std::unique_ptr<Expression> Parser::parse_binary(int level) {
 std::unique_ptr<Expression> Parser::parse_primary() {
   Token* token = tokens.peek();
   if (tokens.match(token::Type::left_parenthesis)) return parse_parenthesis();
+  if (tokens.match(token::Type::keyword_if)) return parse_condition();
+  if (tokens.match(token::Type::keyword_while)) return parse_loop();
+
   if (tokens.match({ token::Type::keyword_true, token::Type::keyword_false })) {
     return std::make_unique<Literal>(token->get_content(), type::Type::boolean);
   }

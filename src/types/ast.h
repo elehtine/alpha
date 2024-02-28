@@ -90,6 +90,20 @@ class IfThenElse : public Expression {
     std::unique_ptr<Expression> else_expression;
 };
 
+class While : public Expression {
+  public:
+    While(std::unique_ptr<Expression> condition,
+        std::unique_ptr<Expression> do_expression);
+    std::string print(int level) const override;
+    std::unique_ptr<interpretation::Interpretation> interpret() const override;
+    type::Type check() override;
+    IrVar visit(IrGenerator* generator) const override;
+
+  private:
+    std::unique_ptr<Expression> condition;
+    std::unique_ptr<Expression> do_expression;
+};
+
 class Block : public Expression {
   public:
     Block(std::vector<std::unique_ptr<Expression>> expressions);

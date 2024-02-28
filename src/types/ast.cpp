@@ -158,6 +158,33 @@ IrVar IfThenElse::visit(IrGenerator* generator) const {
   return IrVar("null");
 }
 
+While::While(std::unique_ptr<Expression> condition,
+    std::unique_ptr<Expression> do_expression):
+  condition(std::move(condition)),
+  do_expression(std::move(do_expression))
+{}
+
+std::string While::print(int level) const {
+  std::string result = std::string(level * space, ' ') + "while\n";
+  result += condition->print(level+1);
+  result += std::string(level * space, ' ') + "do\n";
+  result += do_expression->print(level+1);
+  return result;
+}
+
+std::unique_ptr<interpretation::Interpretation> While::interpret() const
+{
+  return do_expression->interpret();
+}
+
+type::Type While::check() {
+  throw TypeException("not implemented if");
+}
+
+IrVar While::visit(IrGenerator* generator) const {
+  return IrVar("null");
+}
+
 Block::Block(std::vector<std::unique_ptr<Expression>> expressions):
   expressions(std::move(expressions))
 {}
