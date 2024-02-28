@@ -7,27 +7,6 @@
 #include "ast.h"
 
 
-Location::Location(int row, int column, std::string line):
-  row(row), column(column), line(line) {}
-
-Location::operator std::string() const {
-  return "(" + std::to_string(row) + "," + std::to_string(column) + ")";
-}
-
-TokeniseException Location::error() {
-  std::string message = "'" + line.substr(column, 10) + "' in line ";
-  message += std::to_string(row) + "\n";
-  message += error_mark() + "unknown token";
-  return message;
-}
-
-std::string Location::error_mark() {
-  std::string result = "";
-  result += line + "\n";
-  result += std::string(column, ' ') + "^- ";
-  return result;
-}
-
 std::string to_string(const token::Type& type) {
   if (type == token::Type::left_parenthesis) return "LEFT_PARENTHESIS";
   if (type == token::Type::right_parenthesis) return "RIGHT_PARENTHESIS";
@@ -102,6 +81,10 @@ std::string Token::get_content() const {
 std::string Token::parse_str() {
   if (type == token::Type::identifier) return content;
   throw error({ token::Type::identifier });
+}
+
+Location Token::copy_location() const {
+  return location;
 }
 
 bool Token::match(token::Type match_type) {

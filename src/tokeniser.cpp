@@ -1,3 +1,4 @@
+#include "types/location.h"
 #include "tokeniser.h"
 #include "tools/readwrite.h"
 

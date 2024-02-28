@@ -4,19 +4,20 @@
 #include <string>
 #include <memory>
 
-#include "types/ast.h"
-#include "types/interpretation.h"
-
-#include "tools/readwrite.h"
-
+class Expression;
+namespace interpretation {
+  class Interpretation;
+}
+class Printer;
 
 class Interpreter {
   public:
     Interpreter(Expression* tree, Printer* printer);
-    interpretation::Interpretation* get_interpretation();
+    std::unique_ptr<interpretation::Interpretation> interpret();
 
   private:
-    std::unique_ptr<interpretation::Interpretation> interpretation;
+    Expression* tree;
+    Printer* printer;
 };
 
 #endif

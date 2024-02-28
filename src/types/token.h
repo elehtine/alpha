@@ -6,22 +6,12 @@
 #include <map>
 #include <memory>
 
-#include "../tools/exceptions.h"
+#include "location.h"
+
 
 class Printer;
-
-class Location {
-  public:
-    Location(int row, int column, std::string line);
-    operator std::string() const;
-    TokeniseException error();
-    std::string error_mark();
-
-  private:
-    const int row;
-    const int column;
-    const std::string line;
-};
+class TokeniseException;
+class ParseException;
 
 namespace token {
 
@@ -73,6 +63,7 @@ class Token {
 
     std::string get_content() const;
     std::string parse_str();
+    Location copy_location() const;
 
   private:
     token::Type type;

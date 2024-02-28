@@ -4,6 +4,7 @@
 #include "tools/readwrite.h"
 #include "tools/exceptions.h"
 #include "types/token.h"
+#include "types/type.h"
 #include "parser.h"
 #include "interpreter.h"
 
@@ -17,6 +18,8 @@ Parser::Parser(Tokens& tokens, Printer* printer):
 
 std::unique_ptr<Expression> Parser::parse() {
   std::vector<std::unique_ptr<Expression>> expressions;
+  Location location = tokens.peek()->copy_location();
+
   while (!tokens.match(token::Type::eof)) {
     expressions.push_back(parse_expression_statement());
     if (!tokens.match(token::Type::semicolon)) {
@@ -26,8 +29,11 @@ std::unique_ptr<Expression> Parser::parse() {
     }
   }
 
+  expressions.push_back(
+      std::make_unique<Literal>(location, "null", type::Type::unit));
+
   std::unique_ptr<Expression> root =
-    std::make_unique<Block>(std::move(expressions));
+    std::make_unique<Block>(std::move(expressions), location);
   printer->print_tree(root.get());
   return root;
 }
@@ -51,6 +57,7 @@ std::unique_ptr<Expression> Parser::parse_parenthesis() {
 }
 
 std::unique_ptr<Expression> Parser::parse_condition() {
+  Location location = tokens.peek()->copy_location();
   std::unique_ptr<Expression> condition = parse_expression();
 
   if (!tokens.match(token::Type::keyword_then)) {
@@ -58,16 +65,18 @@ std::unique_ptr<Expression> Parser::parse_condition() {
   }
   std::unique_ptr<Expression> then_expression = parse_expression();
 
-  std::unique_ptr<Expression> else_expression = std::make_unique<Literal>("null", type::Type::unit);
+  std::unique_ptr<Expression> else_expression =
+    std::make_unique<Literal>(location, "null", type::Type::unit);
   if (tokens.match(token::Type::keyword_else)) {
     else_expression = parse_expression();
   }
 
   return std::make_unique<IfThenElse>(std::move(condition),
-      std::move(then_expression), std::move(else_expression));
+      std::move(then_expression), std::move(else_expression), location);
 }
 
 std::unique_ptr<Expression> Parser::parse_loop() {
+  Location location = tokens.peek()->copy_location();
   std::unique_ptr<Expression> condition = parse_expression();
 
   if (!tokens.match(token::Type::keyword_do)) {
@@ -75,29 +84,32 @@ std::unique_ptr<Expression> Parser::parse_loop() {
   }
   std::unique_ptr<Expression> do_expression = parse_expression();
 
-  return std::make_unique<While>(
-      std::move(condition), std::move(do_expression));
+  return std::make_unique<While>(std::move(condition),
+      std::move(do_expression), location);
 }
 
 std::unique_ptr<Expression> Parser::parse_block() {
+  Location location = tokens.peek()->copy_location();
   std::vector<std::unique_ptr<Expression>> expressions;
   while (true) {
+    if (tokens.match(token::Type::right_brace)) {
+      expressions.push_back(
+          std::make_unique<Literal>(location, "null", type::Type::unit));
+      break;
+    }
+
     expressions.push_back(std::move(parse_expression_statement()));
 
     if (!tokens.match(token::Type::semicolon) && !tokens.previous()->match(token::Type::right_brace)) {
       if (tokens.match(token::Type::right_brace)) break;
       throw tokens.error({ token::Type::semicolon, token::Type::right_brace });
     }
-
-    if (tokens.match(token::Type::right_brace)) {
-      expressions.push_back(std::make_unique<Literal>("null", type::Type::unit));
-      break;
-    }
   }
-  return std::make_unique<Block>(std::move(expressions));
+  return std::make_unique<Block>(std::move(expressions), location);
 }
 
 std::unique_ptr<Expression> Parser::parse_binary(int level) {
+  Location location = tokens.peek()->copy_location();
   if (level == primary) return parse_primary();
   if (level == assignment) return parse_assignment();
 
@@ -105,8 +117,8 @@ std::unique_ptr<Expression> Parser::parse_binary(int level) {
   while (tokens.peek()->level() == level) {
     Token* token = tokens.consume();
     std::unique_ptr<Expression> right = parse_binary(level + 1);
-    left = std::make_unique<BinaryOp>(std::move(left),
-        token, std::move(right));
+    left = std::make_unique<BinaryOp>(std::move(left), token,
+        std::move(right), location);
   }
   return left;
 }
@@ -118,15 +130,17 @@ std::unique_ptr<Expression> Parser::parse_primary() {
   if (tokens.match(token::Type::keyword_while)) return parse_loop();
 
   if (tokens.match({ token::Type::keyword_true, token::Type::keyword_false })) {
-    return std::make_unique<Literal>(token->get_content(), type::Type::boolean);
+    return std::make_unique<Literal>(token->copy_location(),
+        token->get_content(), type::Type::boolean);
   }
   if (tokens.match(token::Type::literal)) {
-    return std::make_unique<Literal>(token->get_content(), type::Type::integer);
+    return std::make_unique<Literal>(token->copy_location(),
+        token->get_content(), type::Type::integer);
   }
   if (tokens.match(token::Type::identifier)) {
-    std::unique_ptr<Identifier> id = std::make_unique<Identifier>(*token);
+    std::unique_ptr<Identifier> id = std::make_unique<Identifier>(*token, token->copy_location());
     if (!tokens.match(token::Type::left_parenthesis)) return id;
-    return std::make_unique<Function>(std::move(id), parse_arguments());
+    return std::make_unique<Function>(std::move(id), parse_arguments(), token->copy_location());
   }
   throw tokens.error({ token::Type::literal, token::Type::identifier });
 }
@@ -136,7 +150,7 @@ std::unique_ptr<Identifier> Parser::parse_identifier() {
   if (!tokens.match(token::Type::identifier)) {
     throw tokens.error(token::Type::identifier);
   }
-  return std::make_unique<Identifier>(*token);
+  return std::make_unique<Identifier>(*token, token->copy_location());
 }
 
 std::unique_ptr<Expression> Parser::parse_assignment() {
@@ -148,13 +162,15 @@ std::unique_ptr<Expression> Parser::parse_assignment() {
   equal = tokens.consume();
   std::unique_ptr<Expression> value = parse_assignment();
 
-  return std::make_unique<BinaryOp>(std::move(name), equal, std::move(value));
+  return std::make_unique<BinaryOp>(std::move(name), equal, std::move(value),
+      equal->copy_location());
 }
 
 std::unique_ptr<Arguments> Parser::parse_arguments() {
+  Location location = tokens.peek()->copy_location();
   std::vector<std::unique_ptr<Expression>> args;
   if (tokens.match(token::Type::right_parenthesis)) {
-    return std::make_unique<Arguments>(args);
+    return std::make_unique<Arguments>(args, location);
   }
 
   while (true) {
@@ -164,7 +180,7 @@ std::unique_ptr<Arguments> Parser::parse_arguments() {
   if (!tokens.match(token::Type::right_parenthesis)) {
     throw tokens.error(token::Type::right_parenthesis);
   }
-  return std::make_unique<Arguments>(args);
+  return std::make_unique<Arguments>(args, location);
 }
 
 std::unique_ptr<Expression> Parser::parse_declaration() {
@@ -172,7 +188,8 @@ std::unique_ptr<Expression> Parser::parse_declaration() {
   if (!tokens.match(token::Type::identifier)) {
     throw tokens.error(token::Type::identifier);
   }
-  std::unique_ptr<Identifier> name = std::make_unique<Identifier>(*token);
+  std::unique_ptr<Identifier> name =
+    std::make_unique<Identifier>(*token, token->copy_location());
 
   std::unique_ptr<Identifier> type = nullptr;
   if (tokens.match(token::Type::colon)) {
@@ -180,7 +197,7 @@ std::unique_ptr<Expression> Parser::parse_declaration() {
     if (!tokens.match(token::Type::identifier)) {
       throw tokens.error(token::Type::identifier);
     }
-    type = std::make_unique<Identifier>(*token);
+    type = std::make_unique<Identifier>(*token, token->copy_location());
   }
 
   if (!tokens.match(token::Type::equal)) {
@@ -188,6 +205,6 @@ std::unique_ptr<Expression> Parser::parse_declaration() {
   }
   std::unique_ptr<Expression> expr = parse_expression();
 
-  return std::make_unique<Declaration>(
-      std::move(name), std::move(type), std::move(expr));
+  return std::make_unique<Declaration>(std::move(name), std::move(type),
+      std::move(expr), token->copy_location());
 }

@@ -11,6 +11,7 @@ SRCS = main.cpp \
 	   src/compiler.cpp src/command.cpp src/intrinsics.cpp \
 	   src/types/source.cpp src/types/token.cpp src/types/ast.cpp \
 	   src/types/interpretation.cpp src/types/type.cpp src/types/ir.cpp \
+	   src/types/location.cpp \
 	   src/tools/readwrite.cpp src/tools/exceptions.cpp
 OBJS = $(SRCS:.cpp=.o)
 

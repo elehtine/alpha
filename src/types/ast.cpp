@@ -1,14 +1,18 @@
 #include "ast.h"
+#include "type.h"
+#include "ir.h"
 
-#include "../tools/exceptions.h"
 #include "../ir_generator.h"
+#include "../tools/exceptions.h"
+#include "../tools/readwrite.h"
 
 
-Expression::Expression() {}
+Expression::Expression(Location location): location(location) {}
 Expression::~Expression() {}
 
-Literal::Literal(std::string value, type::Type type
-    ): value(value), type(type) {}
+Literal::Literal(Location location, std::string value, type::Type type):
+  Expression(location), value(value), type(type)
+{}
 
 std::string Literal::print(int level) const {
   std::string result = std::string(level * space, ' ');
@@ -17,7 +21,7 @@ std::string Literal::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Literal::interpret() const
+std::unique_ptr<interpretation::Interpretation> Literal::interpret(Printer* printer) const
 {
   if (value == "true") return std::make_unique<interpretation::Integer>(1);
   if (value == "false" || value == "null") {
@@ -39,7 +43,9 @@ type::Type Literal::check() {
   return type::Type::integer;
 }
 
-Identifier::Identifier(Token token): name(token.get_content()) {}
+Identifier::Identifier(Token token, Location location):
+  Expression(location), name(token.get_content())
+{}
 
 std::string Identifier::print(int level) const {
   std::string result = std::string(level * space, ' ');
@@ -48,7 +54,7 @@ std::string Identifier::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Identifier::interpret() const {
+std::unique_ptr<interpretation::Interpretation> Identifier::interpret(Printer* printer) const {
   return std::make_unique<interpretation::Integer>(1);
 }
 
@@ -65,8 +71,8 @@ bool Identifier::is_name(std::string guess) const {
 }
 
 BinaryOp::BinaryOp(std::unique_ptr<Expression> left, Token* op,
-    std::unique_ptr<Expression> right):
-  left(std::move(left)), op(op), right(std::move(right)) {}
+    std::unique_ptr<Expression> right, Location location):
+  Expression(location), left(std::move(left)), op(op), right(std::move(right)) {}
 
   std::string BinaryOp::print(int level) const {
     std::string result = left->print(level+1);
@@ -77,9 +83,9 @@ BinaryOp::BinaryOp(std::unique_ptr<Expression> left, Token* op,
     return result;
   }
 
-std::unique_ptr<interpretation::Interpretation> BinaryOp::interpret() const {
-  int left_value = *left->interpret();
-  int right_value = *right->interpret();
+std::unique_ptr<interpretation::Interpretation> BinaryOp::interpret(Printer* printer) const {
+  int left_value = *left->interpret(printer);
+  int right_value = *right->interpret(printer);
   if (op->match(token::Type::plus)) {
     return std::make_unique<interpretation::Integer>(left_value + right_value);
   }
@@ -118,7 +124,9 @@ IrVar BinaryOp::visit(IrGenerator* generator) const {
 
 IfThenElse::IfThenElse(std::unique_ptr<Expression> condition,
     std::unique_ptr<Expression> then_expression,
-    std::unique_ptr<Expression> else_expression):
+    std::unique_ptr<Expression> else_expression,
+    Location location):
+  Expression(location),
   condition(std::move(condition)),
   then_expression(std::move(then_expression)),
   else_expression(std::move(else_expression))
@@ -134,11 +142,11 @@ std::string IfThenElse::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> IfThenElse::interpret() const
+std::unique_ptr<interpretation::Interpretation> IfThenElse::interpret(Printer* printer) const
 {
-  int cond = *condition->interpret();
-  if (cond == 0) return else_expression->interpret();
-  return then_expression->interpret();
+  int cond = *condition->interpret(printer);
+  if (cond == 0) return else_expression->interpret(printer);
+  return then_expression->interpret(printer);
 }
 
 type::Type IfThenElse::check() {
@@ -159,7 +167,9 @@ IrVar IfThenElse::visit(IrGenerator* generator) const {
 }
 
 While::While(std::unique_ptr<Expression> condition,
-    std::unique_ptr<Expression> do_expression):
+    std::unique_ptr<Expression> do_expression,
+    Location location):
+  Expression(location),
   condition(std::move(condition)),
   do_expression(std::move(do_expression))
 {}
@@ -172,9 +182,9 @@ std::string While::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> While::interpret() const
+std::unique_ptr<interpretation::Interpretation> While::interpret(Printer* printer) const
 {
-  return do_expression->interpret();
+  return do_expression->interpret(printer);
 }
 
 type::Type While::check() {
@@ -185,8 +195,9 @@ IrVar While::visit(IrGenerator* generator) const {
   return IrVar("null");
 }
 
-Block::Block(std::vector<std::unique_ptr<Expression>> expressions):
-  expressions(std::move(expressions))
+Block::Block(std::vector<std::unique_ptr<Expression>> expressions,
+    Location location):
+  Expression(location), expressions(std::move(expressions))
 {}
 
 std::string Block::print(int level) const {
@@ -198,10 +209,13 @@ std::string Block::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Block::interpret() const
+std::unique_ptr<interpretation::Interpretation> Block::interpret(Printer* printer) const
 {
-  if (expressions.size() == 0) throw InterpretException("Empty file");
-  return expressions[0]->interpret();
+  std::unique_ptr<interpretation::Interpretation> result;
+  for (const std::unique_ptr<Expression>& expr: expressions) {
+    result = expr->interpret(printer);
+  }
+  return result;
 }
 
 type::Type Block::check() {
@@ -212,8 +226,9 @@ IrVar Block::visit(IrGenerator* generator) const {
   return expressions[0]->visit(generator);
 }
 
-Arguments::Arguments(std::vector<std::unique_ptr<Expression>>& arguments):
-  arguments(std::move(arguments))
+Arguments::Arguments(std::vector<std::unique_ptr<Expression>>& arguments,
+    Location location):
+  Expression(location), arguments(std::move(arguments))
 {}
 
 std::string Arguments::print(int level) const {
@@ -225,8 +240,8 @@ std::string Arguments::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Arguments::interpret() const {
-  if (arguments.size() == 1) return arguments[0]->interpret();
+std::unique_ptr<interpretation::Interpretation> Arguments::interpret(Printer* printer) const {
+  if (arguments.size() == 1) return arguments[0]->interpret(printer);
   return std::make_unique<interpretation::Integer>(1);
 }
 
@@ -239,7 +254,9 @@ IrVar Arguments::visit(IrGenerator* generator) const {
   throw IrGenerateException("Arguments not implemented");
 }
 
-Function::Function(std::unique_ptr<Identifier> fun, std::unique_ptr<Arguments> arguments):
+Function::Function(std::unique_ptr<Identifier> fun,
+    std::unique_ptr<Arguments> arguments, Location location):
+  Expression(location),
   fun(std::move(fun)), arguments(std::move(arguments))
 {}
 
@@ -250,8 +267,11 @@ std::string Function::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Function::interpret() const {
-  if (fun->is_name("print_int")) return arguments->interpret();
+std::unique_ptr<interpretation::Interpretation> Function::interpret(Printer* printer) const {
+  if (fun->is_name("print_int")) {
+    printer->print_interpretation(arguments->interpret(printer).get());
+    return nullptr;
+  }
   throw InterpretException("Unknown function");
 }
 
@@ -266,7 +286,9 @@ IrVar Function::visit(IrGenerator* generator) const {
 Declaration::Declaration(
     std::unique_ptr<Identifier> name,
     std::unique_ptr<Identifier> type,
-    std::unique_ptr<Expression> value):
+    std::unique_ptr<Expression> value,
+    Location location):
+  Expression(location),
   name(std::move(name)), type(std::move(type)), value(std::move(value))
 {}
 
@@ -278,7 +300,7 @@ std::string Declaration::print(int level) const {
   return result;
 }
 
-std::unique_ptr<interpretation::Interpretation> Declaration::interpret() const {
+std::unique_ptr<interpretation::Interpretation> Declaration::interpret(Printer* printer) const {
   return std::make_unique<interpretation::Integer>(0);
 }
 
