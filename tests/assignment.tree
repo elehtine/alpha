@@ -59,12 +59,12 @@
     )
   var
     x_4
+    assign
       x_3
-    =
+      assign
         x_2
-      =
+        assign
           x_1
-        =
           42
   fun
     print_int

@@ -25,8 +25,8 @@
           0
       then
         {
+          assign
             n
-          =
               n
             /
               2
@@ -34,8 +34,8 @@
         }
       else
         {
+          assign
             n
-          =
                 3
               *
                 n

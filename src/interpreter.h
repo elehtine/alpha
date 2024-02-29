@@ -8,11 +8,17 @@
 class Expression;
 class Interpretation;
 class Printer;
+class SymTab;
 
 class Interpreter {
   public:
     Interpreter(Expression* tree, Printer* printer);
     void add_interpretation(std::unique_ptr<Interpretation> value);
+
+    void assign_variable(std::string identifier, std::unique_ptr<Interpretation> value);
+    std::unique_ptr<Interpretation> get_variable(std::string identifier);
+    void start_block();
+    void end_block();
 
   private:
     std::vector<Interpretation*> get_interpretations();
@@ -20,6 +26,7 @@ class Interpreter {
     Expression* tree;
     Printer* printer;
 
+    std::unique_ptr<SymTab> symtab;
     std::vector<std::unique_ptr<Interpretation>> interpretations;
 };
 

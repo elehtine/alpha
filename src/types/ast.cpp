@@ -55,7 +55,7 @@ std::string Identifier::print(int level) const {
 }
 
 std::unique_ptr<Interpretation> Identifier::interpret(Interpreter* interpreter) const {
-  return std::make_unique<Integer>(1);
+  return interpreter->get_variable(name);
 }
 
 type::Type Identifier::check() {
@@ -68,6 +68,10 @@ IrVar Identifier::visit(IrGenerator* generator) const {
 
 bool Identifier::is_name(std::string guess) const {
   return name == guess;
+}
+
+void Identifier::assign(Interpreter* interpreter, std::unique_ptr<Interpretation> value) {
+  interpreter->assign_variable(name, std::move(value));
 }
 
 BinaryOp::BinaryOp(std::unique_ptr<Expression> left, Token* op,
@@ -152,6 +156,31 @@ IrVar BinaryOp::visit(IrGenerator* generator) const {
   IrVar result = generator->create_var();
   generator->add_instruction(std::make_unique<Call>(function, arguments, result));
   return result;
+}
+
+Assign::Assign(std::unique_ptr<Identifier> identifier,
+    std::unique_ptr<Expression> value, Location location):
+  Expression(location), identifier(std::move(identifier)), value(std::move(value))
+{}
+
+std::string Assign::print(int level) const {
+  std::string result = std::string(level * space, ' ') + "assign\n";
+  result += identifier->print(level+1);
+  result += value->print(level+1);
+  return result;
+}
+
+std::unique_ptr<Interpretation> Assign::interpret(Interpreter* interpreter) const {
+  identifier->assign(interpreter, value->interpret(interpreter));
+  return identifier->interpret(interpreter);
+}
+
+type::Type Assign::check() {
+  throw TypeException("not implemented if");
+}
+
+IrVar Assign::visit(IrGenerator* generator) const {
+  return IrVar("null");
 }
 
 IfThenElse::IfThenElse(std::unique_ptr<Expression> condition,
@@ -240,10 +269,12 @@ std::string Block::print(int level) const {
 }
 
 std::unique_ptr<Interpretation> Block::interpret(Interpreter* interpreter) const {
+  interpreter->start_block();
   std::unique_ptr<Interpretation> result;
   for (const std::unique_ptr<Expression>& expr: expressions) {
     result = expr->interpret(interpreter);
   }
+  interpreter->end_block();
   return result;
 }
 
@@ -329,6 +360,7 @@ std::string Declaration::print(int level) const {
 }
 
 std::unique_ptr<Interpretation> Declaration::interpret(Interpreter* interpreter) const {
+  name->assign(interpreter, std::move(value->interpret(interpreter)));
   return std::make_unique<Integer>(0);
 }
 

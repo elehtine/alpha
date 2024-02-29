@@ -60,6 +60,7 @@ class Identifier : public Expression {
     IrVar visit(IrGenerator* generator) const override;
 
     bool is_name(std::string guess) const;
+    void assign(Interpreter* interpreter, std::unique_ptr<Interpretation> value);
 
   private:
     std::string name;
@@ -79,6 +80,21 @@ class BinaryOp : public Expression {
     std::unique_ptr<Expression> left;
     Token* op;
     std::unique_ptr<Expression> right;
+};
+
+class Assign : public Expression {
+  public:
+    Assign(std::unique_ptr<Identifier> identifier,
+        std::unique_ptr<Expression> value, Location location);
+    std::string print(int level) const override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
+    type::Type check() override;
+
+    IrVar visit(IrGenerator* generator) const override;
+
+  private:
+    std::unique_ptr<Identifier> identifier;
+    std::unique_ptr<Expression> value;
 };
 
 class IfThenElse : public Expression {

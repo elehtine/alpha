@@ -162,7 +162,7 @@ std::unique_ptr<Expression> Parser::parse_assignment() {
   equal = tokens.consume();
   std::unique_ptr<Expression> value = parse_assignment();
 
-  return std::make_unique<BinaryOp>(std::move(name), equal, std::move(value),
+  return std::make_unique<Assign>(std::move(name), std::move(value),
       equal->copy_location());
 }
 
