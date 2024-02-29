@@ -16,6 +16,7 @@ print_int(x_2 - x_1);
 print_int(x_1);
 print_int(x_2);
 
+var x_3 = 1337;
 var x_4 = x_3 = x_2 = x_1 = 42;
 
 print_int(x_1);

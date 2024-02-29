@@ -41,7 +41,7 @@ std::unique_ptr<Interpretation> SymTab::get_variable(std::string identifier) {
   std::unique_ptr<Interpretation>& value = symbols[identifier];
   if (value) return value->clone();
   if (parent) return parent->get_variable(identifier);
-  return std::make_unique<Integer>(0);
+  return nullptr;
 }
 
 std::unique_ptr<SymTab> SymTab::get_parent() {

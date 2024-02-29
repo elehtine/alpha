@@ -55,7 +55,9 @@ std::string Identifier::print(int level) const {
 }
 
 std::unique_ptr<Interpretation> Identifier::interpret(Interpreter* interpreter) const {
-  return interpreter->get_variable(name);
+  std::unique_ptr<Interpretation> result = interpreter->get_variable(name);
+  if (result) return result;
+  throw InterpretException("Undeclared identifier\n" + location.error_mark() + "here");
 }
 
 type::Type Identifier::check() {
@@ -171,6 +173,7 @@ std::string Assign::print(int level) const {
 }
 
 std::unique_ptr<Interpretation> Assign::interpret(Interpreter* interpreter) const {
+  identifier->interpret(interpreter);
   identifier->assign(interpreter, value->interpret(interpreter));
   return identifier->interpret(interpreter);
 }

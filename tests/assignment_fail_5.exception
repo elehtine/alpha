@@ -1,0 +1,3 @@
+InterpretException: Undeclared identifier
+x = 42;
+^- here

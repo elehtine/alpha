@@ -58,6 +58,9 @@
       x_2
     )
   var
+    x_3
+    1337
+  var
     x_4
     assign
       x_3

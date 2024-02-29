@@ -10,8 +10,8 @@ class Location {
   public:
     Location(int row, int column, std::string line);
     operator std::string() const;
-    TokeniseException error();
-    std::string error_mark();
+    TokeniseException error() const;
+    std::string error_mark() const;
 
   private:
     const int row;

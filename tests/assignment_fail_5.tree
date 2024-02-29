@@ -1,0 +1,6 @@
+{
+  assign
+    x
+    42
+  null
+}
