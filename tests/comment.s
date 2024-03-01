@@ -11,12 +11,15 @@ movq %rsp, %rbp
 # START
 
 
-subq $8, %rsp
-subq $8, %rsp
+subq $16, %rsp
 
 # LoadIntConst(1, x1)
 movq $1, -8(%rbp)
 movq -8(%rbp), %rsi
+
+# LoadIntConst(0, x2)
+movq $0, -16(%rbp)
+movq -16(%rbp), %rsi
 
 
 # END

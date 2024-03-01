@@ -1,0 +1,27 @@
+{
+  var
+    size
+    5
+  var
+    index
+    0
+  while
+      index
+    <
+      size
+  do
+    {
+      fun
+        print_int
+        (
+          index
+        )
+      assign
+        index
+          index
+        +
+          1
+      null
+    }
+  null
+}

@@ -1,0 +1,12 @@
+LoadIntConst(5, x1)
+LoadIntConst(0, x2)
+L3
+Call(<, [index, size], x6)
+CondJump(x6, L4, L5)
+L4
+LoadIntConst(1, x7)
+Call(+, [index, x7], x8)
+LoadIntConst(0, x9)
+Jump(L3)
+L5
+LoadIntConst(0, x10)

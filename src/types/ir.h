@@ -100,4 +100,16 @@ class CondJump : public Instruction {
     Instruction* else_label;
 };
 
+class Jump : public Instruction {
+  public:
+    Jump(Instruction* label);
+    operator std::string() const override;
+
+    void add_variables(Locals* locals) const override;
+    void to_asm(AssemblyGenerator* asm_generator) const override;
+
+  private:
+    Instruction* label;
+};
+
 #endif

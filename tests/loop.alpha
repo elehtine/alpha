@@ -1,0 +1,7 @@
+var size = 5;
+
+var index = 0;
+while index < size do {
+    print_int(index);
+    index = index + 1;
+}

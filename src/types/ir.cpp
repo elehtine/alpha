@@ -137,3 +137,15 @@ void CondJump::add_variables(Locals* locals) const {}
 void CondJump::to_asm(AssemblyGenerator* asm_generator) const {
   throw IrGenerateException("CondJump not implemented");
 }
+
+Jump::Jump(Instruction* label): label(label) {}
+
+Jump::operator std::string() const {
+  return "Jump(" + std::string(*label) + ")";
+}
+
+void Jump::add_variables(Locals* locals) const {}
+
+void Jump::to_asm(AssemblyGenerator* asm_generator) const {
+  throw IrGenerateException("Jump not implemented");
+}

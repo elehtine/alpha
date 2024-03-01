@@ -183,7 +183,8 @@ type::Type Assign::check() {
 }
 
 IrVar Assign::visit(IrGenerator* generator) const {
-  return IrVar("null");
+  IrVar value_ir = value->visit(generator);
+  return value_ir;
 }
 
 IfThenElse::IfThenElse(std::unique_ptr<Expression> condition,
@@ -219,13 +220,19 @@ type::Type IfThenElse::check() {
 IrVar IfThenElse::visit(IrGenerator* generator) const {
   std::unique_ptr<Instruction> then_label = generator->create_label();
   std::unique_ptr<Instruction> else_label = generator->create_label();
+  std::unique_ptr<Instruction> end_label = generator->create_label();
   IrVar cond = condition->visit(generator);
+
   generator->add_instruction(std::make_unique<CondJump>(
         cond, then_label.get(), else_label.get()));
+
   generator->add_instruction(std::move(then_label));
   then_expression->visit(generator);
+  generator->add_instruction(std::make_unique<Jump>(end_label.get()));
+
   generator->add_instruction(std::move(else_label));
   else_expression->visit(generator);
+  generator->add_instruction(std::move(end_label));
   return IrVar("null");
 }
 
@@ -254,6 +261,20 @@ type::Type While::check() {
 }
 
 IrVar While::visit(IrGenerator* generator) const {
+  std::unique_ptr<Instruction> start_label = generator->create_label();
+  std::unique_ptr<Instruction> body_label = generator->create_label();
+  std::unique_ptr<Instruction> end_label = generator->create_label();
+
+  std::unique_ptr<Jump> loop_jump = std::make_unique<Jump>(start_label.get());
+
+  generator->add_instruction(std::move(start_label));
+  IrVar cond = condition->visit(generator);
+  generator->add_instruction(std::make_unique<CondJump>(
+        cond, body_label.get(), end_label.get()));
+  generator->add_instruction(std::move(body_label));
+  do_expression->visit(generator);
+  generator->add_instruction(std::move(loop_jump));
+  generator->add_instruction(std::move(end_label));
   return IrVar("null");
 }
 
@@ -286,7 +307,10 @@ type::Type Block::check() {
 }
 
 IrVar Block::visit(IrGenerator* generator) const {
-  return expressions[0]->visit(generator);
+  for (const std::unique_ptr<Expression>& expr: expressions) {
+    expr->visit(generator);
+  }
+  return IrVar("unit");
 }
 
 Arguments::Arguments(std::vector<std::unique_ptr<Expression>>& arguments,

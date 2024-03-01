@@ -1,3 +1,91 @@
 LoadIntConst(1, x1)
 LoadIntConst(2, x2)
 Call(+, [x1, x2], x3)
+LoadIntConst(3, x4)
+LoadIntConst(4, x5)
+Call(-, [x4, x5], x6)
+LoadIntConst(5, x7)
+LoadIntConst(6, x8)
+Call(*, [x7, x8], x9)
+LoadIntConst(7, x10)
+LoadIntConst(2, x11)
+Call(/, [x10, x11], x12)
+LoadIntConst(1, x13)
+LoadIntConst(2, x14)
+Call(+, [x13, x14], x15)
+LoadIntConst(3, x16)
+Call(*, [x15, x16], x17)
+LoadIntConst(1, x18)
+LoadIntConst(2, x19)
+LoadIntConst(3, x20)
+Call(*, [x19, x20], x21)
+Call(+, [x18, x21], x22)
+LoadIntConst(4, x23)
+LoadIntConst(2, x24)
+Call(/, [x23, x24], x25)
+Call(-, [x22, x25], x26)
+LoadIntConst(1, x30)
+LoadIntConst(2, x31)
+Call(<, [x30, x31], x32)
+CondJump(x32, L27, L28)
+L27
+LoadIntConst(1, x33)
+Jump(L29)
+L28
+LoadIntConst(2, x34)
+L29
+LoadIntConst(1, x38)
+LoadIntConst(2, x39)
+Call(>, [x38, x39], x40)
+CondJump(x40, L35, L36)
+L35
+LoadIntConst(1, x41)
+Jump(L37)
+L36
+LoadIntConst(2, x42)
+L37
+LoadIntConst(1, x46)
+LoadIntConst(1, x47)
+Call(>=, [x46, x47], x48)
+CondJump(x48, L43, L44)
+L43
+LoadIntConst(1, x49)
+Jump(L45)
+L44
+LoadIntConst(2, x50)
+L45
+LoadIntConst(1, x54)
+LoadIntConst(1, x55)
+Call(<=, [x54, x55], x56)
+CondJump(x56, L51, L52)
+L51
+LoadIntConst(1, x57)
+Jump(L53)
+L52
+LoadIntConst(2, x58)
+L53
+LoadIntConst(3, x59)
+LoadIntConst(1, x63)
+LoadIntConst(2, x64)
+Call(<, [x63, x64], x65)
+CondJump(x65, L60, L61)
+L60
+LoadIntConst(1, x66)
+Jump(L62)
+L61
+LoadIntConst(2, x67)
+L62
+Call(+, [x59, null], x68)
+LoadIntConst(3, x69)
+LoadIntConst(1, x73)
+LoadIntConst(2, x74)
+Call(>, [x73, x74], x75)
+CondJump(x75, L70, L71)
+L70
+LoadIntConst(1, x76)
+Jump(L72)
+L71
+LoadIntConst(2, x77)
+L72
+Call(+, [x69, null], x78)
+LoadIntConst(0, x79)
