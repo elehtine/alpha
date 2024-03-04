@@ -1,6 +1,7 @@
 #include "ir.h"
 #include "../asm_generator.h"
 #include "../intrinsics.h"
+#include "../tools/exceptions.h"
 
 
 IrVar::IrVar(std::string name): name(name) {}

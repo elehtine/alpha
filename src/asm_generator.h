@@ -6,7 +6,8 @@
 
 #include "types/ir.h"
 
-#include "tools/readwrite.h"
+
+class Printer;
 
 
 class Locals {

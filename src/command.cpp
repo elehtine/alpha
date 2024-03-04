@@ -2,7 +2,8 @@
 #include <regex>
 
 #include "command.h"
-#include "tools/readwrite.h"
+#include "tools/files.h"
+#include "tools/printer.h"
 
 #include "types/source.h"
 #include "compiler.h"

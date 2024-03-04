@@ -5,10 +5,9 @@
 #include <memory>
 #include <vector>
 
-class Expression;
-class Interpretation;
-class Printer;
-class SymTab;
+#include "types/ast.h"
+#include "types/interpretation.h"
+
 
 class Interpreter {
   public:

@@ -12,7 +12,7 @@ SRCS = main.cpp \
 	   src/types/source.cpp src/types/token.cpp src/types/ast.cpp \
 	   src/types/interpretation.cpp src/types/type.cpp src/types/ir.cpp \
 	   src/types/location.cpp \
-	   src/tools/readwrite.cpp src/tools/exceptions.cpp
+	   src/tools/files.cpp src/tools/printer.cpp src/tools/exceptions.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 

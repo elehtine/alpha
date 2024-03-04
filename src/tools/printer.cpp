@@ -1,57 +1,16 @@
-#include <fstream>
-#include <string>
-#include <vector>
 #include <iostream>
-#include <sstream>
-#include <boost/filesystem.hpp>
 
-#include "../types/token.h"
+#include "printer.h"
+
 #include "../types/source.h"
+#include "../types/token.h"
+#include "../types/ast.h"
+#include "../types/interpretation.h"
+#include "../types/ir.h"
 
-#include "readwrite.h"
+#include "exceptions.h"
+#include "files.h"
 
-
-std::vector<std::string> test_files() {
-  const boost::filesystem::path dir { "tests" };
-  std::vector<std::string> files;
-  for (auto const& file: boost::filesystem::directory_iterator(dir)) {
-    files.push_back(file.path().string());
-  }
-  return files;
-}
-
-bool user_approval(std::string prompt) {
-  std::cout << prompt;
-
-  std::string approval;
-  std::cin >> approval;
-  std::vector<std::string> positive = { "Y", "y", "yes" };
-  for (const std::string& possible: positive) {
-    if (approval == possible) return true;
-  }
-  return false;
-}
-
-bool is_file(const std::string& file) {
-  return std::ifstream(file, std::ios::in).good();
-}
-
-std::string read(const std::string& file) {
-  std::string text;
-  std::string s;
-  std::ifstream in(file, std::ios::in);
-  while (getline(in, s)) {
-    text.append(s);
-    text.append("\n");
-  }
-  return text;
-}
-
-void write(const std::string& file, const std::string& content) {
-  std::ofstream out(file);
-  out << content;
-  out.close();
-}
 
 template<class T>
 std::string to_string(std::vector<T> vec) {
@@ -71,17 +30,10 @@ std::string to_string(const std::vector<T*> vec) {
   return result;
 }
 
-std::string to_string(const std::vector<Instruction*> vec) {
-  std::string result = "";
-  for (const Instruction* element: vec) {
-    result += std::string(*element) + "\n";
-  }
-  return result;
-}
-
 std::string bool_to_string(bool value) {
   return value ? "TRUE\n" : "FALSE\n";
 }
+
 
 void UserPrinter::print_lines(Source* source) {
   std::cout << "Lines:" << std::endl;
@@ -202,4 +154,3 @@ bool FilePrinter::accept(const std::string& result, const std::string& before) {
   std::cout << before << std::endl;
   return user_approval("Do you want to override [Y/n]? ");
 }
-

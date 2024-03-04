@@ -1,6 +1,7 @@
 #include "ir_generator.h"
 
 #include "tools/exceptions.h"
+#include "tools/printer.h"
 
 
 IrGenerator::IrGenerator(Expression* root, Printer* printer) {

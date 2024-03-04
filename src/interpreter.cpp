@@ -2,7 +2,7 @@
 
 #include "types/ast.h"
 #include "types/interpretation.h"
-#include "tools/readwrite.h"
+#include "tools/printer.h"
 
 
 Interpreter::Interpreter(Expression* tree, Printer* printer):

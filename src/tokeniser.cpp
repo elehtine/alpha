@@ -1,6 +1,6 @@
 #include "types/location.h"
 #include "tokeniser.h"
-#include "tools/readwrite.h"
+#include "tools/files.h"
 
 
 std::unique_ptr<Tokens> tokenise(Source& source, Printer* printer) {

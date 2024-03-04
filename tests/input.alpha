@@ -1,0 +1,2 @@
+var x = read_int();
+print_int(x);

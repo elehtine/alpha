@@ -13,7 +13,8 @@
 #include "interpreter.h"
 #include "checker.h"
 
-#include "tools/readwrite.h"
+
+class Printer;
 
 
 class Compiler {

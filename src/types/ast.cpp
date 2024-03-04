@@ -1,3 +1,4 @@
+#include "token.h"
 #include "ast.h"
 #include "type.h"
 #include "ir.h"
@@ -5,7 +6,6 @@
 #include "../interpreter.h"
 #include "../ir_generator.h"
 #include "../tools/exceptions.h"
-#include "../tools/readwrite.h"
 
 
 Expression::Expression(Location location): location(location) {}

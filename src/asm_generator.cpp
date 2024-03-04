@@ -1,5 +1,7 @@
 #include "asm_generator.h"
-#include "tools/readwrite.h"
+
+#include "tools/files.h"
+#include "tools/printer.h"
 
 
 Locals::Locals(std::vector<Instruction*> instructions) {

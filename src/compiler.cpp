@@ -3,7 +3,7 @@
 #include "compiler.h"
 #include "tokeniser.h"
 
-#include "tools/readwrite.h"
+#include "tools/printer.h"
 
 
 Compiler::Compiler(Source& source, Printer* printer):
