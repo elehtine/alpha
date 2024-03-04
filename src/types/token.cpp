@@ -56,7 +56,7 @@ std::string to_string(const int level) {
   if (level == comparison) return "comparison";
   if (level == term) return "term";
   if (level == factor) return "factor";
-  if (level == primary) return "primary";
+  if (level == unary) return "unary";
   if (level == unknown) return "unknown";
   return "";
 }
@@ -99,8 +99,6 @@ int Token::level() const {
   if (content[0] == '<' || content[0] == '>') return comparison;
   if (content == "+" || content == "-") return term;
   if (content == "*" || content == "/" || content == "%") return factor;
-  if (type == TokenType::identifier) return primary;
-  if (type == TokenType::literal) return primary;
   return unknown;
 }
 

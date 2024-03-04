@@ -9,9 +9,6 @@
 #include "interpreter.h"
 
 
-bool binary(int level) { return level < primary; }
-bool unary(int level) { return primary <= level; }
-
 Parser::Parser(Tokens& tokens, Printer* printer):
   tokens(tokens), printer(printer)
 {}
@@ -110,7 +107,7 @@ std::unique_ptr<Expression> Parser::parse_block() {
 
 std::unique_ptr<Expression> Parser::parse_binary(int level) {
   Location location = tokens.peek()->copy_location();
-  if (level == primary) return parse_primary();
+  if (level == unary) return parse_unary();
   if (level == assignment) return parse_assignment();
 
   std::unique_ptr<Expression> left = parse_binary(level + 1);
@@ -121,6 +118,14 @@ std::unique_ptr<Expression> Parser::parse_binary(int level) {
         std::move(right), location);
   }
   return left;
+}
+
+std::unique_ptr<Expression> Parser::parse_unary() {
+  Token* token = tokens.peek();
+  if (tokens.match(TokenType::keyword_not) || tokens.match(TokenType::minus)) {
+    return std::make_unique<Unary>(parse_unary(), token, token->copy_location());
+  }
+  return parse_primary();
 }
 
 std::unique_ptr<Expression> Parser::parse_primary() {

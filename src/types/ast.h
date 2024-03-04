@@ -82,6 +82,19 @@ class BinaryOp : public Expression {
     std::unique_ptr<Expression> right;
 };
 
+class Unary : public Expression {
+  public:
+    Unary(std::unique_ptr<Expression> expr, Token* op, Location location);
+    std::string print(int level) const override;
+    std::unique_ptr<Interpretation> interpret(Interpreter* interpreter) const override;
+    type::Type check() override;
+    IrVar visit(IrGenerator* generator) const override;
+
+  private:
+    std::unique_ptr<Expression> expr;
+    Token* op;
+};
+
 class Assign : public Expression {
   public:
     Assign(std::unique_ptr<Identifier> identifier,

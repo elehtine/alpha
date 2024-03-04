@@ -18,6 +18,7 @@ class Parser {
     std::unique_ptr<Expression> parse_expression_statement();
     std::unique_ptr<Expression> parse_expression();
     std::unique_ptr<Expression> parse_binary(int level);
+    std::unique_ptr<Expression> parse_unary();
     std::unique_ptr<Expression> parse_primary();
 
     std::unique_ptr<Identifier> parse_identifier();

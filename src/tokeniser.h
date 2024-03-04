@@ -29,7 +29,7 @@ class Tokeniser {
     const std::regex punctuation { "^(\\(|\\)|\\{|\\}|,|:|;)" };
     const std::regex oper { "^(\\+|-|\\*|/|%|==|!=|<=|>=|=|<|>|and|or)" };
     const std::regex keyword {
-      "^(var|true|false|if|then|else|while|do)"
+      "^(var|true|false|not|if|then|else|while|do)"
     };
     const std::regex identifier { "^[a-zA-Z_][a-zA-Z_0-9]*" };
     const std::regex literal { "^(\\d)+" };
@@ -48,7 +48,7 @@ class Tokeniser {
       { "*", TokenType::product },
       { "/", TokenType::division },
       { "%", TokenType::modulo },
-      { "!", TokenType::keyword_not },
+      { "not", TokenType::keyword_not },
       { "=", TokenType::equal },
       { "==", TokenType::equal_equal },
       { "!=", TokenType::not_equal },

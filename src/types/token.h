@@ -44,7 +44,7 @@ const int equality = 4;
 const int comparison = 5;
 const int term = 6;
 const int factor = 7;
-const int primary = 8;
+const int unary = 8;
 const int unknown = 9;
 
 std::string to_string(const TokenType& type);

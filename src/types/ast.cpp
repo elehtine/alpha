@@ -160,6 +160,30 @@ IrVar BinaryOp::visit(IrGenerator* generator) const {
   return result;
 }
 
+Unary::Unary(std::unique_ptr<Expression> expr, Token* op, Location location):
+  Expression(location), expr(std::move(expr)), op(op)
+{}
+
+std::string Unary::print(int level) const {
+  std::string result = std::string(level * space, ' ');
+  result += op->get_content();
+  result += "\n";
+  result += expr->print(level+1);
+  return result;
+}
+
+std::unique_ptr<Interpretation> Unary::interpret(Interpreter* interpreter) const {
+  return expr->interpret(interpreter);
+}
+
+type::Type Unary::check() {
+  return expr->check();
+}
+
+IrVar Unary::visit(IrGenerator* generator) const {
+  return expr->visit(generator);
+}
+
 Assign::Assign(std::unique_ptr<Identifier> identifier,
     std::unique_ptr<Expression> value, Location location):
   Expression(location), identifier(std::move(identifier)), value(std::move(value))

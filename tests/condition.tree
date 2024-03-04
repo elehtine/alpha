@@ -32,13 +32,10 @@
   else
     2
   if
-    fun
-      not
-      (
-          1
-        <
-          2
-      )
+    not
+        1
+      <
+        2
   then
     1
   else

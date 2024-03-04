@@ -1,5 +1,5 @@
 Token({, LEFT_BRACE, unknown, (1,0))
-Token(a, IDENTIFIER, primary, (1,2))
-Token(b, IDENTIFIER, primary, (1,4))
+Token(a, IDENTIFIER, unknown, (1,2))
+Token(b, IDENTIFIER, unknown, (1,4))
 Token(}, RIGHT_BRACE, unknown, (1,6))
 Token(end, EOF, unknown, (1,0))

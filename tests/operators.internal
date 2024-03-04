@@ -88,4 +88,14 @@ L71
 LoadIntConst(2, x77)
 L72
 Call(+, [x69, null], x78)
-LoadIntConst(0, x79)
+LoadIntConst(1, x82)
+LoadIntConst(2, x83)
+Call(>, [x82, x83], x84)
+CondJump(x84, L79, L80)
+L79
+LoadIntConst(1, x85)
+Jump(L81)
+L80
+LoadIntConst(2, x86)
+L81
+LoadIntConst(0, x87)

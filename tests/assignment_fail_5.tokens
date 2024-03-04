@@ -1,5 +1,5 @@
-Token(x, IDENTIFIER, primary, (1,0))
+Token(x, IDENTIFIER, unknown, (1,0))
 Token(=, EQUAL, assignment, (1,2))
-Token(42, LITERAL, primary, (1,4))
+Token(42, LITERAL, unknown, (1,4))
 Token(;, SEMICOLON, unknown, (1,6))
 Token(end, EOF, unknown, (1,0))
