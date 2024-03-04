@@ -88,19 +88,24 @@ std::unique_ptr<Expression> Parser::parse_loop() {
 std::unique_ptr<Expression> Parser::parse_block() {
   Location location = tokens.peek()->copy_location();
   std::vector<std::unique_ptr<Expression>> expressions;
+
+  bool semicolon = true;
   while (true) {
-    if (tokens.match(TokenType::right_brace)) {
-      expressions.push_back(
-          std::make_unique<Literal>(location, "null", type::Type::unit));
-      break;
+    if (tokens.match(TokenType::right_brace)) break;
+    if (tokens.previous()->match(TokenType::right_brace)) semicolon = true;
+
+    if (!tokens.match(TokenType::semicolon) && !semicolon) {
+      throw tokens.error({ TokenType::semicolon, TokenType::right_brace });
     }
 
     expressions.push_back(std::move(parse_expression_statement()));
+    semicolon = false;
+    if (tokens.match(TokenType::semicolon)) semicolon = true;
+  }
 
-    if (!tokens.match(TokenType::semicolon) && !tokens.previous()->match(TokenType::right_brace)) {
-      if (tokens.match(TokenType::right_brace)) break;
-      throw tokens.error({ TokenType::semicolon, TokenType::right_brace });
-    }
+
+  if (semicolon) {
+    expressions.push_back(std::make_unique<Literal>(location, "null", type::Type::unit));
   }
   return std::make_unique<Block>(std::move(expressions), location);
 }

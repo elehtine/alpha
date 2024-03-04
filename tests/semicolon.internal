@@ -1,34 +1,32 @@
 LoadIntConst(1, x1)
 LoadIntConst(2, x2)
 LoadIntConst(2, x3)
-LoadIntConst(0, x4)
-LoadIntConst(1, x8)
-CondJump(x8, L5, L6)
+LoadIntConst(1, x7)
+CondJump(x7, L4, L5)
+L4
+Jump(L6)
 L5
-Jump(L7)
+LoadIntConst(0, x8)
 L6
-LoadIntConst(0, x9)
-L7
-LoadIntConst(1, x13)
-CondJump(x13, L10, L11)
+LoadIntConst(1, x12)
+CondJump(x12, L9, L10)
+L9
+Jump(L11)
 L10
-Jump(L12)
+LoadIntConst(0, x13)
 L11
-LoadIntConst(0, x14)
-L12
-LoadIntConst(1, x18)
-CondJump(x18, L15, L16)
+LoadIntConst(1, x17)
+CondJump(x17, L14, L15)
+L14
+Jump(L16)
 L15
-Jump(L17)
+LoadIntConst(0, x18)
 L16
-LoadIntConst(0, x19)
-L17
-LoadIntConst(1, x23)
-CondJump(x23, L20, L21)
+LoadIntConst(1, x22)
+CondJump(x22, L19, L20)
+L19
+Jump(L21)
 L20
-Jump(L22)
 L21
-L22
-LoadIntConst(3, x24)
-LoadIntConst(0, x25)
-LoadIntConst(0, x26)
+LoadIntConst(3, x23)
+LoadIntConst(0, x24)
