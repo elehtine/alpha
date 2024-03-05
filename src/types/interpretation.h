@@ -5,12 +5,7 @@
 #include <memory>
 #include <map>
 
-
-enum class ValueType {
-  Integer,
-  Boolean,
-  Unit,
-};
+#include "type.h"
 
 class Value {
   public:

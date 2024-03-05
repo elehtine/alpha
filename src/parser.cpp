@@ -27,7 +27,7 @@ std::unique_ptr<Expression> Parser::parse() {
   }
 
   expressions.push_back(
-      std::make_unique<Literal>(location, "null", type::Type::unit));
+      std::make_unique<Literal>(location, "null", ValueType::Unit));
 
   std::unique_ptr<Expression> root =
     std::make_unique<Block>(std::move(expressions), location);
@@ -63,7 +63,7 @@ std::unique_ptr<Expression> Parser::parse_condition() {
   std::unique_ptr<Expression> then_expression = parse_expression();
 
   std::unique_ptr<Expression> else_expression =
-    std::make_unique<Literal>(location, "null", type::Type::unit);
+    std::make_unique<Literal>(location, "null", ValueType::Unit);
   if (tokens.match(TokenType::keyword_else)) {
     else_expression = parse_expression();
   }
@@ -105,7 +105,7 @@ std::unique_ptr<Expression> Parser::parse_block() {
 
 
   if (semicolon) {
-    expressions.push_back(std::make_unique<Literal>(location, "null", type::Type::unit));
+    expressions.push_back(std::make_unique<Literal>(location, "null", ValueType::Unit));
   }
   return std::make_unique<Block>(std::move(expressions), location);
 }
@@ -141,11 +141,11 @@ std::unique_ptr<Expression> Parser::parse_primary() {
 
   if (tokens.match({ TokenType::keyword_true, TokenType::keyword_false })) {
     return std::make_unique<Literal>(token->copy_location(),
-        token->get_content(), type::Type::boolean);
+        token->get_content(), ValueType::Boolean);
   }
   if (tokens.match(TokenType::literal)) {
     return std::make_unique<Literal>(token->copy_location(),
-        token->get_content(), type::Type::integer);
+        token->get_content(), ValueType::Integer);
   }
   if (tokens.match(TokenType::identifier)) {
     std::unique_ptr<Identifier> id = std::make_unique<Identifier>(*token, token->copy_location());

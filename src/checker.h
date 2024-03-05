@@ -4,10 +4,13 @@
 #include "types/ast.h"
 
 
-namespace checker {
+class Checker {
+  public:
+    Checker(Expression* tree, Printer* printer);
 
-  bool check(Expression* tree);
-
-} /* checker */
+  private:
+    Expression* tree;
+    Printer* printer;
+};
 
 #endif

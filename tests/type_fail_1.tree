@@ -1,0 +1,8 @@
+{
+  fun
+    print_int
+    (
+      true
+    )
+  null
+}

@@ -4,16 +4,12 @@
 #include <string>
 
 
-namespace type {
+enum class ValueType {
+  Integer,
+  Boolean,
+  Unit,
+};
 
-  enum class Type {
-    integer,
-    boolean,
-    unit,
-  };
-
-  std::string type_to_string(const Type& type);
-
-} /* type  */
+std::string to_string(const ValueType& type);
 
 #endif

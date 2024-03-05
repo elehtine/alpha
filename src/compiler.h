@@ -25,6 +25,7 @@ class Compiler {
     Source source;
     std::unique_ptr<Tokens> tokens;
     std::unique_ptr<Expression> tree;
+    Checker checker;
     Interpreter interpreter;
     IrGenerator ir_generator;
     AssemblyGenerator asm_generator;

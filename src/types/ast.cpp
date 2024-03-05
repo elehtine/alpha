@@ -11,7 +11,7 @@
 Expression::Expression(Location location): location(location) {}
 Expression::~Expression() {}
 
-Literal::Literal(Location location, std::string value, type::Type type):
+Literal::Literal(Location location, std::string value, ValueType type):
   Expression(location), value(value), type(type)
 {}
 
@@ -38,8 +38,8 @@ IrVar Literal::visit(IrGenerator* generator) const {
   return variable;
 }
 
-type::Type Literal::check() {
-  return type::Type::integer;
+ValueType Literal::check() {
+  return type;
 }
 
 Identifier::Identifier(Token token, Location location):
@@ -57,8 +57,8 @@ Value Identifier::interpret(Interpreter* interpreter) const {
   return interpreter->get_variable(name);
 }
 
-type::Type Identifier::check() {
-  return type::Type::unit;
+ValueType Identifier::check() {
+  return ValueType();
 }
 
 IrVar Identifier::visit(IrGenerator* generator) const {
@@ -144,17 +144,30 @@ Value BinaryOp::interpret(Interpreter* interpreter) const {
     }
   }
 
-  throw InterpretException("Invalid operators in " + location.error_mark() + "here");
+  throw InterpretException("Invalid operators in\n" + location.error_mark() + "here");
 }
 
-type::Type BinaryOp::check() {
-  if (left->check() != type::Type::integer) {
-    throw TypeException("Expected integer, got " + type_to_string(left->check()));
+ValueType BinaryOp::check() {
+  ValueType left_type = left->check();
+  ValueType right_type = right->check();
+
+  if (op->match(TokenType::logical_and) || op->match(TokenType::logical_or)) {
+    if (left_type == ValueType::Boolean && right_type == ValueType::Boolean) {
+      return ValueType::Boolean;
+    }
+    throw TypeException("Expected booleans, got " + to_string(left_type) + ", and " + to_string(right_type));
   }
-  if (right->check() != type::Type::integer) {
-    throw TypeException("Expected integer, got " + type_to_string(left->check()));
+
+  if (left_type != ValueType::Integer || right_type != ValueType::Integer) {
+    throw TypeException("Expected integers, got " + to_string(left_type) + ", and " + to_string(right_type));
   }
-  return type::Type::integer;
+
+  if (op->match(TokenType::plus)) return ValueType::Integer;
+  if (op->match(TokenType::minus)) return ValueType::Integer;
+  if (op->match(TokenType::product)) return ValueType::Integer;
+  if (op->match(TokenType::division)) return ValueType::Integer;
+  if (op->match(TokenType::modulo)) return ValueType::Integer;
+  return ValueType::Boolean;
 }
 
 IrVar BinaryOp::visit(IrGenerator* generator) const {
@@ -192,8 +205,18 @@ Value Unary::interpret(Interpreter* interpreter) const {
   throw InterpretException("Invalid value in\n" + location.error_mark() + "here");
 }
 
-type::Type Unary::check() {
-  return expr->check();
+ValueType Unary::check() {
+  ValueType type = expr->check();
+  if (op->match(TokenType::minus)) {
+    if (type == ValueType::Integer) return type;
+    throw TypeException("Expected integer, got " + to_string(type));
+  }
+  if (op->match(TokenType::keyword_not)) {
+    if (type == ValueType::Boolean) return type;
+    throw TypeException("Expected boolean, got " + to_string(type));
+  }
+
+  throw TypeException("Unknown unary operator");
 }
 
 IrVar Unary::visit(IrGenerator* generator) const {
@@ -220,8 +243,8 @@ Value Assign::interpret(Interpreter* interpreter) const {
   }
 }
 
-type::Type Assign::check() {
-  throw TypeException("not implemented if");
+ValueType Assign::check() {
+  throw TypeException("not implemented assignment");
 }
 
 IrVar Assign::visit(IrGenerator* generator) const {
@@ -252,7 +275,7 @@ std::string IfThenElse::print(int level) const {
 Value IfThenElse::interpret(Interpreter* interpreter) const {
   Value cond = condition->interpret(interpreter);
   if (cond.type != ValueType::Boolean) {
-    throw InterpretException("Condition is not boolean " + location.error_mark() + "here");
+    throw InterpretException("Condition is not boolean\n" + location.error_mark() + "here");
   }
 
   if (cond.value == true) {
@@ -265,7 +288,7 @@ Value IfThenElse::interpret(Interpreter* interpreter) const {
   return Value();
 }
 
-type::Type IfThenElse::check() {
+ValueType IfThenElse::check() {
   throw TypeException("not implemented if");
 }
 
@@ -312,8 +335,8 @@ Value While::interpret(Interpreter* interpreter) const {
   return Value();
 }
 
-type::Type While::check() {
-  throw TypeException("not implemented if");
+ValueType While::check() {
+  throw TypeException("not implemented while");
 }
 
 IrVar While::visit(IrGenerator* generator) const {
@@ -358,8 +381,8 @@ Value Block::interpret(Interpreter* interpreter) const {
   return result;
 }
 
-type::Type Block::check() {
-  return expressions[0]->check();
+ValueType Block::check() {
+  return expressions.back()->check();
 }
 
 IrVar Block::visit(IrGenerator* generator) const {
@@ -388,8 +411,8 @@ Value Arguments::interpret(Interpreter* interpreter) const {
   return Value();
 }
 
-type::Type Arguments::check() {
-  return type::Type::unit;
+ValueType Arguments::check() {
+  return ValueType::Unit;
 }
 
 IrVar Arguments::visit(IrGenerator* generator) const {
@@ -418,8 +441,8 @@ Value Function::interpret(Interpreter* interpreter) const {
   return Value();
 }
 
-type::Type Function::check() {
-  return type::Type::unit;
+ValueType Function::check() {
+  return ValueType::Unit;
 }
 
 IrVar Function::visit(IrGenerator* generator) const {
@@ -448,8 +471,8 @@ Value Declaration::interpret(Interpreter* interpreter) const {
   return Value();
 }
 
-type::Type Declaration::check() {
-  return type::Type::unit;
+ValueType Declaration::check() {
+  return ValueType::Unit;
 }
 
 IrVar Declaration::visit(IrGenerator* generator) const {

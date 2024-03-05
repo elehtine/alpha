@@ -1,11 +1,8 @@
 #include "type.h"
 
-namespace type {
-
-  std::string type_to_string(const Type& type) {
-    if (type == Type::integer) return "integer";
-    if (type == Type::boolean) return "boolean";
-    return "unit";
-  }
-
-} /* type */
+std::string to_string(const ValueType& type) {
+  if (type == ValueType::Integer) return "INTEGER";
+  if (type == ValueType::Boolean) return "BOOLEAN";
+  if (type == ValueType::Unit) return "UNIT";
+  return "UNKNOWN_TYPE";
+}
