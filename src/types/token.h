@@ -12,6 +12,7 @@
 class Printer;
 class TokeniseException;
 class ParseException;
+class FunType;
 
 enum class TokenType {
   left_parenthesis, right_parenthesis,
@@ -56,6 +57,7 @@ class Token {
     bool match(TokenType match_type);
     virtual int level() const;
     ParseException error(std::vector<TokenType> types);
+    FunType get_funtype();
 
     std::string get_content() const;
     std::string parse_str();

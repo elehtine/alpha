@@ -1,0 +1,3 @@
+InterpretException: Invalid operators in
+print_int(1 + true);
+          ^- here

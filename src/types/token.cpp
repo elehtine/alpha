@@ -112,6 +112,34 @@ ParseException Token::error(std::vector<TokenType> types) {
   return ParseException(message);
 }
 
+FunType Token::get_funtype() {
+  if (type == TokenType::plus ||
+      type == TokenType::minus ||
+      type == TokenType::product ||
+      type == TokenType::division ||
+      type == TokenType::modulo) {
+    return FunType({ ValueType::Integer, ValueType::Integer }, ValueType::Integer);
+  }
+
+  if (type == TokenType::keyword_not ||
+      type == TokenType::equal ||
+      type == TokenType::equal_equal ||
+      type == TokenType::not_equal ||
+      type == TokenType::less ||
+      type == TokenType::less_or_equal ||
+      type == TokenType::greater ||
+      type == TokenType::greater_or_equal) {
+    return FunType({ ValueType::Integer, ValueType::Integer }, ValueType::Boolean);
+  }
+
+  if (type == TokenType::logical_and ||
+      type == TokenType::logical_or) {
+    return FunType({ ValueType::Boolean, ValueType::Boolean }, ValueType::Boolean);
+  }
+
+  throw TypeException("Invalid token for arguments: " + content);
+}
+
 std::string types_to_string(std::vector<TokenType> vec) {
   std::string result = "";
   bool inter;

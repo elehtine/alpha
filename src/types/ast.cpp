@@ -150,24 +150,8 @@ Value BinaryOp::interpret(Interpreter* interpreter) const {
 ValueType BinaryOp::check() {
   ValueType left_type = left->check();
   ValueType right_type = right->check();
-
-  if (op->match(TokenType::logical_and) || op->match(TokenType::logical_or)) {
-    if (left_type == ValueType::Boolean && right_type == ValueType::Boolean) {
-      return ValueType::Boolean;
-    }
-    throw TypeException("Expected booleans, got " + to_string(left_type) + ", and " + to_string(right_type));
-  }
-
-  if (left_type != ValueType::Integer || right_type != ValueType::Integer) {
-    throw TypeException("Expected integers, got " + to_string(left_type) + ", and " + to_string(right_type));
-  }
-
-  if (op->match(TokenType::plus)) return ValueType::Integer;
-  if (op->match(TokenType::minus)) return ValueType::Integer;
-  if (op->match(TokenType::product)) return ValueType::Integer;
-  if (op->match(TokenType::division)) return ValueType::Integer;
-  if (op->match(TokenType::modulo)) return ValueType::Integer;
-  return ValueType::Boolean;
+  FunType type = op->get_funtype();
+  return type.check({ left_type, right_type });
 }
 
 IrVar BinaryOp::visit(IrGenerator* generator) const {

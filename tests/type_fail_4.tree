@@ -1,0 +1,10 @@
+{
+  fun
+    print_bool
+    (
+        true
+      or
+        13
+    )
+  null
+}

@@ -32,7 +32,7 @@ class Expression {
     const int space = 2;
 };
 
-class Literal : public Expression {
+class Literal: public Expression {
   public:
     Literal(Location location, std::string value, ValueType type);
 
@@ -47,7 +47,7 @@ class Literal : public Expression {
     ValueType type;
 };
 
-class Identifier : public Expression {
+class Identifier: public Expression {
   public:
     Identifier(Token token, Location location);
 
@@ -65,7 +65,7 @@ class Identifier : public Expression {
     std::string name;
 };
 
-class BinaryOp : public Expression {
+class BinaryOp: public Expression {
   public:
     BinaryOp(std::unique_ptr<Expression> left, Token* op,
         std::unique_ptr<Expression> right, Location location);
@@ -81,7 +81,7 @@ class BinaryOp : public Expression {
     std::unique_ptr<Expression> right;
 };
 
-class Unary : public Expression {
+class Unary: public Expression {
   public:
     Unary(std::unique_ptr<Expression> expr, Token* op, Location location);
     std::string print(int level) const override;
@@ -94,7 +94,7 @@ class Unary : public Expression {
     Token* op;
 };
 
-class Assign : public Expression {
+class Assign: public Expression {
   public:
     Assign(std::unique_ptr<Identifier> identifier,
         std::unique_ptr<Expression> value, Location location);
@@ -109,7 +109,7 @@ class Assign : public Expression {
     std::unique_ptr<Expression> value;
 };
 
-class IfThenElse : public Expression {
+class IfThenElse: public Expression {
   public:
     IfThenElse(std::unique_ptr<Expression> condition,
         std::unique_ptr<Expression> then_expression,
@@ -127,7 +127,7 @@ class IfThenElse : public Expression {
     std::unique_ptr<Expression> else_expression;
 };
 
-class While : public Expression {
+class While: public Expression {
   public:
     While(std::unique_ptr<Expression> condition,
         std::unique_ptr<Expression> do_expression,
@@ -142,7 +142,7 @@ class While : public Expression {
     std::unique_ptr<Expression> do_expression;
 };
 
-class Block : public Expression {
+class Block: public Expression {
   public:
     Block(std::vector<std::unique_ptr<Expression>> expressions, Location location);
     std::string print(int level) const override;
