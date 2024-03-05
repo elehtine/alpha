@@ -4,28 +4,16 @@
 #include "../tools/exceptions.h"
 
 
-Integer::Integer(int value): value(value) {}
-Integer::operator int() const { return value; }
-Integer::operator bool() const {
-  throw InterpretException("Expected bool, got int");
-}
-Integer::operator std::string() const {
-  return std::to_string(value);
-}
-std::unique_ptr<Interpretation> Integer::clone() const {
-  return std::make_unique<Integer>(value);
-}
+Value::Value(): type(ValueType::Unit), value(0) {}
+Value::Value(ValueType type, int value): type(type), value(value) {}
 
-Boolean::Boolean(bool value): value(value) {}
-Boolean::operator bool() const { return value; }
-Boolean::operator int() const {
-  throw InterpretException("Expected int, got bool");
-}
-Boolean::operator std::string() const {
-  return "TRUE";
-}
-std::unique_ptr<Interpretation> Boolean::clone() const {
-  return std::make_unique<Boolean>(value);
+Value::operator std::string() const {
+  if (type == ValueType::Integer) return std::to_string(value);
+  if (type == ValueType::Boolean) {
+    if (value == 1) return "TRUE";
+    return "FALSE";
+  }
+  return "UNIT";
 }
 
 
@@ -33,15 +21,26 @@ SymTab::SymTab(std::unique_ptr<SymTab> parent):
   parent(std::move(parent))
 {}
 
-void SymTab::assign_variable(std::string identifier, std::unique_ptr<Interpretation> value) {
-  symbols[identifier] = std::move(value);
+void SymTab::assign_variable(std::string identifier, Value value) {
+  if (symbols.count(identifier)) {
+    symbols[identifier] = value;
+    return;
+  }
+  if (parent) {
+    parent->assign_variable(identifier, value);
+    return;
+  }
+  throw InterpretException("Undeclared identifier in assignment: " + identifier);
 }
 
-std::unique_ptr<Interpretation> SymTab::get_variable(std::string identifier) {
-  std::unique_ptr<Interpretation>& value = symbols[identifier];
-  if (value) return value->clone();
+void SymTab::declare_variable(std::string identifier, Value value) {
+  symbols[identifier] = value;
+}
+
+Value SymTab::get_variable(std::string identifier) {
+  if (symbols.count(identifier)) return symbols[identifier];
   if (parent) return parent->get_variable(identifier);
-  return nullptr;
+  throw InterpretException("Undeclared identifier used: " + identifier);
 }
 
 std::unique_ptr<SymTab> SymTab::get_parent() {

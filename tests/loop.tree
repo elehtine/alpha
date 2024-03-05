@@ -4,10 +4,10 @@
     5
   var
     index
-    0
+    1
   while
       index
-    <
+    <=
       size
   do
     {

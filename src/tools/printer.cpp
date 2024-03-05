@@ -60,8 +60,8 @@ void UserPrinter::print_asm(std::vector<std::string> lines) {
   std::cout << to_string(lines) << std::endl;
 }
 
-void UserPrinter::print_interpretation(std::vector<Interpretation*> interpretations) {
-  std::cout << "Interpretation:" << std::endl;
+void UserPrinter::print_interpretation(std::vector<Value> interpretations) {
+  std::cout << "Value:" << std::endl;
   std::cout << to_string(interpretations) << std::endl;
 }
 
@@ -101,7 +101,7 @@ void FilePrinter::print_asm(std::vector<std::string> lines) {
   print(to_string(lines), filename(FileType::assembly));
 }
 
-void FilePrinter::print_interpretation(std::vector<Interpretation*> interpretations) {
+void FilePrinter::print_interpretation(std::vector<Value> interpretations) {
   print(to_string(interpretations), filename(FileType::interpret));
 }
 

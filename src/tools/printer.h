@@ -8,7 +8,7 @@
 class Source;
 class Token;
 class Expression;
-class Interpretation;
+class Value;
 class Instruction;
 class CompileException;
 
@@ -22,7 +22,7 @@ class Printer {
     virtual void print_asm(std::vector<std::string> lines) = 0;
 
     virtual void print_interpretation(
-        std::vector<Interpretation*> interpretations) = 0;
+        std::vector<Value> interpretations) = 0;
     virtual void print_check(bool check) = 0;
 
     virtual void print_exception(const CompileException& exception) = 0;
@@ -39,7 +39,7 @@ class UserPrinter: public Printer  {
     void print_asm(std::vector<std::string> lines) override;
 
     virtual void print_interpretation(
-        std::vector<Interpretation*> interpretations) override;
+        std::vector<Value> interpretations) override;
     void print_check(bool check) override;
 
     void print_exception(const CompileException& exception) override;
@@ -69,7 +69,7 @@ class FilePrinter: public Printer  {
     void print_asm(std::vector<std::string> lines) override;
 
     virtual void print_interpretation(
-        std::vector<Interpretation*> interpretations) override;
+        std::vector<Value> interpretations) override;
     void print_check(bool check) override;
 
     void print_exception(const CompileException& exception) override;

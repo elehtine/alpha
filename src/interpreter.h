@@ -12,21 +12,20 @@
 class Interpreter {
   public:
     Interpreter(Expression* tree, Printer* printer);
-    void add_interpretation(std::unique_ptr<Interpretation> value);
+    void add_interpretation(Value value);
 
-    void assign_variable(std::string identifier, std::unique_ptr<Interpretation> value);
-    std::unique_ptr<Interpretation> get_variable(std::string identifier);
+    void assign_variable(std::string identifier, Value value);
+    void declare_variable(std::string identifier, Value value);
+    Value get_variable(std::string identifier);
     void start_block();
     void end_block();
 
   private:
-    std::vector<Interpretation*> get_interpretations();
-
     Expression* tree;
     Printer* printer;
 
     std::unique_ptr<SymTab> symtab;
-    std::vector<std::unique_ptr<Interpretation>> interpretations;
+    std::vector<Value> interpretations;
 };
 
 #endif

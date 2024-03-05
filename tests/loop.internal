@@ -1,7 +1,7 @@
 LoadIntConst(5, x1)
-LoadIntConst(0, x2)
+LoadIntConst(1, x2)
 L3
-Call(<, [index, size], x6)
+Call(<=, [index, size], x6)
 CondJump(x6, L4, L5)
 L4
 LoadIntConst(1, x7)

@@ -22,12 +22,11 @@ std::string Literal::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> Literal::interpret(Interpreter* interpreter) const {
-  if (value == "true") return std::make_unique<Integer>(1);
-  if (value == "false" || value == "null") {
-    return std::make_unique<Integer>(0);
-  }
-  return std::make_unique<Integer>(std::stoi(value));
+Value Literal::interpret(Interpreter* interpreter) const {
+  if (value == "null") return Value();
+  if (value == "true") return Value(ValueType::Boolean, true);
+  if (value == "false") return Value(ValueType::Boolean, false);
+  return Value(ValueType::Integer, std::stoi(value));
 }
 
 IrVar Literal::visit(IrGenerator* generator) const {
@@ -54,10 +53,8 @@ std::string Identifier::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> Identifier::interpret(Interpreter* interpreter) const {
-  std::unique_ptr<Interpretation> result = interpreter->get_variable(name);
-  if (result) return result;
-  throw InterpretException("Undeclared identifier\n" + location.error_mark() + "here");
+Value Identifier::interpret(Interpreter* interpreter) const {
+  return interpreter->get_variable(name);
 }
 
 type::Type Identifier::check() {
@@ -72,8 +69,13 @@ bool Identifier::is_name(std::string guess) const {
   return name == guess;
 }
 
-void Identifier::assign(Interpreter* interpreter, std::unique_ptr<Interpretation> value) {
-  interpreter->assign_variable(name, std::move(value));
+Value Identifier::assign(Interpreter* interpreter, Value value) {
+  interpreter->assign_variable(name, value);
+  return interpreter->get_variable(name);
+}
+
+void Identifier::declare(Interpreter* interpreter, Value value) {
+  interpreter->declare_variable(name, value);
 }
 
 BinaryOp::BinaryOp(std::unique_ptr<Expression> left, Token* op,
@@ -90,53 +92,59 @@ std::string BinaryOp::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> BinaryOp::interpret(Interpreter* interpreter) const {
-  int left_value = *left->interpret(interpreter);
-  int right_value = *right->interpret(interpreter);
-  if (op->match(TokenType::plus)) {
-    return std::make_unique<Integer>(left_value + right_value);
-  }
-  if (op->match(TokenType::minus)) {
-    return std::make_unique<Integer>(left_value - right_value);
-  }
-  if (op->match(TokenType::product)) {
-    return std::make_unique<Integer>(left_value * right_value);
-  }
-  if (op->match(TokenType::division)) {
-    return std::make_unique<Integer>(left_value / right_value);
-  }
-  if (op->match(TokenType::modulo)) {
-    return std::make_unique<Integer>(left_value % right_value);
-  }
-
-  if (op->match(TokenType::equal_equal)) {
-    return std::make_unique<Integer>(left_value == right_value);
-  }
-  if (op->match(TokenType::not_equal)) {
-    return std::make_unique<Integer>(left_value != right_value);
-  }
-
-  if (op->match(TokenType::less_or_equal)) {
-    return std::make_unique<Integer>(left_value <= right_value);
-  }
-  if (op->match(TokenType::greater_or_equal)) {
-    return std::make_unique<Integer>(left_value >= right_value);
-  }
-  if (op->match(TokenType::less)) {
-    return std::make_unique<Integer>(left_value < right_value);
-  }
-  if (op->match(TokenType::greater)) {
-    return std::make_unique<Integer>(left_value > right_value);
-  }
-
+Value BinaryOp::interpret(Interpreter* interpreter) const {
   if (op->match(TokenType::logical_and)) {
-    return std::make_unique<Integer>(left_value && right_value);
+    Value left_value = left->interpret(interpreter);
+    if (left_value.type != ValueType::Boolean && !left_value.value) return left_value;
+    return right->interpret(interpreter);
   }
   if (op->match(TokenType::logical_or)) {
-    return std::make_unique<Integer>(left_value || right_value);
+    Value left_value = left->interpret(interpreter);
+    if (left_value.type != ValueType::Boolean && !left_value.value) return right->interpret(interpreter);
+    return left_value;
   }
 
-  return std::make_unique<Integer>(1);
+  Value left_value = left->interpret(interpreter);
+  Value right_value = right->interpret(interpreter);
+  if (left_value.type == ValueType::Integer && right_value.type == ValueType::Integer) {
+    if (op->match(TokenType::plus)) {
+      return Value(ValueType::Integer, left_value.value + right_value.value);
+    }
+    if (op->match(TokenType::minus)) {
+      return Value(ValueType::Integer, left_value.value - right_value.value);
+    }
+    if (op->match(TokenType::product)) {
+      return Value(ValueType::Integer, left_value.value * right_value.value);
+    }
+    if (op->match(TokenType::division)) {
+      return Value(ValueType::Integer, left_value.value / right_value.value);
+    }
+    if (op->match(TokenType::modulo)) {
+      return Value(ValueType::Integer, left_value.value % right_value.value);
+    }
+
+    if (op->match(TokenType::equal_equal)) {
+      return Value(ValueType::Boolean, left_value.value == right_value.value);
+    }
+    if (op->match(TokenType::not_equal)) {
+      return Value(ValueType::Boolean, left_value.value != right_value.value);
+    }
+
+    if (op->match(TokenType::less_or_equal)) {
+      return Value(ValueType::Boolean, left_value.value <= right_value.value);
+    }
+    if (op->match(TokenType::greater_or_equal)) {
+      return Value(ValueType::Boolean, left_value.value >= right_value.value);
+    }
+    if (op->match(TokenType::less)) {
+      return Value(ValueType::Boolean, left_value.value < right_value.value);
+    }
+    if (op->match(TokenType::greater)) {
+      return Value(ValueType::Boolean, left_value.value > right_value.value);
+    }
+  }
+
+  throw InterpretException("Invalid operators in " + location.error_mark() + "here");
 }
 
 type::Type BinaryOp::check() {
@@ -172,8 +180,16 @@ std::string Unary::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> Unary::interpret(Interpreter* interpreter) const {
-  return expr->interpret(interpreter);
+Value Unary::interpret(Interpreter* interpreter) const {
+  Value value = expr->interpret(interpreter);
+  if (op->match(TokenType::keyword_not) && value.type == ValueType::Boolean) {
+    return Value(ValueType::Boolean, !value.value);
+  }
+  if (op->match(TokenType::minus) && value.type == ValueType::Integer) {
+    return Value(ValueType::Integer, -value.value);
+  }
+
+  throw InterpretException("Invalid value in\n" + location.error_mark() + "here");
 }
 
 type::Type Unary::check() {
@@ -196,10 +212,12 @@ std::string Assign::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> Assign::interpret(Interpreter* interpreter) const {
-  identifier->interpret(interpreter);
-  identifier->assign(interpreter, value->interpret(interpreter));
-  return identifier->interpret(interpreter);
+Value Assign::interpret(Interpreter* interpreter) const {
+  try {
+  return identifier->assign(interpreter, value->interpret(interpreter));
+  } catch (const InterpretException& e) {
+    throw InterpretException("Invalid assignment in\n" + location.error_mark() + "here");
+  }
 }
 
 type::Type Assign::check() {
@@ -231,10 +249,20 @@ std::string IfThenElse::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> IfThenElse::interpret(Interpreter* interpreter) const {
-  int cond = *condition->interpret(interpreter);
-  if (cond == 0) return else_expression->interpret(interpreter);
-  return then_expression->interpret(interpreter);
+Value IfThenElse::interpret(Interpreter* interpreter) const {
+  Value cond = condition->interpret(interpreter);
+  if (cond.type != ValueType::Boolean) {
+    throw InterpretException("Condition is not boolean " + location.error_mark() + "here");
+  }
+
+  if (cond.value == true) {
+    Value result = then_expression->interpret(interpreter);
+    if (else_expression) return result;
+    return Value();
+  }
+
+  if (else_expression) return else_expression->interpret(interpreter);
+  return Value();
 }
 
 type::Type IfThenElse::check() {
@@ -276,8 +304,12 @@ std::string While::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> While::interpret(Interpreter* interpreter) const {
-  return do_expression->interpret(interpreter);
+Value While::interpret(Interpreter* interpreter) const {
+  for (int time = 1; time < 10; time++) {
+    if (!condition->interpret(interpreter).value) break;
+    do_expression->interpret(interpreter);
+  }
+  return Value();
 }
 
 type::Type While::check() {
@@ -316,9 +348,9 @@ std::string Block::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> Block::interpret(Interpreter* interpreter) const {
+Value Block::interpret(Interpreter* interpreter) const {
   interpreter->start_block();
-  std::unique_ptr<Interpretation> result;
+  Value result;
   for (const std::unique_ptr<Expression>& expr: expressions) {
     result = expr->interpret(interpreter);
   }
@@ -351,9 +383,9 @@ std::string Arguments::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> Arguments::interpret(Interpreter* interpreter) const {
+Value Arguments::interpret(Interpreter* interpreter) const {
   if (arguments.size() == 1) return arguments[0]->interpret(interpreter);
-  return std::make_unique<Integer>(1);
+  return Value();
 }
 
 type::Type Arguments::check() {
@@ -378,11 +410,12 @@ std::string Function::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> Function::interpret(Interpreter* interpreter) const {
-  if (fun->is_name("print_int")) {
-    interpreter->add_interpretation(std::move(arguments->interpret(interpreter)));
+Value Function::interpret(Interpreter* interpreter) const {
+  if (fun->is_name("print_int") || fun->is_name("print_bool")) {
+    interpreter->add_interpretation(arguments->interpret(interpreter));
   }
-  return std::make_unique<Integer>(1);
+  if (fun->is_name("read_int")) return Value(ValueType::Integer, 10);
+  return Value();
 }
 
 type::Type Function::check() {
@@ -410,9 +443,9 @@ std::string Declaration::print(int level) const {
   return result;
 }
 
-std::unique_ptr<Interpretation> Declaration::interpret(Interpreter* interpreter) const {
-  name->assign(interpreter, std::move(value->interpret(interpreter)));
-  return std::make_unique<Integer>(0);
+Value Declaration::interpret(Interpreter* interpreter) const {
+  name->declare(interpreter, value->interpret(interpreter));
+  return Value();
 }
 
 type::Type Declaration::check() {
