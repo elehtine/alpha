@@ -1,0 +1,7 @@
+Token(print_int, IDENTIFIER, unknown, (1,0))
+Token((, LEFT_PARENTHESIS, unknown, (1,9))
+Token(-, MINUS, term, (1,10))
+Token(true, TRUE, unknown, (1,12))
+Token(), RIGHT_PARENTHESIS, unknown, (1,16))
+Token(;, SEMICOLON, unknown, (1,17))
+Token(end, EOF, unknown, (1,0))

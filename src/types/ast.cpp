@@ -228,7 +228,7 @@ Value Assign::interpret(Interpreter* interpreter) const {
 }
 
 ValueType Assign::check() {
-  throw TypeException("not implemented assignment");
+  return value->check();
 }
 
 IrVar Assign::visit(IrGenerator* generator) const {
@@ -273,7 +273,15 @@ Value IfThenElse::interpret(Interpreter* interpreter) const {
 }
 
 ValueType IfThenElse::check() {
-  throw TypeException("not implemented if");
+  ValueType cond = condition->check();
+  if (cond != ValueType::Boolean) {
+    throw TypeException("Expected boolean, got " + to_string(cond));
+  }
+
+  if (else_expression) {
+    return then_expression->check();
+  }
+  return ValueType::Unit;
 }
 
 IrVar IfThenElse::visit(IrGenerator* generator) const {
@@ -366,7 +374,11 @@ Value Block::interpret(Interpreter* interpreter) const {
 }
 
 ValueType Block::check() {
-  return expressions.back()->check();
+  ValueType result;
+  for (const std::unique_ptr<Expression>& expr: expressions) {
+    result = expr->check();
+  }
+  return result;
 }
 
 IrVar Block::visit(IrGenerator* generator) const {

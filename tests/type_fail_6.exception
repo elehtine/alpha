@@ -1,0 +1,3 @@
+InterpretException: Invalid value in
+print_int(- true);
+          ^- here

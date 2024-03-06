@@ -1,0 +1,9 @@
+{
+  fun
+    print_int
+    (
+      not
+        7
+    )
+  null
+}
