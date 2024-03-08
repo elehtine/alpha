@@ -1,1 +1,160 @@
-TRUE
+{
+  fun
+    print_int
+    (
+        1 (INTEGER)
+      +
+        2 (INTEGER)
+    )
+  fun
+    print_int
+    (
+        3 (INTEGER)
+      -
+        4 (INTEGER)
+    )
+  fun
+    print_int
+    (
+        5 (INTEGER)
+      *
+        6 (INTEGER)
+    )
+  fun
+    print_int
+    (
+        7 (INTEGER)
+      /
+        2 (INTEGER)
+    )
+  fun
+    print_int
+    (
+          1 (INTEGER)
+        +
+          2 (INTEGER)
+      *
+        3 (INTEGER)
+    )
+  fun
+    print_int
+    (
+          1 (INTEGER)
+        +
+            2 (INTEGER)
+          *
+            3 (INTEGER)
+      -
+          4 (INTEGER)
+        /
+          2 (INTEGER)
+    )
+  if
+      1 (INTEGER)
+    < (BOOLEAN)
+      2 (INTEGER)
+  then
+    fun
+      print_int
+      (
+        1 (INTEGER)
+      )
+  else
+    fun
+      print_int
+      (
+        2 (INTEGER)
+      )
+  if
+      1 (INTEGER)
+    > (BOOLEAN)
+      2 (INTEGER)
+  then
+    fun
+      print_int
+      (
+        1 (INTEGER)
+      )
+  else
+    fun
+      print_int
+      (
+        2 (INTEGER)
+      )
+  if
+      1 (INTEGER)
+    >= (BOOLEAN)
+      1 (INTEGER)
+  then
+    fun
+      print_int
+      (
+        1 (INTEGER)
+      )
+  else
+    fun
+      print_int
+      (
+        2 (INTEGER)
+      )
+  if
+      1 (INTEGER)
+    <= (BOOLEAN)
+      1 (INTEGER)
+  then
+    fun
+      print_int
+      (
+        1 (INTEGER)
+      )
+  else
+    fun
+      print_int
+      (
+        2 (INTEGER)
+      )
+  fun
+    print_int
+    (
+        3 (INTEGER)
+      +
+        if
+            1 (INTEGER)
+          <
+            2 (INTEGER)
+        then
+          1 (INTEGER)
+        else
+          2 (INTEGER)
+    )
+  fun
+    print_int
+    (
+        3 (INTEGER)
+      +
+        if
+            1 (INTEGER)
+          >
+            2 (INTEGER)
+        then
+          1 (INTEGER)
+        else
+          2 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      -
+        if
+          not
+              -
+                1 (INTEGER)
+            >
+              2 (INTEGER)
+        then
+          1 (INTEGER)
+        else
+          2 (INTEGER)
+    )
+  null
+}

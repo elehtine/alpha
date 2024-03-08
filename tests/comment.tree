@@ -2,7 +2,7 @@
   fun
     print_int
     (
-      1
+      1 (INTEGER)
     )
   null
 }

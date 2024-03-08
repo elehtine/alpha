@@ -1,13 +1,13 @@
 {
   var
     a
-    1
+    1 (INTEGER)
   var
     b
-    2
+    2 (INTEGER)
   var
     c
-    2
+    2 (INTEGER)
   {
     {
       a
@@ -18,41 +18,35 @@
   }
   {
     if
-      true
+      true (BOOLEAN)
     then
       {
         a
       }
-    else
-      null
     b
   }
   {
     if
-      true
+      true (BOOLEAN)
     then
       {
         a
       }
-    else
-      null
     b
   }
   {
     if
-      true
+      true (BOOLEAN)
     then
       {
         a
       }
-    else
-      null
     b
     c
   }
   {
     if
-      true
+      true (BOOLEAN)
     then
       {
         a
@@ -61,7 +55,7 @@
       {
         b
       }
-    3
+    3 (INTEGER)
   }
   var
     x

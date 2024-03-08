@@ -28,7 +28,10 @@ class Expression {
 
   protected:
     Expression(Location location);
+    Expression(Location location, ValueType type);
     Location location;
+    ValueType type = ValueType::Unit;
+
     const int space = 2;
 };
 
@@ -44,7 +47,6 @@ class Literal: public Expression {
 
   private:
     std::string value;
-    ValueType type;
 };
 
 class Identifier: public Expression {
@@ -189,7 +191,7 @@ class Declaration: public Expression {
   public:
     Declaration(
         std::unique_ptr<Identifier> name,
-        std::unique_ptr<Identifier> type,
+        std::unique_ptr<Identifier> type_id,
         std::unique_ptr<Expression> value,
         Location location);
 
@@ -200,7 +202,7 @@ class Declaration: public Expression {
 
   private:
     std::unique_ptr<Identifier> name;
-    std::unique_ptr<Identifier> type;
+    std::unique_ptr<Identifier> type_id;
     std::unique_ptr<Expression> value;
 };
 

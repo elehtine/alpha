@@ -47,7 +47,12 @@ void UserPrinter::print_tokens(std::vector<Token*> tokens) {
 
 void UserPrinter::print_tree(Expression* root) {
   std::cout << "AST:" << std::endl;
-  if (root != nullptr) std::cout << root->print(0) << std::endl;
+  std::cout << root->print(0) << std::endl;
+}
+
+void UserPrinter::print_check(Expression* root) {
+  std::cout << "AST (checked):" << std::endl;
+  std::cout << root->print(0) << std::endl;
 }
 
 void UserPrinter::print_ir(std::vector<Instruction*> ir) {
@@ -63,11 +68,6 @@ void UserPrinter::print_asm(std::vector<std::string> lines) {
 void UserPrinter::print_interpretation(std::vector<Value> interpretations) {
   std::cout << "Value:" << std::endl;
   std::cout << to_string(interpretations) << std::endl;
-}
-
-void UserPrinter::print_check(bool check) {
-  std::cout << "Type check:" << std::endl;
-  std::cout << bool_to_string(check) << std::endl;
 }
 
 void UserPrinter::print_exception(const CompileException& exception) {
@@ -90,7 +90,11 @@ void FilePrinter::print_tokens(std::vector<Token*> tokens) {
 }
 
 void FilePrinter::print_tree(Expression* root) {
-  if (root != nullptr) print(root->print(0), filename(FileType::tree));
+  print(root->print(0), filename(FileType::tree));
+}
+
+void FilePrinter::print_check(Expression* root) {
+  print(root->print(0), filename(FileType::check));
 }
 
 void FilePrinter::print_ir(std::vector<Instruction*> ir) {
@@ -103,10 +107,6 @@ void FilePrinter::print_asm(std::vector<std::string> lines) {
 
 void FilePrinter::print_interpretation(std::vector<Value> interpretations) {
   print(to_string(interpretations), filename(FileType::interpret));
-}
-
-void FilePrinter::print_check(bool check) {
-  print(bool_to_string(check), filename(FileType::check));
 }
 
 void FilePrinter::print_exception(const CompileException& exception) {

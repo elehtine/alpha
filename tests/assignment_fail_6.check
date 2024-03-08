@@ -2,8 +2,7 @@
   fun
     print_int
     (
-      -
-        true (BOOLEAN)
+      x_1
     )
   null
 }

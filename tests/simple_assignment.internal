@@ -1,0 +1,2 @@
+LoadIntConst(42, x1)
+LoadIntConst(0, x2)

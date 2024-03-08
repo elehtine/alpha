@@ -1,9 +1,9 @@
 {
-  var
-    x
+  if
+    true (BOOLEAN)
+  then
     42 (INTEGER)
-  var
-    x
+  else
     13 (INTEGER)
   null
 }

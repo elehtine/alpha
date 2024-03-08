@@ -1,5 +1,5 @@
 {
-  assign
+  assign (INTEGER)
     x
     42 (INTEGER)
   null

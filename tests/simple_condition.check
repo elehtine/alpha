@@ -1,0 +1,9 @@
+{
+  if (INTEGER)
+    true (BOOLEAN)
+  then
+    42 (INTEGER)
+  else
+    13 (INTEGER)
+  null
+}

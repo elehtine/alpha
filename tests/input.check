@@ -1,0 +1,14 @@
+{
+  var
+    x
+    fun
+      read_int
+      (
+      )
+  fun
+    print_int
+    (
+      x
+    )
+  null
+}

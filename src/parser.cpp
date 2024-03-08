@@ -62,8 +62,7 @@ std::unique_ptr<Expression> Parser::parse_condition() {
   }
   std::unique_ptr<Expression> then_expression = parse_expression();
 
-  std::unique_ptr<Expression> else_expression =
-    std::make_unique<Literal>(location, "null", ValueType::Unit);
+  std::unique_ptr<Expression> else_expression = nullptr;
   if (tokens.match(TokenType::keyword_else)) {
     else_expression = parse_expression();
   }

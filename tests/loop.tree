@@ -1,10 +1,10 @@
 {
   var
     size
-    5
+    5 (INTEGER)
   var
     index
-    1
+    1 (INTEGER)
   while
       index
     <=
@@ -20,7 +20,7 @@
         index
           index
         +
-          1
+          1 (INTEGER)
       null
     }
   null

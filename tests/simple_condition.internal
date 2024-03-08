@@ -1,0 +1,9 @@
+LoadIntConst(1, x4)
+CondJump(x4, L1, L2)
+L1
+LoadIntConst(42, x5)
+Jump(L3)
+L2
+LoadIntConst(13, x6)
+L3
+LoadIntConst(0, x7)

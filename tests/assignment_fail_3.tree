@@ -1,9 +1,9 @@
 {
   var
     x
-    42
+    42 (INTEGER)
   var
     x
-    13
+    13 (INTEGER)
   null
 }

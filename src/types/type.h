@@ -6,9 +6,9 @@
 
 
 enum class ValueType {
+  Unit,
   Integer,
   Boolean,
-  Unit,
 };
 
 std::string to_string(const ValueType& type);

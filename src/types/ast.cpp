@@ -9,15 +9,19 @@
 
 
 Expression::Expression(Location location): location(location) {}
+Expression::Expression(Location location, ValueType type):
+  location(location), type(type)
+{}
 Expression::~Expression() {}
 
 Literal::Literal(Location location, std::string value, ValueType type):
-  Expression(location), value(value), type(type)
+  Expression(location, type), value(value)
 {}
 
 std::string Literal::print(int level) const {
   std::string result = std::string(level * space, ' ');
   result += value;
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
   result += "\n";
   return result;
 }
@@ -49,6 +53,7 @@ Identifier::Identifier(Token token, Location location):
 std::string Identifier::print(int level) const {
   std::string result = std::string(level * space, ' ');
   result += name;
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
   result += "\n";
   return result;
 }
@@ -87,6 +92,7 @@ std::string BinaryOp::print(int level) const {
   std::string result = left->print(level+1);
   result += std::string(level * space, ' ');
   result += op->get_content();
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
   result += "\n";
   result += right->print(level+1);
   return result;
@@ -150,8 +156,10 @@ Value BinaryOp::interpret(Interpreter* interpreter) const {
 ValueType BinaryOp::check() {
   ValueType left_type = left->check();
   ValueType right_type = right->check();
-  FunType type = op->get_funtype();
-  return type.check({ left_type, right_type });
+  FunType fun_type = op->get_funtype();
+
+  type = fun_type.check({ left_type, right_type });
+  return type;
 }
 
 IrVar BinaryOp::visit(IrGenerator* generator) const {
@@ -172,6 +180,7 @@ Unary::Unary(std::unique_ptr<Expression> expr, Token* op, Location location):
 std::string Unary::print(int level) const {
   std::string result = std::string(level * space, ' ');
   result += op->get_content();
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
   result += "\n";
   result += expr->print(level+1);
   return result;
@@ -190,7 +199,7 @@ Value Unary::interpret(Interpreter* interpreter) const {
 }
 
 ValueType Unary::check() {
-  ValueType type = expr->check();
+  type = expr->check();
   if (op->match(TokenType::minus)) {
     if (type == ValueType::Integer) return type;
     throw TypeException("Expected integer, got " + to_string(type));
@@ -213,7 +222,9 @@ Assign::Assign(std::unique_ptr<Identifier> identifier,
 {}
 
 std::string Assign::print(int level) const {
-  std::string result = std::string(level * space, ' ') + "assign\n";
+  std::string result = std::string(level * space, ' ') + "assign";
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  result += "\n";
   result += identifier->print(level+1);
   result += value->print(level+1);
   return result;
@@ -228,7 +239,8 @@ Value Assign::interpret(Interpreter* interpreter) const {
 }
 
 ValueType Assign::check() {
-  return value->check();
+  type = value->check();
+  return type;
 }
 
 IrVar Assign::visit(IrGenerator* generator) const {
@@ -247,12 +259,16 @@ IfThenElse::IfThenElse(std::unique_ptr<Expression> condition,
 {}
 
 std::string IfThenElse::print(int level) const {
-  std::string result = std::string(level * space, ' ') + "if\n";
+  std::string result = std::string(level * space, ' ') + "if";
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  result += "\n";
   result += condition->print(level+1);
   result += std::string(level * space, ' ') + "then\n";
   result += then_expression->print(level+1);
-  result += std::string(level * space, ' ') + "else\n";
-  result += else_expression->print(level+1);
+  if (else_expression) {
+    result += std::string(level * space, ' ') + "else\n";
+    result += else_expression->print(level+1);
+  }
   return result;
 }
 
@@ -279,9 +295,14 @@ ValueType IfThenElse::check() {
   }
 
   if (else_expression) {
-    return then_expression->check();
+    type = then_expression->check();
+    if (type != else_expression->check()) {
+      throw TypeException("Branches different types\n" +
+          location.error_mark());
+    }
   }
-  return ValueType::Unit;
+
+  return type;
 }
 
 IrVar IfThenElse::visit(IrGenerator* generator) const {
@@ -298,7 +319,9 @@ IrVar IfThenElse::visit(IrGenerator* generator) const {
   generator->add_instruction(std::make_unique<Jump>(end_label.get()));
 
   generator->add_instruction(std::move(else_label));
-  else_expression->visit(generator);
+  if (else_expression) {
+    else_expression->visit(generator);
+  }
   generator->add_instruction(std::move(end_label));
   return IrVar("null");
 }
@@ -312,7 +335,9 @@ While::While(std::unique_ptr<Expression> condition,
 {}
 
 std::string While::print(int level) const {
-  std::string result = std::string(level * space, ' ') + "while\n";
+  std::string result = std::string(level * space, ' ') + "while";
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  result += "\n";
   result += condition->print(level+1);
   result += std::string(level * space, ' ') + "do\n";
   result += do_expression->print(level+1);
@@ -355,7 +380,9 @@ Block::Block(std::vector<std::unique_ptr<Expression>> expressions,
 {}
 
 std::string Block::print(int level) const {
-  std::string result = std::string(level * space, ' ') + "{\n";
+  std::string result = std::string(level * space, ' ') + "{";
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  result += "\n";
   for (const std::unique_ptr<Expression>& expression: expressions) {
     result += expression->print(level + 1);
   }
@@ -394,7 +421,9 @@ Arguments::Arguments(std::vector<std::unique_ptr<Expression>>& arguments,
 {}
 
 std::string Arguments::print(int level) const {
-  std::string result = std::string(level * space, ' ') + "(\n";
+  std::string result = std::string(level * space, ' ') + "(";
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  result += "\n";
   for (const std::unique_ptr<Expression>& expression: arguments) {
     result += expression->print(level + 1);
   }
@@ -423,7 +452,9 @@ Function::Function(std::unique_ptr<Identifier> fun,
 {}
 
 std::string Function::print(int level) const {
-  std::string result = std::string(level * space, ' ') + "fun\n";
+  std::string result = std::string(level * space, ' ') + "fun";
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  result += "\n";
   result += fun->print(level+1);
   result += arguments->print(level + 1);
   return result;
@@ -447,17 +478,19 @@ IrVar Function::visit(IrGenerator* generator) const {
 
 Declaration::Declaration(
     std::unique_ptr<Identifier> name,
-    std::unique_ptr<Identifier> type,
+    std::unique_ptr<Identifier> type_id,
     std::unique_ptr<Expression> value,
     Location location):
   Expression(location),
-  name(std::move(name)), type(std::move(type)), value(std::move(value))
+  name(std::move(name)), type_id(std::move(type_id)), value(std::move(value))
 {}
 
 std::string Declaration::print(int level) const {
-  std::string result = std::string(level * space, ' ') + "var\n";
+  std::string result = std::string(level * space, ' ') + "var";
+  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  result += "\n";
   result += name->print(level + 1);
-  if (type) result += type->print(level + 1);
+  if (type_id) result += type_id->print(level + 1);
   result += value->print(level + 1);
   return result;
 }

@@ -1,6 +1,7 @@
 {
-  assign
+  var
     x
+    Int
     42 (INTEGER)
   null
 }

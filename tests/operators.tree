@@ -2,144 +2,144 @@
   fun
     print_int
     (
-        1
+        1 (INTEGER)
       +
-        2
+        2 (INTEGER)
     )
   fun
     print_int
     (
-        3
+        3 (INTEGER)
       -
-        4
+        4 (INTEGER)
     )
   fun
     print_int
     (
-        5
+        5 (INTEGER)
       *
-        6
+        6 (INTEGER)
     )
   fun
     print_int
     (
-        7
+        7 (INTEGER)
       /
-        2
+        2 (INTEGER)
     )
   fun
     print_int
     (
-          1
+          1 (INTEGER)
         +
-          2
+          2 (INTEGER)
       *
-        3
+        3 (INTEGER)
     )
   fun
     print_int
     (
-          1
+          1 (INTEGER)
         +
-            2
+            2 (INTEGER)
           *
-            3
+            3 (INTEGER)
       -
-          4
+          4 (INTEGER)
         /
-          2
+          2 (INTEGER)
     )
   if
-      1
+      1 (INTEGER)
     <
-      2
+      2 (INTEGER)
   then
     fun
       print_int
       (
-        1
+        1 (INTEGER)
       )
   else
     fun
       print_int
       (
-        2
+        2 (INTEGER)
       )
   if
-      1
+      1 (INTEGER)
     >
-      2
+      2 (INTEGER)
   then
     fun
       print_int
       (
-        1
+        1 (INTEGER)
       )
   else
     fun
       print_int
       (
-        2
+        2 (INTEGER)
       )
   if
-      1
+      1 (INTEGER)
     >=
-      1
+      1 (INTEGER)
   then
     fun
       print_int
       (
-        1
+        1 (INTEGER)
       )
   else
     fun
       print_int
       (
-        2
+        2 (INTEGER)
       )
   if
-      1
+      1 (INTEGER)
     <=
-      1
+      1 (INTEGER)
   then
     fun
       print_int
       (
-        1
+        1 (INTEGER)
       )
   else
     fun
       print_int
       (
-        2
+        2 (INTEGER)
       )
   fun
     print_int
     (
-        3
+        3 (INTEGER)
       +
         if
-            1
+            1 (INTEGER)
           <
-            2
+            2 (INTEGER)
         then
-          1
+          1 (INTEGER)
         else
-          2
+          2 (INTEGER)
     )
   fun
     print_int
     (
-        3
+        3 (INTEGER)
       +
         if
-            1
+            1 (INTEGER)
           >
-            2
+            2 (INTEGER)
         then
-          1
+          1 (INTEGER)
         else
-          2
+          2 (INTEGER)
     )
   fun
     print_int
@@ -148,13 +148,13 @@
         if
           not
               -
-                1
+                1 (INTEGER)
             >
-              2
+              2 (INTEGER)
         then
-          1
+          1 (INTEGER)
         else
-          2
+          2 (INTEGER)
     )
   null
 }

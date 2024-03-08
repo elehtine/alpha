@@ -1,11 +1,11 @@
 {
-  if
+  if (INTEGER)
     true (BOOLEAN)
   then
     1 (INTEGER)
   else
     0 (INTEGER)
-  if
+  if (INTEGER)
     false (BOOLEAN)
   then
     1 (INTEGER)
@@ -19,92 +19,92 @@
     false (BOOLEAN)
   then
     1 (INTEGER)
-  if
+  if (INTEGER)
       1 (INTEGER)
-    <
+    < (BOOLEAN)
       2 (INTEGER)
   then
     1 (INTEGER)
   else
     2 (INTEGER)
-  if
-    not
+  if (INTEGER)
+    not (BOOLEAN)
         1 (INTEGER)
-      <
+      < (BOOLEAN)
         2 (INTEGER)
   then
     1 (INTEGER)
   else
     2 (INTEGER)
-  if
+  if (INTEGER)
         1 (INTEGER)
-      <
+      < (BOOLEAN)
         2 (INTEGER)
-    and
+    and (BOOLEAN)
         3 (INTEGER)
-      <=
+      <= (BOOLEAN)
         3 (INTEGER)
   then
     1 (INTEGER)
   else
     2 (INTEGER)
-  if
+  if (INTEGER)
         1 (INTEGER)
-      <
+      < (BOOLEAN)
         2 (INTEGER)
-    or
+    or (BOOLEAN)
         3 (INTEGER)
-      <=
+      <= (BOOLEAN)
         3 (INTEGER)
   then
     1 (INTEGER)
   else
     2 (INTEGER)
-  if
+  if (INTEGER)
         1 (INTEGER)
-      <=
+      <= (BOOLEAN)
         2 (INTEGER)
-    and
+    and (BOOLEAN)
         3 (INTEGER)
-      <
+      < (BOOLEAN)
         3 (INTEGER)
   then
     1 (INTEGER)
   else
     2 (INTEGER)
-  if
+  if (INTEGER)
         1 (INTEGER)
-      <=
+      <= (BOOLEAN)
         2 (INTEGER)
-    or
+    or (BOOLEAN)
         3 (INTEGER)
-      <
+      < (BOOLEAN)
         3 (INTEGER)
   then
     1 (INTEGER)
   else
     2 (INTEGER)
-  if
+  if (INTEGER)
       1 (INTEGER)
-    ==
-      2 (INTEGER)
-  then
-    3 (INTEGER)
-  else
-    4 (INTEGER)
-  if
-      1 (INTEGER)
-    !=
+    == (BOOLEAN)
       2 (INTEGER)
   then
     3 (INTEGER)
   else
     4 (INTEGER)
-  if
+  if (INTEGER)
+      1 (INTEGER)
+    != (BOOLEAN)
+      2 (INTEGER)
+  then
+    3 (INTEGER)
+  else
+    4 (INTEGER)
+  if (INTEGER)
         false (BOOLEAN)
-      and
+      and (BOOLEAN)
         true (BOOLEAN)
-    or
+    or (BOOLEAN)
       true (BOOLEAN)
   then
     1 (INTEGER)

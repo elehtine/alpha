@@ -1,1 +1,8 @@
-TRUE
+{
+  fun
+    print_int
+    (
+      1 (INTEGER)
+    )
+  null
+}

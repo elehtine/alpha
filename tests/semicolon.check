@@ -1,1 +1,75 @@
-TRUE
+{
+  var
+    a
+    1 (INTEGER)
+  var
+    b
+    2 (INTEGER)
+  var
+    c
+    2 (INTEGER)
+  {
+    {
+      a
+    }
+    {
+      b
+    }
+  }
+  {
+    if
+      true (BOOLEAN)
+    then
+      {
+        a
+      }
+    b
+  }
+  {
+    if
+      true (BOOLEAN)
+    then
+      {
+        a
+      }
+    b
+  }
+  {
+    if
+      true (BOOLEAN)
+    then
+      {
+        a
+      }
+    b
+    c
+  }
+  {
+    if
+      true (BOOLEAN)
+    then
+      {
+        a
+      }
+    else
+      {
+        b
+      }
+    3 (INTEGER)
+  }
+  var
+    x
+    {
+      {
+        fun
+          f
+          (
+            a
+          )
+      }
+      {
+        b
+      }
+    }
+  null
+}

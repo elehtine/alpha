@@ -2,10 +2,10 @@
   var
     x_1
     Int
-    1
+    1 (INTEGER)
   var
     x_2
-      2
+      2 (INTEGER)
     *
       x_1
   fun
@@ -26,10 +26,10 @@
     var
       x_1
       Int
-      3
+      3 (INTEGER)
     var
       x_3
-      4
+      4 (INTEGER)
     fun
       print_int
       (
@@ -59,7 +59,7 @@
     )
   var
     x_3
-    1337
+    1337 (INTEGER)
   var
     x_4
     assign
@@ -68,7 +68,7 @@
         x_2
         assign
           x_1
-          42
+          42 (INTEGER)
   fun
     print_int
     (

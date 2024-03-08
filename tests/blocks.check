@@ -1,1 +1,17 @@
-TRUE
+{
+  1 (INTEGER)
+  {
+      2 (INTEGER)
+    + (INTEGER)
+      3 (INTEGER)
+    {
+      null
+    }
+    {
+      4 (INTEGER)
+      null
+    }
+  }
+  5 (INTEGER)
+  null
+}

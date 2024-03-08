@@ -14,33 +14,33 @@
   while
       n
     >
-      1
+      1 (INTEGER)
   do
     {
       if
             n
           %
-            2
+            2 (INTEGER)
         ==
-          0
+          0 (INTEGER)
       then
         {
           assign
             n
               n
             /
-              2
+              2 (INTEGER)
           null
         }
       else
         {
           assign
             n
-                3
+                3 (INTEGER)
               *
                 n
             +
-              1
+              1 (INTEGER)
           null
         }
       fun
