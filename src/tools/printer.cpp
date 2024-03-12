@@ -5,7 +5,7 @@
 #include "../types/source.h"
 #include "../types/token.h"
 #include "../types/ast.h"
-#include "../types/interpretation.h"
+#include "../types/value.h"
 #include "../types/ir.h"
 
 #include "exceptions.h"

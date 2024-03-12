@@ -2,5 +2,5 @@
   assign (INTEGER)
     x
     42 (INTEGER)
-  null
+  null (UNIT)
 }

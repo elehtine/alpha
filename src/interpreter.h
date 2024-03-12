@@ -6,7 +6,8 @@
 #include <vector>
 
 #include "types/ast.h"
-#include "types/interpretation.h"
+#include "types/value.h"
+#include "types/symtab.h"
 
 
 class Interpreter {
@@ -24,7 +25,7 @@ class Interpreter {
     Expression* tree;
     Printer* printer;
 
-    std::unique_ptr<SymTab> symtab;
+    std::unique_ptr<SymTab<Value>> symtab;
     std::vector<Value> interpretations;
 };
 

@@ -1,12 +1,12 @@
 #include "interpreter.h"
 
 #include "types/ast.h"
-#include "types/interpretation.h"
+#include "types/value.h"
 #include "tools/printer.h"
 
 
 Interpreter::Interpreter(Expression* tree, Printer* printer):
-  tree(tree), printer(printer), symtab(std::make_unique<SymTab>(nullptr))
+  tree(tree), printer(printer), symtab(std::make_unique<SymTab<Value>>(nullptr))
 {
   tree->interpret(this);
   printer->print_interpretation(interpretations);
@@ -29,7 +29,7 @@ Value Interpreter::get_variable(std::string identifier) {
 }
 
 void Interpreter::start_block() {
-  symtab = std::make_unique<SymTab>(std::move(symtab));
+  symtab = std::make_unique<SymTab<Value>>(std::move(symtab));
 }
 
 void Interpreter::end_block() {

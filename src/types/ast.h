@@ -12,6 +12,7 @@
 class Token;
 class Value;
 class Interpreter;
+class Checker;
 class IrGenerator;
 class IrVar;
 class Printer;
@@ -22,7 +23,7 @@ class Expression {
     virtual ~Expression();
     virtual std::string print(int level) const = 0;
     virtual Value interpret(Interpreter* interpreter) const = 0;
-    virtual ValueType check() = 0;
+    virtual ValueType check(Checker* checker) = 0;
 
     virtual IrVar visit(IrGenerator* generator) const = 0;
 
@@ -30,7 +31,7 @@ class Expression {
     Expression(Location location);
     Expression(Location location, ValueType type);
     Location location;
-    ValueType type = ValueType::Unit;
+    ValueType type = ValueType::Unknown;
 
     const int space = 2;
 };
@@ -41,7 +42,7 @@ class Literal: public Expression {
 
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
 
     IrVar visit(IrGenerator* generator) const override;
 
@@ -55,7 +56,7 @@ class Identifier: public Expression {
 
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
 
     IrVar visit(IrGenerator* generator) const override;
 
@@ -73,7 +74,7 @@ class BinaryOp: public Expression {
         std::unique_ptr<Expression> right, Location location);
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
 
     IrVar visit(IrGenerator* generator) const override;
 
@@ -88,7 +89,7 @@ class Unary: public Expression {
     Unary(std::unique_ptr<Expression> expr, Token* op, Location location);
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
     IrVar visit(IrGenerator* generator) const override;
 
   private:
@@ -102,7 +103,7 @@ class Assign: public Expression {
         std::unique_ptr<Expression> value, Location location);
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
 
     IrVar visit(IrGenerator* generator) const override;
 
@@ -119,7 +120,7 @@ class IfThenElse: public Expression {
         Location location);
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
 
     IrVar visit(IrGenerator* generator) const override;
 
@@ -136,7 +137,7 @@ class While: public Expression {
         Location location);
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
     IrVar visit(IrGenerator* generator) const override;
 
   private:
@@ -149,7 +150,7 @@ class Block: public Expression {
     Block(std::vector<std::unique_ptr<Expression>> expressions, Location location);
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
 
     IrVar visit(IrGenerator* generator) const override;
 
@@ -164,7 +165,7 @@ class Arguments: public Expression {
 
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
     IrVar visit(IrGenerator* generator) const override;
 
   private:
@@ -179,7 +180,7 @@ class Function: public Expression {
 
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
     IrVar visit(IrGenerator* generator) const override;
 
   private:
@@ -197,7 +198,7 @@ class Declaration: public Expression {
 
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
-    ValueType check() override;
+    ValueType check(Checker* checker) override;
     IrVar visit(IrGenerator* generator) const override;
 
   private:

@@ -49,7 +49,7 @@
         /
           2 (INTEGER)
     )
-  if
+  if (UNIT)
       1 (INTEGER)
     < (BOOLEAN)
       2 (INTEGER)
@@ -65,7 +65,7 @@
       (
         2 (INTEGER)
       )
-  if
+  if (UNIT)
       1 (INTEGER)
     > (BOOLEAN)
       2 (INTEGER)
@@ -81,7 +81,7 @@
       (
         2 (INTEGER)
       )
-  if
+  if (UNIT)
       1 (INTEGER)
     >= (BOOLEAN)
       1 (INTEGER)
@@ -97,7 +97,7 @@
       (
         2 (INTEGER)
       )
-  if
+  if (UNIT)
       1 (INTEGER)
     <= (BOOLEAN)
       1 (INTEGER)
@@ -156,5 +156,5 @@
         else
           2 (INTEGER)
     )
-  null
+  null (UNIT)
 }

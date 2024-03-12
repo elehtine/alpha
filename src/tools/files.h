@@ -3,15 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <memory>
-#include <filesystem>
-
-#include "../types/token.h"
-#include "../types/ast.h"
-#include "../types/ir.h"
-#include "../types/interpretation.h"
-
-#include "exceptions.h"
 
 
 class Source;

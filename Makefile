@@ -10,8 +10,8 @@ SRCS = main.cpp \
 	   src/interpreter.cpp src/checker.cpp \
 	   src/compiler.cpp src/command.cpp src/intrinsics.cpp \
 	   src/types/source.cpp src/types/token.cpp src/types/ast.cpp \
-	   src/types/interpretation.cpp src/types/type.cpp src/types/ir.cpp \
-	   src/types/location.cpp \
+	   src/types/value.cpp src/types/type.cpp src/types/ir.cpp \
+	   src/types/location.cpp src/types/symtab.cpp \
 	   src/tools/files.cpp src/tools/printer.cpp src/tools/exceptions.cpp
 OBJS = $(SRCS:.cpp=.o)
 

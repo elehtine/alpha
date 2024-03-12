@@ -3,9 +3,12 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+#include <map>
 
 
 enum class ValueType {
+  Unknown,
   Unit,
   Integer,
   Boolean,

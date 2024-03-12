@@ -30,7 +30,7 @@
               n
             /
               2 (INTEGER)
-          null
+          null (UNIT)
         }
       else
         {
@@ -41,14 +41,14 @@
                 n
             +
               1 (INTEGER)
-          null
+          null (UNIT)
         }
       fun
         print_int
         (
           n
         )
-      null
+      null (UNIT)
     }
-  null
+  null (UNIT)
 }

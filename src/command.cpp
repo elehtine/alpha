@@ -4,6 +4,7 @@
 #include "command.h"
 #include "tools/files.h"
 #include "tools/printer.h"
+#include "tools/exceptions.h"
 
 #include "types/source.h"
 #include "compiler.h"

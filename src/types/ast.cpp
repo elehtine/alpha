@@ -4,6 +4,7 @@
 #include "ir.h"
 
 #include "../interpreter.h"
+#include "../checker.h"
 #include "../ir_generator.h"
 #include "../tools/exceptions.h"
 
@@ -21,7 +22,7 @@ Literal::Literal(Location location, std::string value, ValueType type):
 std::string Literal::print(int level) const {
   std::string result = std::string(level * space, ' ');
   result += value;
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   return result;
 }
@@ -33,6 +34,10 @@ Value Literal::interpret(Interpreter* interpreter) const {
   return Value(ValueType::Integer, std::stoi(value));
 }
 
+ValueType Literal::check(Checker* checker) {
+  return type;
+}
+
 IrVar Literal::visit(IrGenerator* generator) const {
   IrVar variable = generator->create_var();
   int v = 0;
@@ -42,10 +47,6 @@ IrVar Literal::visit(IrGenerator* generator) const {
   return variable;
 }
 
-ValueType Literal::check() {
-  return type;
-}
-
 Identifier::Identifier(Token token, Location location):
   Expression(location), name(token.get_content())
 {}
@@ -53,7 +54,7 @@ Identifier::Identifier(Token token, Location location):
 std::string Identifier::print(int level) const {
   std::string result = std::string(level * space, ' ');
   result += name;
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   return result;
 }
@@ -62,8 +63,8 @@ Value Identifier::interpret(Interpreter* interpreter) const {
   return interpreter->get_variable(name);
 }
 
-ValueType Identifier::check() {
-  return ValueType();
+ValueType Identifier::check(Checker* checker) {
+  return checker->get_variable(name);
 }
 
 IrVar Identifier::visit(IrGenerator* generator) const {
@@ -92,7 +93,7 @@ std::string BinaryOp::print(int level) const {
   std::string result = left->print(level+1);
   result += std::string(level * space, ' ');
   result += op->get_content();
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   result += right->print(level+1);
   return result;
@@ -153,9 +154,9 @@ Value BinaryOp::interpret(Interpreter* interpreter) const {
   throw InterpretException("Invalid operators in\n" + location.error_mark() + "here");
 }
 
-ValueType BinaryOp::check() {
-  ValueType left_type = left->check();
-  ValueType right_type = right->check();
+ValueType BinaryOp::check(Checker* checker) {
+  ValueType left_type = left->check(checker);
+  ValueType right_type = right->check(checker);
   FunType fun_type = op->get_funtype();
 
   type = fun_type.check({ left_type, right_type });
@@ -180,7 +181,7 @@ Unary::Unary(std::unique_ptr<Expression> expr, Token* op, Location location):
 std::string Unary::print(int level) const {
   std::string result = std::string(level * space, ' ');
   result += op->get_content();
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   result += expr->print(level+1);
   return result;
@@ -198,8 +199,8 @@ Value Unary::interpret(Interpreter* interpreter) const {
   throw InterpretException("Invalid value in\n" + location.error_mark() + "here");
 }
 
-ValueType Unary::check() {
-  type = expr->check();
+ValueType Unary::check(Checker* checker) {
+  type = expr->check(checker);
   if (op->match(TokenType::minus)) {
     if (type == ValueType::Integer) return type;
     throw TypeException("Expected integer, got " + to_string(type));
@@ -223,7 +224,7 @@ Assign::Assign(std::unique_ptr<Identifier> identifier,
 
 std::string Assign::print(int level) const {
   std::string result = std::string(level * space, ' ') + "assign";
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   result += identifier->print(level+1);
   result += value->print(level+1);
@@ -238,8 +239,8 @@ Value Assign::interpret(Interpreter* interpreter) const {
   }
 }
 
-ValueType Assign::check() {
-  type = value->check();
+ValueType Assign::check(Checker* checker) {
+  type = value->check(checker);
   return type;
 }
 
@@ -260,7 +261,7 @@ IfThenElse::IfThenElse(std::unique_ptr<Expression> condition,
 
 std::string IfThenElse::print(int level) const {
   std::string result = std::string(level * space, ' ') + "if";
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   result += condition->print(level+1);
   result += std::string(level * space, ' ') + "then\n";
@@ -288,15 +289,15 @@ Value IfThenElse::interpret(Interpreter* interpreter) const {
   return Value();
 }
 
-ValueType IfThenElse::check() {
-  ValueType cond = condition->check();
+ValueType IfThenElse::check(Checker* checker) {
+  ValueType cond = condition->check(checker);
   if (cond != ValueType::Boolean) {
     throw TypeException("Expected boolean, got " + to_string(cond));
   }
 
   if (else_expression) {
-    type = then_expression->check();
-    if (type != else_expression->check()) {
+    type = then_expression->check(checker);
+    if (type != else_expression->check(checker)) {
       throw TypeException("Branches different types\n" +
           location.error_mark());
     }
@@ -336,7 +337,7 @@ While::While(std::unique_ptr<Expression> condition,
 
 std::string While::print(int level) const {
   std::string result = std::string(level * space, ' ') + "while";
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   result += condition->print(level+1);
   result += std::string(level * space, ' ') + "do\n";
@@ -352,7 +353,7 @@ Value While::interpret(Interpreter* interpreter) const {
   return Value();
 }
 
-ValueType While::check() {
+ValueType While::check(Checker* checker) {
   throw TypeException("not implemented while");
 }
 
@@ -381,7 +382,7 @@ Block::Block(std::vector<std::unique_ptr<Expression>> expressions,
 
 std::string Block::print(int level) const {
   std::string result = std::string(level * space, ' ') + "{";
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   for (const std::unique_ptr<Expression>& expression: expressions) {
     result += expression->print(level + 1);
@@ -400,10 +401,10 @@ Value Block::interpret(Interpreter* interpreter) const {
   return result;
 }
 
-ValueType Block::check() {
+ValueType Block::check(Checker* checker) {
   ValueType result;
   for (const std::unique_ptr<Expression>& expr: expressions) {
-    result = expr->check();
+    result = expr->check(checker);
   }
   return result;
 }
@@ -422,7 +423,7 @@ Arguments::Arguments(std::vector<std::unique_ptr<Expression>>& arguments,
 
 std::string Arguments::print(int level) const {
   std::string result = std::string(level * space, ' ') + "(";
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   for (const std::unique_ptr<Expression>& expression: arguments) {
     result += expression->print(level + 1);
@@ -436,7 +437,7 @@ Value Arguments::interpret(Interpreter* interpreter) const {
   return Value();
 }
 
-ValueType Arguments::check() {
+ValueType Arguments::check(Checker* checker) {
   return ValueType::Unit;
 }
 
@@ -453,7 +454,7 @@ Function::Function(std::unique_ptr<Identifier> fun,
 
 std::string Function::print(int level) const {
   std::string result = std::string(level * space, ' ') + "fun";
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   result += fun->print(level+1);
   result += arguments->print(level + 1);
@@ -468,7 +469,7 @@ Value Function::interpret(Interpreter* interpreter) const {
   return Value();
 }
 
-ValueType Function::check() {
+ValueType Function::check(Checker* checker) {
   return ValueType::Unit;
 }
 
@@ -487,7 +488,7 @@ Declaration::Declaration(
 
 std::string Declaration::print(int level) const {
   std::string result = std::string(level * space, ' ') + "var";
-  if (type != ValueType::Unit) result += " (" + to_string(type) + ")";
+  if (type != ValueType::Unknown) result += " (" + to_string(type) + ")";
   result += "\n";
   result += name->print(level + 1);
   if (type_id) result += type_id->print(level + 1);
@@ -500,7 +501,7 @@ Value Declaration::interpret(Interpreter* interpreter) const {
   return Value();
 }
 
-ValueType Declaration::check() {
+ValueType Declaration::check(Checker* checker) {
   return ValueType::Unit;
 }
 
