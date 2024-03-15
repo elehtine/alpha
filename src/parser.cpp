@@ -91,15 +91,13 @@ std::unique_ptr<Expression> Parser::parse_block() {
   bool semicolon = true;
   while (true) {
     if (tokens.match(TokenType::right_brace)) break;
-    if (tokens.previous()->match(TokenType::right_brace)) semicolon = true;
 
-    if (!tokens.match(TokenType::semicolon) && !semicolon) {
-      throw tokens.error({ TokenType::semicolon, TokenType::right_brace });
-    }
-
-    expressions.push_back(std::move(parse_expression_statement()));
     semicolon = false;
+    expressions.push_back(std::move(parse_expression_statement()));
+
     if (tokens.match(TokenType::semicolon)) semicolon = true;
+    else if (tokens.match(TokenType::right_brace)) break;
+    else throw tokens.error({ TokenType::semicolon, TokenType::right_brace });
   }
 
 

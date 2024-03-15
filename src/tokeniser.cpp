@@ -11,7 +11,8 @@ std::unique_ptr<Tokens> tokenise(Source& source, Printer* printer) {
 
 Tokeniser::Tokeniser(Source& source, Printer* printer):
   source(source),
-  printer(printer) {}
+  printer(printer)
+{}
 
 std::unique_ptr<Tokens> Tokeniser::tokenise() {
   std::vector<std::unique_ptr<Token>> token_list;
@@ -20,6 +21,16 @@ std::unique_ptr<Tokens> Tokeniser::tokenise() {
     while (column < (int) source.line(line).size()) {
       std::unique_ptr<Token> token = scan_token();
       if (!token) continue;
+      if (!token_list.empty() && token_list.back()->match(TokenType::right_brace)) {
+        bool brace = token->match(TokenType::right_brace);
+        bool semicolon = token->match(TokenType::semicolon);
+        bool keyword_else = token->match(TokenType::keyword_else);
+        if (!brace && !semicolon && !keyword_else) {
+          std::unique_ptr<Token> semicolon_token =
+            std::make_unique<Token>(TokenType::semicolon, ";", token_list.back()->copy_location());
+          token_list.push_back(std::move(semicolon_token));
+        }
+      }
       token_list.push_back(std::move(token));
     }
   }
