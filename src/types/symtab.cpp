@@ -24,6 +24,7 @@ void SymTab<T>::assign_variable(std::string identifier, T value) {
 
 template<typename T>
 void SymTab<T>::declare_variable(std::string identifier, T value) {
+  if (symbols.count(identifier)) throw SymTabException();
   symbols[identifier] = value;
 }
 

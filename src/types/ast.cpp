@@ -81,7 +81,11 @@ Value Identifier::assign(Interpreter* interpreter, Value value) {
 }
 
 void Identifier::declare(Interpreter* interpreter, Value value) {
-  interpreter->declare_variable(name, value);
+  try {
+    interpreter->declare_variable(name, value);
+  } catch (const SymTabException& exception) {
+    throw InterpretException("Already defined identifier\n" + location.error_mark() + "here");
+  }
 }
 
 BinaryOp::BinaryOp(std::unique_ptr<Expression> left, Token* op,

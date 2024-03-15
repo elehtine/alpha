@@ -1,0 +1,3 @@
+InterpretException: Already defined identifier
+var x = 13;
+    ^- here

@@ -37,10 +37,11 @@ class TypeException : public CompileException {
     TypeException(const std::string& message);
 };
 
-
 class IrGenerateException : public CompileException {
   public:
     IrGenerateException(const std::string& message);
 };
+
+class SymTabException: public std::exception {};
 
 #endif
