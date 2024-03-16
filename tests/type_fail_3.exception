@@ -1,1 +1,4 @@
-IrGenerateException CondJump not implemented
+TypeException in line 1
+Invalid argument type UNIT
+print_int(if true then 1);
+         ^- here

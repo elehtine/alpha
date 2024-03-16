@@ -1,0 +1,4 @@
+TypeException in line 8
+Already defined identifier
+    var x_1: Int = 3;
+        ^- here

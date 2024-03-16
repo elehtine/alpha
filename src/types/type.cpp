@@ -15,12 +15,12 @@ FunType::FunType(std::initializer_list<ValueType> parameters, ValueType result):
 
 ValueType FunType::check(std::vector<ValueType> arguments) {
   if (arguments.size() != parameters.size()) {
-    throw TypeException("Different sized type lists");
+    throw FunTypeException("Different sized type lists");
   }
 
   for (std::size_t index = 0; index < arguments.size(); index++) {
     if (arguments[index] != parameters[index]) {
-      throw TypeException("Invalid argument type " + to_string(arguments[index]));
+      throw FunTypeException("Invalid argument type " + to_string(arguments[index]));
     }
   }
 

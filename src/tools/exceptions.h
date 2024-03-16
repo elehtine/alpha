@@ -8,7 +8,7 @@
 class CompileException : public std::exception {
   public:
     CompileException(const std::string type, const std::string& message);
-    const char* what() const throw();
+    const char* what() const throw() override;
 
   private:
     const std::string message;
@@ -43,5 +43,14 @@ class IrGenerateException : public CompileException {
 };
 
 class SymTabException: public std::exception {};
+
+class FunTypeException : public std::exception {
+  public:
+    FunTypeException(const std::string& message);
+    const char* what() const throw() override;
+
+  private:
+    std::string message;
+};
 
 #endif

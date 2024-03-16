@@ -1,0 +1,54 @@
+{ (UNIT)
+  var
+    n
+    Int
+    fun (INTEGER)
+      read_int
+      (
+      )
+  fun (UNIT)
+    print_int
+    (
+      n (INTEGER)
+    )
+  while (UNIT)
+      n (INTEGER)
+    > (BOOLEAN)
+      1 (INTEGER)
+  do
+    { (UNIT)
+      if (UNIT)
+            n (INTEGER)
+          % (INTEGER)
+            2 (INTEGER)
+        == (BOOLEAN)
+          0 (INTEGER)
+      then
+        { (UNIT)
+          assign (INTEGER)
+            n
+              n (INTEGER)
+            / (INTEGER)
+              2 (INTEGER)
+          null (UNIT)
+        }
+      else
+        { (UNIT)
+          assign (INTEGER)
+            n
+                3 (INTEGER)
+              * (INTEGER)
+                n (INTEGER)
+            + (INTEGER)
+              1 (INTEGER)
+          null (UNIT)
+        }
+      fun (UNIT)
+        print_int
+        (
+          n (INTEGER)
+        )
+      null (UNIT)
+    }
+  null (UNIT)
+}

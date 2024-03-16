@@ -1,4 +1,4 @@
-InterpretException in line 1
-Invalid value
+TypeException in line 1
+Expected integer, got BOOLEAN
 print_int(- true);
           ^- here

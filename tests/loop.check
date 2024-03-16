@@ -1,4 +1,4 @@
-{
+{ (UNIT)
   var
     size
     5 (INTEGER)
@@ -6,20 +6,20 @@
     index
     1 (INTEGER)
   while (UNIT)
-      index
-    <=
-      size
+      index (INTEGER)
+    <= (BOOLEAN)
+      size (INTEGER)
   do
-    {
-      fun
+    { (UNIT)
+      fun (UNIT)
         print_int
         (
-          index
+          index (INTEGER)
         )
-      assign
+      assign (INTEGER)
         index
-          index
-        +
+          index (INTEGER)
+        + (INTEGER)
           1 (INTEGER)
       null (UNIT)
     }

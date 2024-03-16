@@ -33,3 +33,11 @@ TypeException::TypeException(const std::string& message):
 IrGenerateException::IrGenerateException(const std::string& message):
   CompileException("IrGenerateException ", message)
 {}
+
+FunTypeException::FunTypeException(const std::string& message):
+  message(message)
+{}
+
+const char* FunTypeException::what() const throw() {
+  return message.c_str();
+}

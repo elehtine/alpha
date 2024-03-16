@@ -1,4 +1,4 @@
-TypeException in line 3
-While not implemented
-while n > 1 do {
-^- here
+IrGenerateException in line 1
+Arguments not implemented
+var n: Int = read_int();
+                     ^- here

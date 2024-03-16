@@ -1,4 +1,4 @@
-InterpretException in line 2
+TypeException in line 2
 Already defined identifier
 var x = 13;
     ^- here

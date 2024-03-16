@@ -1,52 +1,52 @@
-{
-  fun
+{ (UNIT)
+  fun (UNIT)
     print_int
     (
         1 (INTEGER)
-      +
+      + (INTEGER)
         2 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
         3 (INTEGER)
-      -
+      - (INTEGER)
         4 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
         5 (INTEGER)
-      *
+      * (INTEGER)
         6 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
         7 (INTEGER)
-      /
+      / (INTEGER)
         2 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
           1 (INTEGER)
-        +
+        + (INTEGER)
           2 (INTEGER)
-      *
+      * (INTEGER)
         3 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
           1 (INTEGER)
-        +
+        + (INTEGER)
             2 (INTEGER)
-          *
+          * (INTEGER)
             3 (INTEGER)
-      -
+      - (INTEGER)
           4 (INTEGER)
-        /
+        / (INTEGER)
           2 (INTEGER)
     )
   if (UNIT)
@@ -54,13 +54,13 @@
     < (BOOLEAN)
       2 (INTEGER)
   then
-    fun
+    fun (UNIT)
       print_int
       (
         1 (INTEGER)
       )
   else
-    fun
+    fun (UNIT)
       print_int
       (
         2 (INTEGER)
@@ -70,13 +70,13 @@
     > (BOOLEAN)
       2 (INTEGER)
   then
-    fun
+    fun (UNIT)
       print_int
       (
         1 (INTEGER)
       )
   else
-    fun
+    fun (UNIT)
       print_int
       (
         2 (INTEGER)
@@ -86,13 +86,13 @@
     >= (BOOLEAN)
       1 (INTEGER)
   then
-    fun
+    fun (UNIT)
       print_int
       (
         1 (INTEGER)
       )
   else
-    fun
+    fun (UNIT)
       print_int
       (
         2 (INTEGER)
@@ -102,54 +102,54 @@
     <= (BOOLEAN)
       1 (INTEGER)
   then
-    fun
+    fun (UNIT)
       print_int
       (
         1 (INTEGER)
       )
   else
-    fun
+    fun (UNIT)
       print_int
       (
         2 (INTEGER)
       )
-  fun
+  fun (UNIT)
     print_int
     (
         3 (INTEGER)
-      +
-        if
+      + (INTEGER)
+        if (INTEGER)
             1 (INTEGER)
-          <
+          < (BOOLEAN)
             2 (INTEGER)
         then
           1 (INTEGER)
         else
           2 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
         3 (INTEGER)
-      +
-        if
+      + (INTEGER)
+        if (INTEGER)
             1 (INTEGER)
-          >
+          > (BOOLEAN)
             2 (INTEGER)
         then
           1 (INTEGER)
         else
           2 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
-      -
-        if
-          not
-              -
+      - (INTEGER)
+        if (INTEGER)
+          not (BOOLEAN)
+              - (INTEGER)
                 1 (INTEGER)
-            >
+            > (BOOLEAN)
               2 (INTEGER)
         then
           1 (INTEGER)

@@ -1,4 +1,4 @@
-{
+{ (UNIT)
   var
     a
     1 (INTEGER)
@@ -8,58 +8,58 @@
   var
     c
     2 (INTEGER)
-  {
-    {
-      a
+  { (INTEGER)
+    { (INTEGER)
+      a (INTEGER)
     }
-    {
-      b
+    { (INTEGER)
+      b (INTEGER)
     }
   }
-  {
-    if
+  { (INTEGER)
+    if (UNIT)
       true (BOOLEAN)
     then
       {
         a
       }
-    b
+    b (INTEGER)
   }
-  {
-    if
+  { (INTEGER)
+    if (UNIT)
       true (BOOLEAN)
     then
       {
         a
       }
-    b
+    b (INTEGER)
   }
-  {
-    if
+  { (INTEGER)
+    if (UNIT)
       true (BOOLEAN)
     then
       {
         a
       }
-    b
-    c
+    b (INTEGER)
+    c (INTEGER)
   }
-  {
-    if
+  { (INTEGER)
+    if (INTEGER)
       true (BOOLEAN)
     then
-      {
-        a
+      { (INTEGER)
+        a (INTEGER)
       }
     else
-      {
-        b
+      { (INTEGER)
+        b (INTEGER)
       }
     3 (INTEGER)
   }
   var
     x
-    {
+    { (INTEGER)
       {
         fun
           f
@@ -67,8 +67,8 @@
             a
           )
       }
-      {
-        b
+      { (INTEGER)
+        b (INTEGER)
       }
     }
   null (UNIT)

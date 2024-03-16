@@ -1,4 +1,4 @@
-{
+{ (UNIT)
   if (INTEGER)
     true (BOOLEAN)
   then
@@ -11,11 +11,11 @@
     1 (INTEGER)
   else
     0 (INTEGER)
-  if
+  if (UNIT)
     true (BOOLEAN)
   then
     1 (INTEGER)
-  if
+  if (UNIT)
     false (BOOLEAN)
   then
     1 (INTEGER)

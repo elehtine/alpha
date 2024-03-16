@@ -64,7 +64,8 @@ Value Identifier::interpret(Interpreter* interpreter) const {
 }
 
 ValueType Identifier::check(Checker* checker) {
-  return checker->get_variable(name);
+  type = checker->get_variable(name);
+  return type;
 }
 
 IrVar Identifier::visit(IrGenerator* generator) const {
@@ -80,11 +81,20 @@ Value Identifier::assign(Interpreter* interpreter, Value value) {
   return interpreter->get_variable(name);
 }
 
-void Identifier::declare(Interpreter* interpreter, Value value) {
+void Identifier::declare_value(Interpreter* interpreter, Value value) {
   try {
     interpreter->declare_variable(name, value);
   } catch (const SymTabException& exception) {
     throw InterpretException(location.error("Already defined identifier"));
+  }
+}
+
+void Identifier::declare_type(Checker* checker, ValueType type) {
+  try {
+    checker->declare_variable(name, type);
+    type = type;
+  } catch (const SymTabException& exception) {
+    throw TypeException(location.error("Already defined identifier"));
   }
 }
 
@@ -163,7 +173,11 @@ ValueType BinaryOp::check(Checker* checker) {
   ValueType right_type = right->check(checker);
   FunType fun_type = op->get_funtype();
 
-  type = fun_type.check({ left_type, right_type });
+  try {
+    type = fun_type.check({ left_type, right_type });
+  } catch (const FunTypeException& exception) {
+    throw TypeException(location.error(exception.what()));
+  }
   return type;
 }
 
@@ -237,7 +251,7 @@ std::string Assign::print(int level) const {
 
 Value Assign::interpret(Interpreter* interpreter) const {
   try {
-  return identifier->assign(interpreter, value->interpret(interpreter));
+    return identifier->assign(interpreter, value->interpret(interpreter));
   } catch (const InterpretException& e) {
     throw InterpretException(location.error("Invalid assignment"));
   }
@@ -304,6 +318,8 @@ ValueType IfThenElse::check(Checker* checker) {
     if (type != else_expression->check(checker)) {
       throw TypeException(location.error("Branches different types"));
     }
+  } else {
+    type = ValueType::Unit;
   }
 
   return type;
@@ -333,7 +349,7 @@ IrVar IfThenElse::visit(IrGenerator* generator) const {
 While::While(std::unique_ptr<Expression> condition,
     std::unique_ptr<Expression> do_expression,
     Location location):
-  Expression(location),
+  Expression(location, ValueType::Unit),
   condition(std::move(condition)),
   do_expression(std::move(do_expression))
 {}
@@ -357,7 +373,13 @@ Value While::interpret(Interpreter* interpreter) const {
 }
 
 ValueType While::check(Checker* checker) {
-  throw TypeException(location.error("While not implemented"));
+  ValueType cond = condition->check(checker);
+  if (cond != ValueType::Boolean) {
+    throw TypeException(location.error("Expected boolean, got " + to_string(cond)));
+  }
+
+  do_expression->check(checker);
+  return type;
 }
 
 IrVar While::visit(IrGenerator* generator) const {
@@ -409,6 +431,7 @@ ValueType Block::check(Checker* checker) {
   for (const std::unique_ptr<Expression>& expr: expressions) {
     result = expr->check(checker);
   }
+  type = result;
   return result;
 }
 
@@ -444,6 +467,21 @@ ValueType Arguments::check(Checker* checker) {
   return ValueType::Unit;
 }
 
+ValueType Arguments::check(Checker* checker, FunType fun_type) {
+  std::vector<ValueType> types;
+  for (const std::unique_ptr<Expression>& argument: arguments) {
+    types.push_back(argument->check(checker));
+  }
+
+  ValueType result = ValueType::Unknown;
+  try {
+    result = fun_type.check(types);
+  } catch (const FunTypeException& exception) {
+    throw TypeException(location.error(exception.what()));
+  }
+  return result;
+}
+
 IrVar Arguments::visit(IrGenerator* generator) const {
   if (arguments.size() == 1) return arguments[0]->visit(generator);
   throw IrGenerateException(location.error("Arguments not implemented"));
@@ -473,7 +511,19 @@ Value Function::interpret(Interpreter* interpreter) const {
 }
 
 ValueType Function::check(Checker* checker) {
-  return ValueType::Unit;
+  if (fun->is_name("print_int")) {
+    FunType fun_type({ ValueType::Integer }, ValueType::Unit);
+    type = arguments->check(checker, fun_type);
+  }
+  if (fun->is_name("print_bool")) {
+    FunType fun_type({ ValueType::Boolean }, ValueType::Unit);
+    type = arguments->check(checker, fun_type);
+  }
+  if (fun->is_name("read_int")) {
+    FunType fun_type({}, ValueType::Integer);
+    type = arguments->check(checker, fun_type);
+  }
+  return type;
 }
 
 IrVar Function::visit(IrGenerator* generator) const {
@@ -500,11 +550,12 @@ std::string Declaration::print(int level) const {
 }
 
 Value Declaration::interpret(Interpreter* interpreter) const {
-  name->declare(interpreter, value->interpret(interpreter));
+  name->declare_value(interpreter, value->interpret(interpreter));
   return Value();
 }
 
 ValueType Declaration::check(Checker* checker) {
+  name->declare_type(checker, value->check(checker));
   return ValueType::Unit;
 }
 

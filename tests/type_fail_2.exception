@@ -1,4 +1,4 @@
-InterpretException in line 1
-Condition is not boolean
+TypeException in line 1
+Expected boolean, got INTEGER
 print_int(if 1 then 1 else 2);
           ^- here

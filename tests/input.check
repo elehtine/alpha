@@ -1,14 +1,14 @@
-{
+{ (UNIT)
   var
     x
-    fun
+    fun (INTEGER)
       read_int
       (
       )
-  fun
+  fun (UNIT)
     print_int
     (
-      x
+      x (INTEGER)
     )
   null (UNIT)
 }

@@ -1,1 +1,1 @@
-InterpretException Undeclared identifier used: a
+IrGenerateException CondJump not implemented

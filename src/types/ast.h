@@ -62,7 +62,8 @@ class Identifier: public Expression {
 
     bool is_name(std::string guess) const;
     Value assign(Interpreter* interpreter, Value value);
-    void declare(Interpreter* interpreter, Value value);
+    void declare_value(Interpreter* interpreter, Value value);
+    void declare_type(Checker* checker, ValueType type);
 
   private:
     std::string name;
@@ -166,6 +167,7 @@ class Arguments: public Expression {
     std::string print(int level) const override;
     Value interpret(Interpreter* interpreter) const override;
     ValueType check(Checker* checker) override;
+    ValueType check(Checker* checker, FunType fun_type);
     IrVar visit(IrGenerator* generator) const override;
 
   private:

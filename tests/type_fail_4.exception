@@ -1,0 +1,4 @@
+TypeException in line 1
+Invalid argument type INTEGER
+print_bool(true or 13);
+                ^- here
