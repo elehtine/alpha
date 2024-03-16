@@ -1,1 +1,4 @@
-TypeException: not implemented while
+TypeException in line 3
+While not implemented
+while n > 1 do {
+^- here

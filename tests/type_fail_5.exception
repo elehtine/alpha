@@ -1,3 +1,4 @@
-InterpretException: Invalid operators in
+InterpretException in line 1
+Invalid operators
 print_int(1 + true);
-          ^- here
+            ^- here

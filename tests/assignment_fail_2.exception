@@ -1,3 +1,4 @@
-ParseException: expected LITERAL, IDENTIFIER, got KEYWORD
+ParseException in line 1
+expected LITERAL, IDENTIFIER, got KEYWORD
 print_int(var x = 13);
-          ^- unexpected token
+          ^- here

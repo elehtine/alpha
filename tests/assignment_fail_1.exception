@@ -1,3 +1,4 @@
-ParseException: expected EQUAL, got PLUS
+ParseException in line 1
+expected EQUAL, got PLUS
 var x + 13 = 42;
-      ^- unexpected token
+      ^- here

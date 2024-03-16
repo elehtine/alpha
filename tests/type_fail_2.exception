@@ -1,3 +1,4 @@
-InterpretException: Condition is not boolean
+InterpretException in line 1
+Condition is not boolean
 print_int(if 1 then 1 else 2);
-             ^- here
+          ^- here

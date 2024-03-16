@@ -9,8 +9,10 @@ class TokeniseException;
 class Location {
   public:
     Location(int row, int column, std::string line);
+    Location(const Location& location);
+
     operator std::string() const;
-    TokeniseException error() const;
+    std::string error(std::string message) const;
     std::string error_mark() const;
 
   private:

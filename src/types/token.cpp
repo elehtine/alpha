@@ -78,11 +78,6 @@ std::string Token::get_content() const {
   return content;
 }
 
-std::string Token::parse_str() {
-  if (type == TokenType::identifier) return content;
-  throw error({ TokenType::identifier });
-}
-
 Location Token::copy_location() const {
   return location;
 }
@@ -102,14 +97,13 @@ int Token::level() const {
   return unknown;
 }
 
-ParseException Token::error(std::vector<TokenType> types) {
+std::string Token::error_message(std::vector<TokenType> types) {
   std::string message = "expected ";
   for (TokenType type: types) {
     message += to_string(type) + ", ";
   }
-  message += "got " + to_string(type) + "\n";
-  message += location.error_mark() + "unexpected token";
-  return ParseException(message);
+  message += "got " + to_string(type);
+  return location.error(message);
 }
 
 FunType Token::get_funtype() {
@@ -201,11 +195,11 @@ bool Tokens::match(std::vector<TokenType> types) {
 }
 
 ParseException Tokens::error(std::vector<TokenType> types) {
-  return peek()->error(types);
+  return ParseException(peek()->error_message(types));
 }
 
 ParseException Tokens::error(TokenType type) {
-  return error(std::vector<TokenType>{ type });
+  return ParseException(error(std::vector<TokenType>{ type }));
 }
 
 

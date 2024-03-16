@@ -55,12 +55,11 @@ class Token {
     Token(TokenType type, std::string content, Location location);
     operator std::string() const;
     bool match(TokenType match_type);
-    virtual int level() const;
-    ParseException error(std::vector<TokenType> types);
+    int level() const;
+    std::string error_message(std::vector<TokenType> types);
     FunType get_funtype();
 
     std::string get_content() const;
-    std::string parse_str();
     Location copy_location() const;
 
   private:

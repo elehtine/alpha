@@ -1,1 +1,4 @@
-IrGenerateException: Arguments not implemented
+IrGenerateException in line 1
+Arguments not implemented
+var x = read_int();
+                ^- here

@@ -15,21 +15,21 @@ const char* CompileException::what() const throw() {
 }
 
 TokeniseException::TokeniseException(const std::string& message):
-  CompileException("TokeniseException: ", message)
+  CompileException("TokeniseException ", message)
 {}
 
 ParseException::ParseException(const std::string& message):
-  CompileException("ParseException: ", message)
+  CompileException("ParseException ", message)
 {}
 
 InterpretException::InterpretException(const std::string& message):
-  CompileException("InterpretException: ", message)
+  CompileException("InterpretException ", message)
 {}
 
 TypeException::TypeException(const std::string& message):
-  CompileException("TypeException: ", message)
+  CompileException("TypeException ", message)
 {}
 
 IrGenerateException::IrGenerateException(const std::string& message):
-  CompileException("IrGenerateException: ", message)
+  CompileException("IrGenerateException ", message)
 {}

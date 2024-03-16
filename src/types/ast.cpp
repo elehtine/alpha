@@ -84,7 +84,7 @@ void Identifier::declare(Interpreter* interpreter, Value value) {
   try {
     interpreter->declare_variable(name, value);
   } catch (const SymTabException& exception) {
-    throw InterpretException("Already defined identifier\n" + location.error_mark() + "here");
+    throw InterpretException(location.error("Already defined identifier"));
   }
 }
 
@@ -155,7 +155,7 @@ Value BinaryOp::interpret(Interpreter* interpreter) const {
     }
   }
 
-  throw InterpretException("Invalid operators in\n" + location.error_mark() + "here");
+  throw InterpretException(location.error("Invalid operators"));
 }
 
 ValueType BinaryOp::check(Checker* checker) {
@@ -200,21 +200,21 @@ Value Unary::interpret(Interpreter* interpreter) const {
     return Value(ValueType::Integer, -value.value);
   }
 
-  throw InterpretException("Invalid value in\n" + location.error_mark() + "here");
+  throw InterpretException(location.error("Invalid value"));
 }
 
 ValueType Unary::check(Checker* checker) {
   type = expr->check(checker);
   if (op->match(TokenType::minus)) {
     if (type == ValueType::Integer) return type;
-    throw TypeException("Expected integer, got " + to_string(type));
+    throw TypeException(location.error("Expected integer, got " + to_string(type)));
   }
   if (op->match(TokenType::keyword_not)) {
     if (type == ValueType::Boolean) return type;
-    throw TypeException("Expected boolean, got " + to_string(type));
+    throw TypeException(location.error("Expected boolean, got " + to_string(type)));
   }
 
-  throw TypeException("Unknown unary operator");
+  throw TypeException(location.error("Unknown unary operator " + to_string(type)));
 }
 
 IrVar Unary::visit(IrGenerator* generator) const {
@@ -239,7 +239,7 @@ Value Assign::interpret(Interpreter* interpreter) const {
   try {
   return identifier->assign(interpreter, value->interpret(interpreter));
   } catch (const InterpretException& e) {
-    throw InterpretException("Invalid assignment in\n" + location.error_mark() + "here");
+    throw InterpretException(location.error("Invalid assignment"));
   }
 }
 
@@ -280,7 +280,7 @@ std::string IfThenElse::print(int level) const {
 Value IfThenElse::interpret(Interpreter* interpreter) const {
   Value cond = condition->interpret(interpreter);
   if (cond.type != ValueType::Boolean) {
-    throw InterpretException("Condition is not boolean\n" + location.error_mark() + "here");
+    throw InterpretException(location.error("Condition is not boolean"));
   }
 
   if (cond.value == true) {
@@ -296,14 +296,13 @@ Value IfThenElse::interpret(Interpreter* interpreter) const {
 ValueType IfThenElse::check(Checker* checker) {
   ValueType cond = condition->check(checker);
   if (cond != ValueType::Boolean) {
-    throw TypeException("Expected boolean, got " + to_string(cond));
+    throw TypeException(location.error("Expected boolean, got " + to_string(cond)));
   }
 
   if (else_expression) {
     type = then_expression->check(checker);
     if (type != else_expression->check(checker)) {
-      throw TypeException("Branches different types\n" +
-          location.error_mark());
+      throw TypeException(location.error("Branches different types"));
     }
   }
 
@@ -358,7 +357,7 @@ Value While::interpret(Interpreter* interpreter) const {
 }
 
 ValueType While::check(Checker* checker) {
-  throw TypeException("not implemented while");
+  throw TypeException(location.error("While not implemented"));
 }
 
 IrVar While::visit(IrGenerator* generator) const {
@@ -447,7 +446,7 @@ ValueType Arguments::check(Checker* checker) {
 
 IrVar Arguments::visit(IrGenerator* generator) const {
   if (arguments.size() == 1) return arguments[0]->visit(generator);
-  throw IrGenerateException("Arguments not implemented");
+  throw IrGenerateException(location.error("Arguments not implemented"));
 }
 
 Function::Function(std::unique_ptr<Identifier> fun,

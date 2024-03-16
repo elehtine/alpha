@@ -35,6 +35,12 @@ std::unique_ptr<Tokens> Tokeniser::tokenise() {
     }
   }
 
+  if (!token_list.empty() && token_list.back()->match(TokenType::right_brace)) {
+    std::unique_ptr<Token> semicolon_token =
+      std::make_unique<Token>(TokenType::semicolon, ";", token_list.back()->copy_location());
+    token_list.push_back(std::move(semicolon_token));
+  }
+
   token_list.push_back(std::make_unique<Token>(TokenType::eof, "end",
         Location(source.size(), 0, "")));
 
@@ -51,7 +57,9 @@ std::unique_ptr<Token> Tokeniser::scan_token() {
   if (check(punctuation) || check(oper) || check(keyword)) {
     std::string content = source.line(line, last_column, column);
     if (!str_to_type.count(content)) {
-      throw Location(line, column, source.line(line)).error();
+      Location location(line, column, source.line(line));
+      std::string message = "Unknown tokens: '" + source.line(line, column, column+10) + "'";
+      throw TokeniseException(location.error(message));
     }
     return create_token(str_to_type[content], content);
   }
@@ -66,7 +74,8 @@ std::unique_ptr<Token> Tokeniser::scan_token() {
   }
 
   Location location(line, column, source.line(line));
-  throw location.error();
+  std::string message = "Unknown tokens: '" + source.line(line, column, column + 10) + "'";
+  throw TokeniseException(location.error(message));
 }
 
 std::unique_ptr<Token> Tokeniser::create_token(TokenType type, std::string content) {

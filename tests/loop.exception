@@ -1,1 +1,4 @@
-TypeException: not implemented while
+TypeException in line 4
+While not implemented
+while index <= size do {
+^- here
