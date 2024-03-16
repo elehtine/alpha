@@ -42,7 +42,8 @@ IrVar Literal::visit(IrGenerator* generator) const {
   IrVar variable = generator->create_var();
   int v = 0;
   if (value == "true") v = 1;
-  else if (value != "false" && value != "null") v = std::stoi(value);
+  else if (value == "false" || value == "null") v = 0;
+  else v = std::stoi(value);
   generator->add_instruction(std::make_unique<LoadIntConst>(v, variable));
   return variable;
 }

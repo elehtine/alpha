@@ -3,5 +3,10 @@
     x
     Int
     42 (INTEGER)
+  fun
+    print_int
+    (
+      x
+    )
   null (UNIT)
 }
