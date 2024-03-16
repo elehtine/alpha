@@ -1,0 +1,4 @@
+TypeException in line 1
+Expected value to be Int
+var x: Int = true;
+           ^- here

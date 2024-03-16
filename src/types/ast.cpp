@@ -89,10 +89,14 @@ void Identifier::declare_value(Interpreter* interpreter, Value value) {
   }
 }
 
-void Identifier::declare_type(Checker* checker, ValueType type) {
+void Identifier::declare_type(Checker* checker, ValueType value_type) {
+  if (value_type == ValueType::Unknown || value_type == ValueType::Unit) {
+    throw TypeException(location.error("Value should be Boolean or Int"));
+  }
+
   try {
-    checker->declare_variable(name, type);
-    type = type;
+    checker->declare_variable(name, value_type);
+    type = value_type;
   } catch (const SymTabException& exception) {
     throw TypeException(location.error("Already defined identifier"));
   }
@@ -555,7 +559,16 @@ Value Declaration::interpret(Interpreter* interpreter) const {
 }
 
 ValueType Declaration::check(Checker* checker) {
-  name->declare_type(checker, value->check(checker));
+  ValueType t = value->check(checker);
+  name->declare_type(checker, t);
+  if (type_id) {
+    if (t == ValueType::Boolean && !type_id->is_name("Boolean")) {
+      throw TypeException(location.error("Expected value to be Int"));
+    }
+    if (t == ValueType::Integer && !type_id->is_name("Int")) {
+      throw TypeException(location.error("Expected value to be Boolean"));
+    }
+  }
   return ValueType::Unit;
 }
 

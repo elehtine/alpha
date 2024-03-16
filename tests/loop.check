@@ -1,9 +1,9 @@
 { (UNIT)
   var
-    size
+    size (INTEGER)
     5 (INTEGER)
   var
-    index
+    index (INTEGER)
     1 (INTEGER)
   while (UNIT)
       index (INTEGER)

@@ -1,12 +1,12 @@
 { (UNIT)
   var
-    a
+    a (INTEGER)
     1 (INTEGER)
   var
-    b
+    b (INTEGER)
     2 (INTEGER)
   var
-    c
+    c (INTEGER)
     2 (INTEGER)
   { (INTEGER)
     { (INTEGER)
@@ -58,7 +58,7 @@
     3 (INTEGER)
   }
   var
-    x
+    x (INTEGER)
     { (INTEGER)
       {
         fun

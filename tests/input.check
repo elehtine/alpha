@@ -1,6 +1,6 @@
 { (UNIT)
   var
-    x
+    x (INTEGER)
     fun (INTEGER)
       read_int
       (
