@@ -4,7 +4,10 @@
 #include "../tools/exceptions.h"
 
 
-IrVar::IrVar(std::string name): name(name) {}
+IrVar::IrVar(): location(0, 0, ""), name("") {}
+IrVar::IrVar(Location location, std::string name):
+  location(location), name(name)
+{}
 
 IrVar::operator std::string() const { return name; }
 

@@ -6,14 +6,17 @@
 #include <map>
 #include <memory>
 
+#include "location.h"
 
 class IrVar {
   public:
-    IrVar(std::string name);
+    IrVar();
+    IrVar(Location location, std::string name);
     operator std::string() const;
     friend bool operator<(const IrVar& left, const IrVar& right);
 
   private:
+    Location location;
     std::string name;
 };
 

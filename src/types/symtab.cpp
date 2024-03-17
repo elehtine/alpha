@@ -2,6 +2,7 @@
 #include "../tools/exceptions.h"
 
 #include "../interpreter.h"
+#include "ir.h"
 
 
 template<typename T>
@@ -12,7 +13,8 @@ SymTab<T>::SymTab(std::unique_ptr<SymTab> parent):
 template<typename T>
 void SymTab<T>::assign_variable(std::string identifier, T value) {
   if (symbols.count(identifier)) {
-    symbols[identifier] = value;
+    symbols.erase(identifier);
+    symbols.insert({ identifier,  value });
     return;
   }
   if (parent) {
@@ -25,7 +27,7 @@ void SymTab<T>::assign_variable(std::string identifier, T value) {
 template<typename T>
 void SymTab<T>::declare_variable(std::string identifier, T value) {
   if (symbols.count(identifier)) throw SymTabException();
-  symbols[identifier] = value;
+  symbols.insert({ identifier, value });
 }
 
 template<typename T>
@@ -42,3 +44,4 @@ std::unique_ptr<SymTab<T>> SymTab<T>::get_parent() {
 
 template class SymTab<Value>;
 template class SymTab<ValueType>;
+template class SymTab<IrVar>;

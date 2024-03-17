@@ -13,7 +13,6 @@ Expression::Expression(Location location): location(location) {}
 Expression::Expression(Location location, ValueType type):
   location(location), type(type)
 {}
-Expression::~Expression() {}
 
 Literal::Literal(Location location, std::string value, ValueType type):
   Expression(location, type), value(value)
@@ -39,7 +38,7 @@ ValueType Literal::check(Checker* checker) {
 }
 
 IrVar Literal::visit(IrGenerator* generator) const {
-  IrVar variable = generator->create_var();
+  IrVar variable = generator->create_var(location);
   int v = 0;
   if (value == "true") v = 1;
   else if (value == "false" || value == "null") v = 0;
@@ -70,7 +69,7 @@ ValueType Identifier::check(Checker* checker) {
 }
 
 IrVar Identifier::visit(IrGenerator* generator) const {
-  return IrVar(name);
+  return IrVar(location, name);
 }
 
 bool Identifier::is_name(std::string guess) const {
@@ -191,8 +190,8 @@ IrVar BinaryOp::visit(IrGenerator* generator) const {
     left->visit(generator),
     right->visit(generator),
   };
-  IrVar function = IrVar(op->get_content());
-  IrVar result = generator->create_var();
+  IrVar function = IrVar(location, op->get_content());
+  IrVar result = generator->create_var(location);
   generator->add_instruction(std::make_unique<Call>(function, arguments, result));
   return result;
 }
@@ -348,7 +347,7 @@ IrVar IfThenElse::visit(IrGenerator* generator) const {
     else_expression->visit(generator);
   }
   generator->add_instruction(std::move(end_label));
-  return IrVar("null");
+  return IrVar(location, "null");
 }
 
 While::While(std::unique_ptr<Expression> condition,
@@ -402,7 +401,7 @@ IrVar While::visit(IrGenerator* generator) const {
   do_expression->visit(generator);
   generator->add_instruction(std::move(loop_jump));
   generator->add_instruction(std::move(end_label));
-  return IrVar("null");
+  return IrVar(location, "null");
 }
 
 Block::Block(std::vector<std::unique_ptr<Expression>> expressions,
@@ -444,7 +443,7 @@ IrVar Block::visit(IrGenerator* generator) const {
   for (const std::unique_ptr<Expression>& expr: expressions) {
     expr->visit(generator);
   }
-  return IrVar("unit");
+  return IrVar(location, "unit");
 }
 
 Arguments::Arguments(std::vector<std::unique_ptr<Expression>>& arguments,

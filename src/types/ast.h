@@ -20,7 +20,7 @@ class Printer;
 
 class Expression {
   public:
-    virtual ~Expression();
+    virtual ~Expression() = default;
     virtual std::string print(int level) const = 0;
     virtual Value interpret(Interpreter* interpreter) const = 0;
     virtual ValueType check(Checker* checker) = 0;

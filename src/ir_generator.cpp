@@ -4,8 +4,7 @@
 #include "tools/printer.h"
 
 
-IrGenerator::IrGenerator(Expression* root, Printer* printer) {
-  if (root == nullptr) return;
+IrGenerator::IrGenerator(Expression* root, Printer* printer): symtab(nullptr) {
   root->visit(this);
   printer->print_ir(get_instructions());
 }
@@ -23,8 +22,8 @@ void IrGenerator::add_instruction(
   instructions.push_back(std::move(instruction));
 }
 
-IrVar IrGenerator::create_var() {
-  IrVar variable("x" + std::to_string(number));
+IrVar IrGenerator::create_var(Location location) {
+  IrVar variable(location, "x" + std::to_string(number));
   number++;
   return variable;
 }
