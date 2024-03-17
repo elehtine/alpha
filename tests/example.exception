@@ -1,4 +1,1 @@
-IrGenerateException in line 1
-Arguments not implemented
-var n: Int = read_int();
-                     ^- here
+IrGenerateException CondJump not implemented

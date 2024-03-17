@@ -38,7 +38,8 @@ std::string Instruction::format(std::vector<IrVar> values) const {
 }
 
 LoadIntConst::LoadIntConst(int value, const IrVar& destination):
-  value(value), destination(destination) {}
+  value(value), destination(destination)
+{}
 
 LoadIntConst::operator std::string() const {
   std::string start = "LoadIntConst(";
@@ -56,7 +57,7 @@ void LoadIntConst::to_asm(AssemblyGenerator* asm_generator) const {
 
   std::string dest = asm_generator->get_location(destination);
   asm_generator->emit("movq $" + std::to_string(value) + ", " + dest);
-  asm_generator->emit("movq " + dest + ", %rsi");
+  asm_generator->emit("movq " + dest + ", %rdi");
 }
 
 Copy::operator std::string() const {
@@ -77,7 +78,7 @@ void Copy::to_asm(AssemblyGenerator* asm_generator) const {
 
 Call::Call(IrVar function, std::vector<IrVar> arguments, IrVar destination):
   function(function), arguments(arguments), destination(destination) {
-}
+  }
 
 Call::operator std::string() const {
   std::string start = "Call(";
@@ -95,23 +96,32 @@ void Call::add_variables(Locals* locals) const {
 
 void Call::to_asm(AssemblyGenerator* asm_generator) const {
   asm_generator->emit(std::string("# ") + std::string(*this));
-  std::vector<std::string> args {
-    asm_generator->get_location(arguments[0]),
-    asm_generator->get_location(arguments[1]),
-  };
 
-  if (std::string(arguments[0])[0] != 'x') asm_generator->emit("movq $1, " + args[0]);
-  if (std::string(arguments[1])[0] != 'x') asm_generator->emit("movq $1, " + args[1]);
+  std::vector<std::string> args;
+  for (IrVar var: arguments) {
+    args.push_back(asm_generator->get_location(var));
+  }
 
-  std::string result = asm_generator->get_location(destination);
-  if (std::string(function) == "+") intrinsics::plus(args, result, asm_generator);
-  if (std::string(function) == "-") intrinsics::minus(args, result, asm_generator);
-  if (std::string(function) == "*") intrinsics::multiply(args, result, asm_generator);
-  if (std::string(function) == "/") intrinsics::divide(args, result, asm_generator);
-  asm_generator->emit("movq " + result + ", %rsi");
+
+  if (std::string(function) == "print_int") {
+    asm_generator->emit("call print_int");
+  } else if (std::string(function) == "print_bool") {
+  } else if (std::string(function) == "read_int") {
+  } else {
+    if (std::string(arguments[0])[0] != 'x') asm_generator->emit("movq $1, " + args[0]);
+    if (std::string(arguments[1])[0] != 'x') asm_generator->emit("movq $1, " + args[1]);
+
+    std::string result = asm_generator->get_location(destination);
+    if (std::string(function) == "+") intrinsics::plus(args, result, asm_generator);
+    if (std::string(function) == "-") intrinsics::minus(args, result, asm_generator);
+    if (std::string(function) == "*") intrinsics::multiply(args, result, asm_generator);
+    if (std::string(function) == "/") intrinsics::divide(args, result, asm_generator);
+    asm_generator->emit("movq " + result + ", %rdi");
+  }
 }
 
-Label::Label(int value): value(value) {}
+Label::Label(int value): value(value)
+{}
 
 Label::operator std::string() const { return "L" + std::to_string(value); }
 
@@ -126,7 +136,8 @@ CondJump::CondJump(IrVar condition,
     Instruction* else_label):
   condition(condition),
   then_label(then_label),
-  else_label(else_label) {}
+  else_label(else_label)
+{}
 
 CondJump::operator std::string() const {
   std::string result = "CondJump(";

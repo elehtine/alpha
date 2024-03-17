@@ -4,9 +4,10 @@ L3
 Call(<=, [index, size], x6)
 CondJump(x6, L4, L5)
 L4
-LoadIntConst(1, x7)
-Call(+, [index, x7], x8)
-LoadIntConst(0, x9)
+Call(print_int, [index], x7)
+LoadIntConst(1, x8)
+Call(+, [index, x8], x9)
+LoadIntConst(0, x10)
 Jump(L3)
 L5
-LoadIntConst(0, x10)
+LoadIntConst(0, x11)

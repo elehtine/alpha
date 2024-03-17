@@ -224,9 +224,7 @@ movq %rsp, %rbp
 
 subq $32, %rsp
 
-# LoadIntConst(42, x1)
-movq $42, -8(%rbp)
-movq -8(%rbp), %rdi
+# Call(read_int, [], x1)
 
 # Call(print_int, [x], x2)
 call print_int

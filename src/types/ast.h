@@ -170,6 +170,8 @@ class Arguments: public Expression {
     ValueType check(Checker* checker, FunType fun_type);
     IrVar visit(IrGenerator* generator) const override;
 
+    std::vector<IrVar> get_ir(IrGenerator* generator);
+
   private:
     std::vector<std::unique_ptr<Expression>> arguments;
 };

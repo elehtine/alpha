@@ -2,8 +2,10 @@ LoadIntConst(1, x4)
 CondJump(x4, L1, L2)
 L1
 LoadIntConst(42, x5)
+Call(print_int, [x5], x6)
 Jump(L3)
 L2
-LoadIntConst(13, x6)
+LoadIntConst(13, x7)
+Call(print_int, [x7], x8)
 L3
-LoadIntConst(0, x7)
+LoadIntConst(0, x9)

@@ -491,6 +491,14 @@ IrVar Arguments::visit(IrGenerator* generator) const {
   throw IrGenerateException(location.error("Arguments not implemented"));
 }
 
+std::vector<IrVar> Arguments::get_ir(IrGenerator* generator) {
+  std::vector<IrVar> result;
+  for (const std::unique_ptr<Expression>& expr: arguments) {
+    result.push_back(expr->visit(generator));
+  }
+  return result;
+}
+
 Function::Function(std::unique_ptr<Identifier> fun,
     std::unique_ptr<Arguments> arguments, Location location):
   Expression(location),
@@ -531,7 +539,27 @@ ValueType Function::check(Checker* checker) {
 }
 
 IrVar Function::visit(IrGenerator* generator) const {
-  return arguments->visit(generator);
+  if (fun->is_name("print_int")) {
+    std::vector<IrVar> args = arguments->get_ir(generator);
+    IrVar function = IrVar(location, "print_int");
+    IrVar result = generator->create_var(location);
+    generator->add_instruction(std::make_unique<Call>(function, args, result));
+    return result;
+  }
+  if (fun->is_name("print_bool")) {
+    std::vector<IrVar> args = arguments->get_ir(generator);
+    IrVar function = IrVar(location, "print_bool");
+    IrVar result = generator->create_var(location);
+    generator->add_instruction(std::make_unique<Call>(function, args, result));
+    return result;
+  }
+  if (fun->is_name("read_int")) {
+    IrVar function = IrVar(location, "read_int");
+    IrVar result = generator->create_var(location);
+    generator->add_instruction(std::make_unique<Call>(function, std::vector<IrVar>{}, result));
+    return result;
+  }
+  return IrVar(location, "null");
 }
 
 Declaration::Declaration(

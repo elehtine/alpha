@@ -1,0 +1,29 @@
+Call(read_int, [], x1)
+Call(print_int, [n], x2)
+L3
+LoadIntConst(1, x6)
+Call(>, [n, x6], x7)
+CondJump(x7, L4, L5)
+L4
+LoadIntConst(2, x11)
+Call(%, [n, x11], x12)
+LoadIntConst(0, x13)
+Call(==, [x12, x13], x14)
+CondJump(x14, L8, L9)
+L8
+LoadIntConst(2, x15)
+Call(/, [n, x15], x16)
+LoadIntConst(0, x17)
+Jump(L10)
+L9
+LoadIntConst(3, x18)
+Call(*, [x18, n], x19)
+LoadIntConst(1, x20)
+Call(+, [x19, x20], x21)
+LoadIntConst(0, x22)
+L10
+Call(print_int, [n], x23)
+LoadIntConst(0, x24)
+Jump(L3)
+L5
+LoadIntConst(0, x25)
