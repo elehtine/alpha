@@ -30,6 +30,13 @@
   fun
     print_int
     (
+        3 (INTEGER)
+      %
+        5 (INTEGER)
+    )
+  fun
+    print_int
+    (
       -
         5 (INTEGER)
     )
@@ -38,6 +45,48 @@
     (
       not
         true (BOOLEAN)
+    )
+  fun
+    print_bool
+    (
+        3 (INTEGER)
+      ==
+        5 (INTEGER)
+    )
+  fun
+    print_bool
+    (
+        3 (INTEGER)
+      !=
+        5 (INTEGER)
+    )
+  fun
+    print_bool
+    (
+        3 (INTEGER)
+      <
+        5 (INTEGER)
+    )
+  fun
+    print_bool
+    (
+        3 (INTEGER)
+      <=
+        5 (INTEGER)
+    )
+  fun
+    print_bool
+    (
+        3 (INTEGER)
+      >
+        5 (INTEGER)
+    )
+  fun
+    print_bool
+    (
+        3 (INTEGER)
+      >=
+        5 (INTEGER)
     )
   null (UNIT)
 }

@@ -222,7 +222,7 @@ movq %rsp, %rbp
 
 # START
 
-subq $184, %rsp
+subq $408, %rsp
 subq $8, %rsp
 
 # LoadIntConst(3, x1)
@@ -306,41 +306,194 @@ callq print_int
 movq %rax, -128(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(5, x17)
-movq $5, -136(%rbp)
+# LoadIntConst(3, x17)
+movq $3, -136(%rbp)
 movq -136(%rbp), %rdi
 
-# Call(-, [x17], x18)
-movq -136(%rbp), %rax
-negq %rax
-movq %rax, -144(%rbp)
-
-# Call(print_int, [x18], x19)
-subq $8, %rsp
+# LoadIntConst(5, x18)
+movq $5, -144(%rbp)
 movq -144(%rbp), %rdi
-callq print_int
-movq %rax, -152(%rbp)
-addq $8, %rsp
 
-# LoadIntConst(1, x20)
-movq $1, -160(%rbp)
-movq -160(%rbp), %rdi
+# Call(%, [x17, x18], x19)
+movq -136(%rbp), %rax
+cqto
+idivq -144(%rbp)
+movq %rdx, -152(%rbp)
 
-# Call(not, [x20], x21)
-movq -160(%rbp), %rax
-xorq $1, %rax
-movq %rax, -168(%rbp)
-
-# Call(print_bool, [x21], x22)
+# Call(print_int, [x19], x20)
 subq $8, %rsp
-movq -168(%rbp), %rdi
-callq print_bool
-movq %rax, -176(%rbp)
+movq -152(%rbp), %rdi
+callq print_int
+movq %rax, -160(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(0, x23)
-movq $0, -184(%rbp)
-movq -184(%rbp), %rdi
+# LoadIntConst(5, x21)
+movq $5, -168(%rbp)
+movq -168(%rbp), %rdi
+
+# Call(-, [x21], x22)
+movq -168(%rbp), %rax
+negq %rax
+movq %rax, -176(%rbp)
+
+# Call(print_int, [x22], x23)
+subq $8, %rsp
+movq -176(%rbp), %rdi
+callq print_int
+movq %rax, -184(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(1, x24)
+movq $1, -192(%rbp)
+movq -192(%rbp), %rdi
+
+# Call(not, [x24], x25)
+movq -192(%rbp), %rax
+xorq $1, %rax
+movq %rax, -200(%rbp)
+
+# Call(print_bool, [x25], x26)
+subq $8, %rsp
+movq -200(%rbp), %rdi
+callq print_bool
+movq %rax, -208(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(3, x27)
+movq $3, -216(%rbp)
+movq -216(%rbp), %rdi
+
+# LoadIntConst(5, x28)
+movq $5, -224(%rbp)
+movq -224(%rbp), %rdi
+
+# Call(==, [x27, x28], x29)
+xor %rax, %rax
+movq -216(%rbp), %rdx
+cmpq -224(%rbp), %rdx
+sete %al
+movq %rax, -232(%rbp)
+
+# Call(print_bool, [x29], x30)
+subq $8, %rsp
+movq -232(%rbp), %rdi
+callq print_bool
+movq %rax, -240(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(3, x31)
+movq $3, -248(%rbp)
+movq -248(%rbp), %rdi
+
+# LoadIntConst(5, x32)
+movq $5, -256(%rbp)
+movq -256(%rbp), %rdi
+
+# Call(!=, [x31, x32], x33)
+xor %rax, %rax
+movq -248(%rbp), %rdx
+cmpq -256(%rbp), %rdx
+setne %al
+movq %rax, -264(%rbp)
+
+# Call(print_bool, [x33], x34)
+subq $8, %rsp
+movq -264(%rbp), %rdi
+callq print_bool
+movq %rax, -272(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(3, x35)
+movq $3, -280(%rbp)
+movq -280(%rbp), %rdi
+
+# LoadIntConst(5, x36)
+movq $5, -288(%rbp)
+movq -288(%rbp), %rdi
+
+# Call(<, [x35, x36], x37)
+xor %rax, %rax
+movq -280(%rbp), %rdx
+cmpq -288(%rbp), %rdx
+setl %al
+movq %rax, -296(%rbp)
+
+# Call(print_bool, [x37], x38)
+subq $8, %rsp
+movq -296(%rbp), %rdi
+callq print_bool
+movq %rax, -304(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(3, x39)
+movq $3, -312(%rbp)
+movq -312(%rbp), %rdi
+
+# LoadIntConst(5, x40)
+movq $5, -320(%rbp)
+movq -320(%rbp), %rdi
+
+# Call(<=, [x39, x40], x41)
+xor %rax, %rax
+movq -312(%rbp), %rdx
+cmpq -320(%rbp), %rdx
+setle %al
+movq %rax, -328(%rbp)
+
+# Call(print_bool, [x41], x42)
+subq $8, %rsp
+movq -328(%rbp), %rdi
+callq print_bool
+movq %rax, -336(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(3, x43)
+movq $3, -344(%rbp)
+movq -344(%rbp), %rdi
+
+# LoadIntConst(5, x44)
+movq $5, -352(%rbp)
+movq -352(%rbp), %rdi
+
+# Call(>, [x43, x44], x45)
+xor %rax, %rax
+movq -344(%rbp), %rdx
+cmpq -352(%rbp), %rdx
+setg %al
+movq %rax, -360(%rbp)
+
+# Call(print_bool, [x45], x46)
+subq $8, %rsp
+movq -360(%rbp), %rdi
+callq print_bool
+movq %rax, -368(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(3, x47)
+movq $3, -376(%rbp)
+movq -376(%rbp), %rdi
+
+# LoadIntConst(5, x48)
+movq $5, -384(%rbp)
+movq -384(%rbp), %rdi
+
+# Call(>=, [x47, x48], x49)
+xor %rax, %rax
+movq -376(%rbp), %rdx
+cmpq -384(%rbp), %rdx
+setge %al
+movq %rax, -392(%rbp)
+
+# Call(print_bool, [x49], x50)
+subq $8, %rsp
+movq -392(%rbp), %rdi
+callq print_bool
+movq %rax, -400(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(0, x51)
+movq $0, -408(%rbp)
+movq -408(%rbp), %rdi
 
 
 # END

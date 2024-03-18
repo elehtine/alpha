@@ -138,6 +138,14 @@ void Call::to_asm(AssemblyGenerator* asm_generator) const {
     if (std::string(function) == "-") intrinsics::minus(args, result, asm_generator);
     if (std::string(function) == "*") intrinsics::multiply(args, result, asm_generator);
     if (std::string(function) == "/") intrinsics::divide(args, result, asm_generator);
+    if (std::string(function) == "%") intrinsics::remainder(args, result, asm_generator);
+
+    if (std::string(function) == "==") intrinsics::equal(args, result, asm_generator);
+    if (std::string(function) == "!=") intrinsics::not_equal(args, result, asm_generator);
+    if (std::string(function) == "<") intrinsics::less(args, result, asm_generator);
+    if (std::string(function) == "<=") intrinsics::less_or_equal(args, result, asm_generator);
+    if (std::string(function) == ">") intrinsics::greater(args, result, asm_generator);
+    if (std::string(function) == ">=") intrinsics::greater_or_equal(args, result, asm_generator);
   } else if (args.size() == 1) {
     if (std::string(function) == "-") intrinsics::unary_minus(args, result, asm_generator);
     if (std::string(function) == "not") intrinsics::unary_not(args, result, asm_generator);
