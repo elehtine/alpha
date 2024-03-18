@@ -248,7 +248,17 @@ ValueType Unary::check(Checker* checker) {
 }
 
 IrVar Unary::visit(IrGenerator* generator) const {
-  return expr->visit(generator);
+  std::vector<IrVar> args = { expr->visit(generator) };
+  IrVar result = generator->create_var(location);
+  if (op->match(TokenType::keyword_not)) {
+    IrVar function = IrVar(location, "not");
+    generator->add_instruction(std::make_unique<Call>(function, args, result));
+  }
+  if (op->match(TokenType::minus)) {
+    IrVar function = IrVar(location, "-");
+    generator->add_instruction(std::make_unique<Call>(function, args, result));
+  }
+  return result;
 }
 
 Assign::Assign(std::unique_ptr<Identifier> identifier,

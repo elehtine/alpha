@@ -4,5 +4,21 @@
     (
       42 (INTEGER)
     )
+  fun
+    print_int
+    (
+      -
+        13 (INTEGER)
+    )
+  fun
+    print_bool
+    (
+      true (BOOLEAN)
+    )
+  fun
+    print_bool
+    (
+      false (BOOLEAN)
+    )
   null (UNIT)
 }

@@ -108,10 +108,10 @@ print_bool:
     ret
 
 true_str:
-    .ascii "true\\n"
+    .ascii "true\n"
 true_str_len = . - true_str
 false_str:
-    .ascii "false\\n"
+    .ascii "false\n"
 false_str_len = . - false_str
 
 # ***** Function 'read_int' *****
@@ -212,7 +212,7 @@ read_int:
     syscall
 
 read_int_error_str:
-    .ascii "Error: read_int() failed to read input\\n"
+    .ascii "Error: read_int() failed to read input\n"
 read_int_error_str_len = . - read_int_error_str
 
 
@@ -222,7 +222,7 @@ movq %rsp, %rbp
 
 # START
 
-subq $136, %rsp
+subq $184, %rsp
 subq $8, %rsp
 
 # LoadIntConst(3, x1)
@@ -306,9 +306,41 @@ callq print_int
 movq %rax, -128(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(0, x17)
-movq $0, -136(%rbp)
+# LoadIntConst(5, x17)
+movq $5, -136(%rbp)
 movq -136(%rbp), %rdi
+
+# Call(-, [x17], x18)
+movq -136(%rbp), %rax
+negq %rax
+movq %rax, -144(%rbp)
+
+# Call(print_int, [x18], x19)
+subq $8, %rsp
+movq -144(%rbp), %rdi
+callq print_int
+movq %rax, -152(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(1, x20)
+movq $1, -160(%rbp)
+movq -160(%rbp), %rdi
+
+# Call(not, [x20], x21)
+movq -160(%rbp), %rax
+xorq $1, %rax
+movq %rax, -168(%rbp)
+
+# Call(print_bool, [x21], x22)
+subq $8, %rsp
+movq -168(%rbp), %rdi
+callq print_bool
+movq %rax, -176(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(0, x23)
+movq $0, -184(%rbp)
+movq -184(%rbp), %rdi
 
 
 # END

@@ -27,5 +27,17 @@
       /
         5 (INTEGER)
     )
+  fun
+    print_int
+    (
+      -
+        5 (INTEGER)
+    )
+  fun
+    print_bool
+    (
+      not
+        true (BOOLEAN)
+    )
   null (UNIT)
 }

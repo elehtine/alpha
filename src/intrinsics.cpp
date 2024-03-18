@@ -5,14 +5,16 @@ namespace  intrinsics {
 
   void unary_minus(std::vector<std::string> args, std::string result,
       AssemblyGenerator* gen) {
-    gen->emit("movq " + args[0] + ", " + result);
-    gen->emit("negq " + result);
+    gen->emit("movq " + args[0] + ", %rax");
+    gen->emit("negq %rax");
+    gen->emit("movq %rax, " + result);
   }
 
   void unary_not(std::vector<std::string> args, std::string result,
       AssemblyGenerator* gen) {
-    gen->emit("movq " + args[0] + ", " + result);
-    gen->emit("xorq $1, " + result);
+    gen->emit("movq " + args[0] + ", %rax");
+    gen->emit("xorq $1, %rax");
+    gen->emit("movq %rax, " + result);
   }
 
 

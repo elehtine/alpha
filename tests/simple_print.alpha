@@ -1,1 +1,4 @@
 print_int(42);
+print_int(-13);
+print_bool(true);
+print_bool(false);
