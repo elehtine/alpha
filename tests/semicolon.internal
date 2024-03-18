@@ -10,24 +10,26 @@ CondJump(x10, .L7, .L8)
 Jump(.L9)
 .L8
 .L9
-LoadIntConst(1, x14)
-CondJump(x14, .L11, .L12)
-.L11
-Jump(.L13)
+LoadIntConst(1, x15)
+CondJump(x15, .L12, .L13)
 .L12
+Jump(.L14)
 .L13
-LoadIntConst(1, x18)
-CondJump(x18, .L15, .L16)
-.L15
-Jump(.L17)
-.L16
+.L14
+LoadIntConst(1, x20)
+CondJump(x20, .L17, .L18)
 .L17
-LoadIntConst(1, x22)
-CondJump(x22, .L19, .L20)
+Jump(.L19)
+.L18
 .L19
-Jump(.L21)
-.L20
-.L21
-LoadIntConst(3, x23)
-Copy(unit, x24)
-LoadIntConst(0, x25)
+LoadIntConst(1, x25)
+CondJump(x25, .L22, .L23)
+.L22
+Copy(unit, x26)
+Jump(.L24)
+.L23
+Copy(unit, x26)
+.L24
+LoadIntConst(3, x27)
+Copy(unit, x28)
+LoadIntConst(0, x29)

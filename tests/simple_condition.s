@@ -222,7 +222,8 @@ movq %rsp, %rbp
 
 # START
 
-subq $48, %rsp
+subq $56, %rsp
+subq $8, %rsp
 
 # LoadIntConst(1, x4)
 movq $1, -8(%rbp)
@@ -234,37 +235,45 @@ jmp .L2
 
 .L1:
 
-# LoadIntConst(42, x5)
+# LoadIntConst(42, x6)
 movq $42, -16(%rbp)
 movq -16(%rbp), %rdi
 
-# Call(print_int, [x5], x6)
+# Call(print_int, [x6], x7)
 subq $8, %rsp
 movq -16(%rbp), %rdi
 callq print_int
 movq %rax, -24(%rbp)
 addq $8, %rsp
 
+# Copy(x7, x5)
+movq -24(%rbp), %rax
+movq %rax, -32(%rbp)
+
 jmp .L3
 
 .L2:
 
-# LoadIntConst(13, x7)
-movq $13, -32(%rbp)
-movq -32(%rbp), %rdi
+# LoadIntConst(13, x8)
+movq $13, -40(%rbp)
+movq -40(%rbp), %rdi
 
-# Call(print_int, [x7], x8)
+# Call(print_int, [x8], x9)
 subq $8, %rsp
-movq -32(%rbp), %rdi
+movq -40(%rbp), %rdi
 callq print_int
-movq %rax, -40(%rbp)
+movq %rax, -48(%rbp)
 addq $8, %rsp
+
+# Copy(x9, x5)
+movq -48(%rbp), %rax
+movq %rax, -32(%rbp)
 
 .L3:
 
-# LoadIntConst(0, x9)
-movq $0, -48(%rbp)
-movq -48(%rbp), %rdi
+# LoadIntConst(0, x10)
+movq $0, -56(%rbp)
+movq -56(%rbp), %rdi
 
 
 # END

@@ -1,114 +1,150 @@
 {
-  if
-    true (BOOLEAN)
-  then
-    1 (INTEGER)
-  else
-    0 (INTEGER)
-  if
-    false (BOOLEAN)
-  then
-    1 (INTEGER)
-  else
-    0 (INTEGER)
-  if
-    true (BOOLEAN)
-  then
-    1 (INTEGER)
-  if
-    false (BOOLEAN)
-  then
-    1 (INTEGER)
-  if
-      1 (INTEGER)
-    <
-      2 (INTEGER)
-  then
-    1 (INTEGER)
-  else
-    2 (INTEGER)
-  if
-    not
-        1 (INTEGER)
-      <
-        2 (INTEGER)
-  then
-    1 (INTEGER)
-  else
-    2 (INTEGER)
-  if
-        1 (INTEGER)
-      <
-        2 (INTEGER)
-    and
-        3 (INTEGER)
-      <=
-        3 (INTEGER)
-  then
-    1 (INTEGER)
-  else
-    2 (INTEGER)
-  if
-        1 (INTEGER)
-      <
-        2 (INTEGER)
-    or
-        3 (INTEGER)
-      <=
-        3 (INTEGER)
-  then
-    1 (INTEGER)
-  else
-    2 (INTEGER)
-  if
-        1 (INTEGER)
-      <=
-        2 (INTEGER)
-    and
-        3 (INTEGER)
-      <
-        3 (INTEGER)
-  then
-    1 (INTEGER)
-  else
-    2 (INTEGER)
-  if
-        1 (INTEGER)
-      <=
-        2 (INTEGER)
-    or
-        3 (INTEGER)
-      <
-        3 (INTEGER)
-  then
-    1 (INTEGER)
-  else
-    2 (INTEGER)
-  if
-      1 (INTEGER)
-    ==
-      2 (INTEGER)
-  then
-    3 (INTEGER)
-  else
-    4 (INTEGER)
-  if
-      1 (INTEGER)
-    !=
-      2 (INTEGER)
-  then
-    3 (INTEGER)
-  else
-    4 (INTEGER)
-  if
-        false (BOOLEAN)
-      and
+  fun
+    print_int
+    (
+      if
         true (BOOLEAN)
-    or
-      true (BOOLEAN)
-  then
-    1 (INTEGER)
-  else
-    2 (INTEGER)
+      then
+        1 (INTEGER)
+      else
+        0 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      if
+        false (BOOLEAN)
+      then
+        1 (INTEGER)
+      else
+        0 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      if
+          1 (INTEGER)
+        <
+          2 (INTEGER)
+      then
+        1 (INTEGER)
+      else
+        2 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      if
+        not
+            1 (INTEGER)
+          <
+            2 (INTEGER)
+      then
+        1 (INTEGER)
+      else
+        2 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      if
+            1 (INTEGER)
+          <
+            2 (INTEGER)
+        and
+            3 (INTEGER)
+          <=
+            3 (INTEGER)
+      then
+        1 (INTEGER)
+      else
+        2 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      if
+            1 (INTEGER)
+          <
+            2 (INTEGER)
+        or
+            3 (INTEGER)
+          <=
+            3 (INTEGER)
+      then
+        1 (INTEGER)
+      else
+        2 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      if
+            1 (INTEGER)
+          <=
+            2 (INTEGER)
+        and
+            3 (INTEGER)
+          <
+            3 (INTEGER)
+      then
+        1 (INTEGER)
+      else
+        2 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      if
+            1 (INTEGER)
+          <=
+            2 (INTEGER)
+        or
+            3 (INTEGER)
+          <
+            3 (INTEGER)
+      then
+        1 (INTEGER)
+      else
+        2 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      if
+          1 (INTEGER)
+        ==
+          2 (INTEGER)
+      then
+        3 (INTEGER)
+      else
+        4 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      if
+          1 (INTEGER)
+        !=
+          2 (INTEGER)
+      then
+        3 (INTEGER)
+      else
+        4 (INTEGER)
+    )
+  fun
+    print_int
+    (
+      if
+            false (BOOLEAN)
+          and
+            true (BOOLEAN)
+        or
+          true (BOOLEAN)
+      then
+        1 (INTEGER)
+      else
+        2 (INTEGER)
+    )
   null (UNIT)
 }

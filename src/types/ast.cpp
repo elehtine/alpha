@@ -358,20 +358,25 @@ IrVar IfThenElse::visit(IrGenerator* generator) const {
   std::unique_ptr<Label> else_label = generator->create_label();
   std::unique_ptr<Label> end_label = generator->create_label();
   IrVar cond = condition->visit(generator);
+  IrVar result = generator->create_var(location);
 
   generator->add_instruction(std::make_unique<CondJump>(
         cond, then_label.get(), else_label.get()));
 
   generator->add_instruction(std::move(then_label));
-  then_expression->visit(generator);
+  IrVar then_result = then_expression->visit(generator);
+  if (else_expression) {
+    generator->add_instruction(std::make_unique<Copy>(then_result, result));
+  }
   generator->add_instruction(std::make_unique<Jump>(end_label.get()));
 
   generator->add_instruction(std::move(else_label));
   if (else_expression) {
-    else_expression->visit(generator);
+    IrVar else_result = else_expression->visit(generator);
+    generator->add_instruction(std::make_unique<Copy>(else_result, result));
   }
   generator->add_instruction(std::move(end_label));
-  return IrVar(location, "null");
+  return result;
 }
 
 While::While(std::unique_ptr<Expression> condition,
