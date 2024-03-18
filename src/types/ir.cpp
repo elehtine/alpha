@@ -60,6 +60,9 @@ void LoadIntConst::to_asm(AssemblyGenerator* asm_generator) const {
   asm_generator->emit("movq " + dest + ", %rdi");
 }
 
+Copy::Copy(IrVar source, IrVar destination): source(source), destination(destination)
+{}
+
 Copy::operator std::string() const {
   std::string start = "Copy(";
   std::string end = ")";

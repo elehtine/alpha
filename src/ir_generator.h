@@ -20,10 +20,17 @@ class IrGenerator {
     IrVar create_var(Location location);
     std::unique_ptr<Instruction> create_label();
 
+    void assign_variable(std::string identifier, IrVar value);
+    void declare_variable(std::string identifier, IrVar value);
+    IrVar get_variable(std::string identifier);
+    void start_block();
+    void end_block();
+
   private:
-    SymTab<IrVar> symtab;
+    std::unique_ptr<SymTab<IrVar>> symtab;
     std::vector<std::unique_ptr<Instruction>> instructions;
     int number = 1;
+    Printer* printer;
 };
 
 #endif

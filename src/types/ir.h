@@ -52,6 +52,7 @@ class LoadIntConst : public Instruction {
 
 class Copy : public Instruction {
   public:
+    Copy(IrVar source, IrVar destination);
     operator std::string() const override;
 
     void add_variables(Locals* locals) const override;

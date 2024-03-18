@@ -1,93 +1,93 @@
-{
+{ (UNIT)
   var
-    x_1
+    x_1 (INTEGER)
     Int
     1 (INTEGER)
   var
-    x_2
+    x_2 (INTEGER)
       2 (INTEGER)
-    *
-      x_1
-  fun
+    * (INTEGER)
+      x_1 (INTEGER)
+  fun (UNIT)
     print_int
     (
-        x_1
-      +
-        x_2
+        x_1 (INTEGER)
+      + (INTEGER)
+        x_2 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
-        x_2
-      -
-        x_1
+        x_2 (INTEGER)
+      - (INTEGER)
+        x_1 (INTEGER)
     )
-  {
+  { (UNIT)
     var
-      x_1
+      x_1 (INTEGER)
       Int
       3 (INTEGER)
     var
-      x_3
+      x_3 (INTEGER)
       4 (INTEGER)
-    fun
+    fun (UNIT)
       print_int
       (
-        x_1
+        x_1 (INTEGER)
       )
-    fun
+    fun (UNIT)
       print_int
       (
-        x_2
+        x_2 (INTEGER)
       )
-    fun
+    fun (UNIT)
       print_int
       (
-        x_3
+        x_3 (INTEGER)
       )
     null (UNIT)
   }
-  fun
+  fun (UNIT)
     print_int
     (
-      x_1
+      x_1 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
-      x_2
+      x_2 (INTEGER)
     )
   var
-    x_3
+    x_3 (INTEGER)
     1337 (INTEGER)
   var
-    x_4
-    assign
+    x_4 (INTEGER)
+    assign (INTEGER)
       x_3
-      assign
+      assign (INTEGER)
         x_2
-        assign
+        assign (INTEGER)
           x_1
           42 (INTEGER)
-  fun
+  fun (UNIT)
     print_int
     (
-      x_1
+      x_1 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
-      x_2
+      x_2 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
-      x_3
+      x_3 (INTEGER)
     )
-  fun
+  fun (UNIT)
     print_int
     (
-      x_4
+      x_4 (INTEGER)
     )
   null (UNIT)
 }

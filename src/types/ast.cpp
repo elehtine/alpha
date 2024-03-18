@@ -69,7 +69,7 @@ ValueType Identifier::check(Checker* checker) {
 }
 
 IrVar Identifier::visit(IrGenerator* generator) const {
-  return IrVar(location, name);
+  return generator->get_variable(name);
 }
 
 bool Identifier::is_name(std::string guess) const {
@@ -99,6 +99,14 @@ void Identifier::declare_type(Checker* checker, ValueType value_type) {
     type = value_type;
   } catch (const SymTabException& exception) {
     throw TypeException(location.error("Already defined identifier"));
+  }
+}
+
+void Identifier::declare_ir(IrGenerator* generator, IrVar var) {
+  try {
+    generator->declare_variable(name, var);
+  } catch (const SymTabException& exception) {
+    throw IrGenerateException(location.error("Already defined identifier"));
   }
 }
 
@@ -431,18 +439,22 @@ Value Block::interpret(Interpreter* interpreter) const {
 }
 
 ValueType Block::check(Checker* checker) {
+  checker->start_block();
   ValueType result;
   for (const std::unique_ptr<Expression>& expr: expressions) {
     result = expr->check(checker);
   }
   type = result;
+  checker->end_block();
   return result;
 }
 
 IrVar Block::visit(IrGenerator* generator) const {
+  generator->start_block();
   for (const std::unique_ptr<Expression>& expr: expressions) {
     expr->visit(generator);
   }
+  generator->end_block();
   return IrVar(location, "unit");
 }
 
@@ -601,5 +613,10 @@ ValueType Declaration::check(Checker* checker) {
 }
 
 IrVar Declaration::visit(IrGenerator* generator) const {
-  return value->visit(generator);
+  IrVar id = generator->create_var(location);
+  name->declare_ir(generator, id);
+
+  IrVar v = value->visit(generator);
+  generator->add_instruction(std::make_unique<Copy>(v, id));
+  return IrVar(location, "null");
 }

@@ -1,3 +1,4 @@
-LoadIntConst(42, x1)
-Call(print_int, [x], x2)
-LoadIntConst(0, x3)
+LoadIntConst(42, x2)
+Copy(x2, x1)
+Call(print_int, [x1], x3)
+LoadIntConst(0, x4)

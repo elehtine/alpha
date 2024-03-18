@@ -64,6 +64,7 @@ class Identifier: public Expression {
     Value assign(Interpreter* interpreter, Value value);
     void declare_value(Interpreter* interpreter, Value value);
     void declare_type(Checker* checker, ValueType type);
+    void declare_ir(IrGenerator* generator, IrVar var);
 
   private:
     std::string name;
