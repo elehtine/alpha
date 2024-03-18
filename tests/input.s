@@ -224,12 +224,22 @@ movq %rsp, %rbp
 
 subq $32, %rsp
 
-# Call(read_int, [], x2)
+# Call(read_int, [], x1)
+subq $8, %rsp
+callq read_int
+movq %rax, -8(%rbp)
+addq $8, %rsp
 
-# Copy(x2, x1)
+# Copy(x1, x2)
+movq -8(%rbp), %rax
+movq %rax, -16(%rbp)
 
-# Call(print_int, [x1], x3)
-call print_int
+# Call(print_int, [x2], x3)
+subq $8, %rsp
+movq -16(%rbp), %rdi
+callq print_int
+movq %rax, -24(%rbp)
+addq $8, %rsp
 
 # LoadIntConst(0, x4)
 movq $0, -32(%rbp)

@@ -37,6 +37,10 @@ std::string Instruction::format(std::vector<IrVar> values) const {
   return result;
 }
 
+std::string Instruction::move(std::string from, std::string to) const {
+  return "movq " + from + ", " + to;
+}
+
 LoadIntConst::LoadIntConst(int value, const IrVar& destination):
   value(value), destination(destination)
 {}
@@ -56,8 +60,8 @@ void LoadIntConst::to_asm(AssemblyGenerator* asm_generator) const {
   asm_generator->emit(std::string("# ") + std::string(*this));
 
   std::string dest = asm_generator->get_location(destination);
-  asm_generator->emit("movq $" + std::to_string(value) + ", " + dest);
-  asm_generator->emit("movq " + dest + ", %rdi");
+  asm_generator->emit(move("$" + std::to_string(value), dest));
+  asm_generator->emit(move(dest, register_destination));
 }
 
 Copy::Copy(IrVar source, IrVar destination): source(source), destination(destination)
@@ -77,11 +81,16 @@ void Copy::add_variables(Locals* locals) const {
 
 void Copy::to_asm(AssemblyGenerator* asm_generator) const {
   asm_generator->emit(std::string("# ") + std::string(*this));
+
+  std::string from = asm_generator->get_location(source);
+  std::string to = asm_generator->get_location(destination);
+  asm_generator->emit(move(from, register_a));
+  asm_generator->emit(move(register_a, to));
 }
 
 Call::Call(IrVar function, std::vector<IrVar> arguments, IrVar destination):
-  function(function), arguments(arguments), destination(destination) {
-  }
+  function(function), arguments(arguments), destination(destination)
+{}
 
 Call::operator std::string() const {
   std::string start = "Call(";
@@ -104,22 +113,34 @@ void Call::to_asm(AssemblyGenerator* asm_generator) const {
   for (IrVar var: arguments) {
     args.push_back(asm_generator->get_location(var));
   }
+  std::string result = asm_generator->get_location(destination);
 
 
   if (std::string(function) == "print_int") {
-    asm_generator->emit("call print_int");
+    asm_generator->emit("subq $8, " + stack_pointer);
+    asm_generator->emit(move(args[0], register_destination));
+    asm_generator->emit("callq print_int");
+    asm_generator->emit(move(register_a, result));
+    asm_generator->emit("addq $8, " + stack_pointer);
   } else if (std::string(function) == "print_bool") {
+    asm_generator->emit("subq $8, " + stack_pointer);
+    asm_generator->emit(move(args[0], register_destination));
+    asm_generator->emit("callq print_bool");
+    asm_generator->emit(move(register_a, result));
+    asm_generator->emit("addq $8, " + stack_pointer);
   } else if (std::string(function) == "read_int") {
-  } else {
-    if (std::string(arguments[0])[0] != 'x') asm_generator->emit("movq $1, " + args[0]);
-    if (std::string(arguments[1])[0] != 'x') asm_generator->emit("movq $1, " + args[1]);
-
-    std::string result = asm_generator->get_location(destination);
+    asm_generator->emit("subq $8, " + stack_pointer);
+    asm_generator->emit("callq read_int");
+    asm_generator->emit(move(register_a, result));
+    asm_generator->emit("addq $8, " + stack_pointer);
+  } else if (args.size() == 2) {
     if (std::string(function) == "+") intrinsics::plus(args, result, asm_generator);
     if (std::string(function) == "-") intrinsics::minus(args, result, asm_generator);
     if (std::string(function) == "*") intrinsics::multiply(args, result, asm_generator);
     if (std::string(function) == "/") intrinsics::divide(args, result, asm_generator);
-    asm_generator->emit("movq " + result + ", %rdi");
+  } else if (args.size() == 1) {
+    if (std::string(function) == "-") intrinsics::minus(args, result, asm_generator);
+    if (std::string(function) == "!") intrinsics::minus(args, result, asm_generator);
   }
 }
 

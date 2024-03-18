@@ -1,17 +1,12 @@
 {
   var
     x
+    Int
     42 (INTEGER)
-  var
-    y
-    13 (INTEGER)
-  assign
-    y
-    x
   fun
     print_int
     (
-      y
+      x
     )
   null (UNIT)
 }

@@ -1,14 +1,15 @@
-LoadIntConst(5, x2)
-Copy(x2, x1)
-LoadIntConst(1, x4)
-Copy(x4, x3)
+LoadIntConst(5, x1)
+Copy(x1, x2)
+LoadIntConst(1, x3)
+Copy(x3, x4)
 L5
-Call(<=, [x3, x1], x8)
+Call(<=, [x4, x2], x8)
 CondJump(x8, L6, L7)
 L6
-Call(print_int, [x3], x9)
+Call(print_int, [x4], x9)
 LoadIntConst(1, x10)
-Call(+, [x3, x10], x11)
+Call(+, [x4, x10], x11)
+Copy(x11, x4)
 LoadIntConst(0, x12)
 Jump(L5)
 L7

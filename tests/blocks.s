@@ -241,7 +241,6 @@ movq -24(%rbp), %rdi
 movq -16(%rbp), %rax
 addq -24(%rbp), %rax
 movq %rax, -32(%rbp)
-movq -32(%rbp), %rdi
 
 # LoadIntConst(0, x5)
 movq $0, -40(%rbp)

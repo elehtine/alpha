@@ -62,6 +62,7 @@ class Identifier: public Expression {
 
     bool is_name(std::string guess) const;
     Value assign(Interpreter* interpreter, Value value);
+    IrVar assign_ir(IrGenerator* generator, IrVar var);
     void declare_value(Interpreter* interpreter, Value value);
     void declare_type(Checker* checker, ValueType type);
     void declare_ir(IrGenerator* generator, IrVar var);

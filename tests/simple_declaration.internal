@@ -1,4 +1,4 @@
-Call(read_int, [], x1)
+LoadIntConst(42, x1)
 Copy(x1, x2)
 Call(print_int, [x2], x3)
 LoadIntConst(0, x4)

@@ -222,20 +222,38 @@ movq %rsp, %rbp
 
 # START
 
-subq $32, %rsp
+subq $48, %rsp
 
-# LoadIntConst(42, x2)
+# LoadIntConst(42, x1)
 movq $42, -8(%rbp)
 movq -8(%rbp), %rdi
 
-# Copy(x2, x1)
+# Copy(x1, x2)
+movq -8(%rbp), %rax
+movq %rax, -16(%rbp)
 
-# Call(print_int, [x1], x3)
-call print_int
+# LoadIntConst(13, x3)
+movq $13, -24(%rbp)
+movq -24(%rbp), %rdi
 
-# LoadIntConst(0, x4)
-movq $0, -32(%rbp)
+# Copy(x3, x4)
+movq -24(%rbp), %rax
+movq %rax, -32(%rbp)
+
+# Copy(x2, x4)
+movq -16(%rbp), %rax
+movq %rax, -32(%rbp)
+
+# Call(print_int, [x4], x5)
+subq $8, %rsp
 movq -32(%rbp), %rdi
+callq print_int
+movq %rax, -40(%rbp)
+addq $8, %rsp
+
+# LoadIntConst(0, x6)
+movq $0, -48(%rbp)
+movq -48(%rbp), %rdi
 
 
 # END

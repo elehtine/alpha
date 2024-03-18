@@ -1,2 +1,4 @@
-var x: Int = 42;
-print_int(x);
+var x = 42;
+var y = 13;
+y = x;
+print_int(y);

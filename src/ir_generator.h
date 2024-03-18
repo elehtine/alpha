@@ -20,7 +20,6 @@ class IrGenerator {
     IrVar create_var(Location location);
     std::unique_ptr<Instruction> create_label();
 
-    void assign_variable(std::string identifier, IrVar value);
     void declare_variable(std::string identifier, IrVar value);
     IrVar get_variable(std::string identifier);
     void start_block();

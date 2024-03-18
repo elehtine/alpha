@@ -34,10 +34,6 @@ std::unique_ptr<Instruction> IrGenerator::create_label() {
   return label;
 }
 
-void IrGenerator::assign_variable(std::string identifier, IrVar value) {
-  symtab->assign_variable(identifier, value);
-}
-
 void IrGenerator::declare_variable(std::string identifier, IrVar var) {
   symtab->declare_variable(identifier, var);
 }

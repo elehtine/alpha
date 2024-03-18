@@ -81,6 +81,10 @@ Value Identifier::assign(Interpreter* interpreter, Value value) {
   return interpreter->get_variable(name);
 }
 
+IrVar Identifier::assign_ir(IrGenerator* generator, IrVar var) {
+  return generator->get_variable(name);
+}
+
 void Identifier::declare_value(Interpreter* interpreter, Value value) {
   try {
     interpreter->declare_variable(name, value);
@@ -276,7 +280,9 @@ ValueType Assign::check(Checker* checker) {
 
 IrVar Assign::visit(IrGenerator* generator) const {
   IrVar value_ir = value->visit(generator);
-  return value_ir;
+  IrVar id = identifier->assign_ir(generator, value_ir);
+  generator->add_instruction(std::make_unique<Copy>(value_ir, id));
+  return id;
 }
 
 IfThenElse::IfThenElse(std::unique_ptr<Expression> condition,
@@ -613,10 +619,11 @@ ValueType Declaration::check(Checker* checker) {
 }
 
 IrVar Declaration::visit(IrGenerator* generator) const {
+  IrVar v = value->visit(generator);
+
   IrVar id = generator->create_var(location);
   name->declare_ir(generator, id);
 
-  IrVar v = value->visit(generator);
   generator->add_instruction(std::make_unique<Copy>(v, id));
   return IrVar(location, "null");
 }

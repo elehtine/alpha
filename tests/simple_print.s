@@ -230,7 +230,11 @@ movq $42, -8(%rbp)
 movq -8(%rbp), %rdi
 
 # Call(print_int, [x1], x2)
-call print_int
+subq $8, %rsp
+movq -8(%rbp), %rdi
+callq print_int
+movq %rax, -16(%rbp)
+addq $8, %rsp
 
 # LoadIntConst(0, x3)
 movq $0, -24(%rbp)

@@ -35,6 +35,11 @@ class Instruction {
   protected:
     std::string format(std::vector<std::string> values) const;
     std::string format(std::vector<IrVar> values) const;
+    std::string move(std::string from, std::string to) const;
+    const std::string stack_pointer = "%rsp";
+    const std::string register_a = "%rax";
+    const std::string register_source = "%rsi";
+    const std::string register_destination = "%rdi";
 };
 
 class LoadIntConst : public Instruction {

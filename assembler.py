@@ -1,10 +1,83 @@
-.global main
-.type main, @function
-.global print_int
-.global print_bool
-.global read_int
+import subprocess
+import tempfile
+from contextlib import nullcontext
+from os import path
+from typing import ContextManager
 
-.section .text
+
+def assemble(
+    assembly_code: str,
+    output_file: str,
+    workdir: str | None = None,
+    tempfile_basename: str = 'program',
+    # Give ['c'] to link the C standard library
+    extra_libraries: list[str] = [],
+) -> None:
+    """Invokes 'as' and 'ld' to generate an executable from Assembly code."""
+    cm: ContextManager[str] = nullcontext(
+        workdir) if workdir is not None else tempfile.TemporaryDirectory(prefix='compiler_')  # type: ignore
+    with cm as workdir:
+        stdlib_asm = path.join(workdir, 'stdlib.s')
+        stdlib_obj = path.join(workdir, 'stdlib.o')
+        program_asm = path.join(workdir, f'{tempfile_basename}.s')
+        program_obj = path.join(workdir, f'{tempfile_basename}.o')
+        with open(stdlib_asm, 'w') as f:
+            f.write(stdlib_asm_code)
+        with open(program_asm, 'w') as f:
+            f.write(assembly_code)
+        subprocess.run(['as', '-g', '-o' +
+                        stdlib_obj, stdlib_asm], check=True)
+        subprocess.run(['as', '-g', '-o' +
+                        program_obj, program_asm], check=True)
+        linker_flags = ['-static', *[f'-l{lib}' for lib in extra_libraries]]
+        subprocess.run(
+            ['ld', '-o' + output_file, *linker_flags, stdlib_obj, program_obj], check=True)
+
+
+stdlib_asm_code: str = """
+    .global _start
+    .global print_int
+    .global print_bool
+    .global read_int
+    .extern main
+    .section .text
+
+# ***** Function '_start' *****
+# Calls function 'main', prints the output value, and halts the program
+
+_start:
+    call main
+    movq $60, %rax
+    xorq %rdi, %rdi
+    syscall
+
+# ***** Function 'print_int' *****
+# Prints a 64-bit signed integer followed by a newline.
+#
+# We'll build up the digits to print on the stack.
+# We generate the least significant digit first,
+# and the stack grows downward, so that works out nicely.
+#
+# Algorithm:
+#     push(newline)
+#     if x < 0:
+#         negative = true
+#         x = -x
+#     while x > 0:
+#         push(digit for (x % 10))
+#         x = x / 10
+#     if negative:
+#         push(minus sign)
+#     syscall 'write' with pushed data
+#     return the original argument
+#
+# Registers:
+# - rdi = our input number, which we divide down as we go
+# - rsp = stack pointer, pointing to the next character to emit.
+# - rbp = pointer to one after the last byte of our output (which grows downward)
+# - r9 = whether the number was negative
+# - r10 = a copy of the original input, so we can return it
+# - rax, rcx and rdx are used by intermediate computations
 
 print_int:
     pushq %rbp               # Save previous stack frame pointer
@@ -214,36 +287,4 @@ read_int:
 read_int_error_str:
     .ascii "Error: read_int() failed to read input\\n"
 read_int_error_str_len = . - read_int_error_str
-
-
-main:
-pushq %rbp
-movq %rsp, %rbp
-
-# START
-
-subq $24, %rsp
-subq $8, %rsp
-
-# LoadIntConst(1, x1)
-movq $1, -8(%rbp)
-movq -8(%rbp), %rdi
-
-# Call(print_int, [x1], x2)
-subq $8, %rsp
-movq -8(%rbp), %rdi
-callq print_int
-movq %rax, -16(%rbp)
-addq $8, %rsp
-
-# LoadIntConst(0, x3)
-movq $0, -24(%rbp)
-movq -24(%rbp), %rdi
-
-
-# END
-
-movq $0, %rax
-movq %rbp, %rsp
-popq %rbp
-ret
+"""
