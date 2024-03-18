@@ -155,17 +155,17 @@ void Call::to_asm(AssemblyGenerator* asm_generator) const {
 Label::Label(int value): value(value)
 {}
 
-Label::operator std::string() const { return "L" + std::to_string(value); }
+Label::operator std::string() const { return ".L" + std::to_string(value); }
 
 void Label::add_variables(Locals* locals) const {}
 
 void Label::to_asm(AssemblyGenerator* asm_generator) const {
-  asm_generator->emit("." + std::string(*this));
+  asm_generator->emit(std::string(*this) + ":");
 }
 
 CondJump::CondJump(IrVar condition,
-    Instruction* then_label,
-    Instruction* else_label):
+    Label* then_label,
+    Label* else_label):
   condition(condition),
   then_label(then_label),
   else_label(else_label)
@@ -182,10 +182,13 @@ CondJump::operator std::string() const {
 void CondJump::add_variables(Locals* locals) const {}
 
 void CondJump::to_asm(AssemblyGenerator* asm_generator) const {
-  throw IrGenerateException("CondJump not implemented");
+  std::string cond = asm_generator->get_location(condition);
+  asm_generator->emit("cmpq $0, " + cond);
+  asm_generator->emit("jne " + std::string(*then_label));
+  asm_generator->emit("jmp " + std::string(*else_label));
 }
 
-Jump::Jump(Instruction* label): label(label) {}
+Jump::Jump(Label* label): label(label) {}
 
 Jump::operator std::string() const {
   return "Jump(" + std::string(*label) + ")";
@@ -194,5 +197,5 @@ Jump::operator std::string() const {
 void Jump::add_variables(Locals* locals) const {}
 
 void Jump::to_asm(AssemblyGenerator* asm_generator) const {
-  throw IrGenerateException("Jump not implemented");
+  asm_generator->emit("jmp " + std::string(*label));
 }

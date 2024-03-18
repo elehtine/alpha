@@ -28,8 +28,8 @@ IrVar IrGenerator::create_var(Location location) {
   return variable;
 }
 
-std::unique_ptr<Instruction> IrGenerator::create_label() {
-  std::unique_ptr<Instruction> label = std::make_unique<Label>(number);
+std::unique_ptr<Label> IrGenerator::create_label() {
+  std::unique_ptr<Label> label = std::make_unique<Label>(number);
   number++;
   return label;
 }

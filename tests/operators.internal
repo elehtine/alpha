@@ -33,75 +33,75 @@ Call(print_int, [x31], x32)
 LoadIntConst(1, x36)
 LoadIntConst(2, x37)
 Call(<, [x36, x37], x38)
-CondJump(x38, L33, L34)
-L33
+CondJump(x38, .L33, .L34)
+.L33
 LoadIntConst(1, x39)
 Call(print_int, [x39], x40)
-Jump(L35)
-L34
+Jump(.L35)
+.L34
 LoadIntConst(2, x41)
 Call(print_int, [x41], x42)
-L35
+.L35
 LoadIntConst(1, x46)
 LoadIntConst(2, x47)
 Call(>, [x46, x47], x48)
-CondJump(x48, L43, L44)
-L43
+CondJump(x48, .L43, .L44)
+.L43
 LoadIntConst(1, x49)
 Call(print_int, [x49], x50)
-Jump(L45)
-L44
+Jump(.L45)
+.L44
 LoadIntConst(2, x51)
 Call(print_int, [x51], x52)
-L45
+.L45
 LoadIntConst(1, x56)
 LoadIntConst(1, x57)
 Call(>=, [x56, x57], x58)
-CondJump(x58, L53, L54)
-L53
+CondJump(x58, .L53, .L54)
+.L53
 LoadIntConst(1, x59)
 Call(print_int, [x59], x60)
-Jump(L55)
-L54
+Jump(.L55)
+.L54
 LoadIntConst(2, x61)
 Call(print_int, [x61], x62)
-L55
+.L55
 LoadIntConst(1, x66)
 LoadIntConst(1, x67)
 Call(<=, [x66, x67], x68)
-CondJump(x68, L63, L64)
-L63
+CondJump(x68, .L63, .L64)
+.L63
 LoadIntConst(1, x69)
 Call(print_int, [x69], x70)
-Jump(L65)
-L64
+Jump(.L65)
+.L64
 LoadIntConst(2, x71)
 Call(print_int, [x71], x72)
-L65
+.L65
 LoadIntConst(3, x73)
 LoadIntConst(1, x77)
 LoadIntConst(2, x78)
 Call(<, [x77, x78], x79)
-CondJump(x79, L74, L75)
-L74
+CondJump(x79, .L74, .L75)
+.L74
 LoadIntConst(1, x80)
-Jump(L76)
-L75
+Jump(.L76)
+.L75
 LoadIntConst(2, x81)
-L76
+.L76
 Call(+, [x73, null], x82)
 Call(print_int, [x82], x83)
 LoadIntConst(3, x84)
 LoadIntConst(1, x88)
 LoadIntConst(2, x89)
 Call(>, [x88, x89], x90)
-CondJump(x90, L85, L86)
-L85
+CondJump(x90, .L85, .L86)
+.L85
 LoadIntConst(1, x91)
-Jump(L87)
-L86
+Jump(.L87)
+.L86
 LoadIntConst(2, x92)
-L87
+.L87
 Call(+, [x84, null], x93)
 Call(print_int, [x93], x94)
 LoadIntConst(1, x98)
@@ -109,13 +109,13 @@ Call(-, [x98], x99)
 LoadIntConst(2, x100)
 Call(>, [x99, x100], x101)
 Call(not, [x101], x102)
-CondJump(x102, L95, L96)
-L95
+CondJump(x102, .L95, .L96)
+.L95
 LoadIntConst(1, x103)
-Jump(L97)
-L96
+Jump(.L97)
+.L96
 LoadIntConst(2, x104)
-L97
+.L97
 Call(-, [null], x105)
 Call(print_int, [x105], x106)
 LoadIntConst(0, x107)

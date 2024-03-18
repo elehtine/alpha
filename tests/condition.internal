@@ -1,54 +1,54 @@
 LoadIntConst(1, x4)
-CondJump(x4, L1, L2)
-L1
+CondJump(x4, .L1, .L2)
+.L1
 LoadIntConst(1, x5)
-Jump(L3)
-L2
+Jump(.L3)
+.L2
 LoadIntConst(0, x6)
-L3
+.L3
 LoadIntConst(0, x10)
-CondJump(x10, L7, L8)
-L7
+CondJump(x10, .L7, .L8)
+.L7
 LoadIntConst(1, x11)
-Jump(L9)
-L8
+Jump(.L9)
+.L8
 LoadIntConst(0, x12)
-L9
+.L9
 LoadIntConst(1, x16)
-CondJump(x16, L13, L14)
-L13
+CondJump(x16, .L13, .L14)
+.L13
 LoadIntConst(1, x17)
-Jump(L15)
-L14
-L15
+Jump(.L15)
+.L14
+.L15
 LoadIntConst(0, x21)
-CondJump(x21, L18, L19)
-L18
+CondJump(x21, .L18, .L19)
+.L18
 LoadIntConst(1, x22)
-Jump(L20)
-L19
-L20
+Jump(.L20)
+.L19
+.L20
 LoadIntConst(1, x26)
 LoadIntConst(2, x27)
 Call(<, [x26, x27], x28)
-CondJump(x28, L23, L24)
-L23
+CondJump(x28, .L23, .L24)
+.L23
 LoadIntConst(1, x29)
-Jump(L25)
-L24
+Jump(.L25)
+.L24
 LoadIntConst(2, x30)
-L25
+.L25
 LoadIntConst(1, x34)
 LoadIntConst(2, x35)
 Call(<, [x34, x35], x36)
 Call(not, [x36], x37)
-CondJump(x37, L31, L32)
-L31
+CondJump(x37, .L31, .L32)
+.L31
 LoadIntConst(1, x38)
-Jump(L33)
-L32
+Jump(.L33)
+.L32
 LoadIntConst(2, x39)
-L33
+.L33
 LoadIntConst(1, x43)
 LoadIntConst(2, x44)
 Call(<, [x43, x44], x45)
@@ -56,13 +56,13 @@ LoadIntConst(3, x46)
 LoadIntConst(3, x47)
 Call(<=, [x46, x47], x48)
 Call(and, [x45, x48], x49)
-CondJump(x49, L40, L41)
-L40
+CondJump(x49, .L40, .L41)
+.L40
 LoadIntConst(1, x50)
-Jump(L42)
-L41
+Jump(.L42)
+.L41
 LoadIntConst(2, x51)
-L42
+.L42
 LoadIntConst(1, x55)
 LoadIntConst(2, x56)
 Call(<, [x55, x56], x57)
@@ -70,13 +70,13 @@ LoadIntConst(3, x58)
 LoadIntConst(3, x59)
 Call(<=, [x58, x59], x60)
 Call(or, [x57, x60], x61)
-CondJump(x61, L52, L53)
-L52
+CondJump(x61, .L52, .L53)
+.L52
 LoadIntConst(1, x62)
-Jump(L54)
-L53
+Jump(.L54)
+.L53
 LoadIntConst(2, x63)
-L54
+.L54
 LoadIntConst(1, x67)
 LoadIntConst(2, x68)
 Call(<=, [x67, x68], x69)
@@ -84,13 +84,13 @@ LoadIntConst(3, x70)
 LoadIntConst(3, x71)
 Call(<, [x70, x71], x72)
 Call(and, [x69, x72], x73)
-CondJump(x73, L64, L65)
-L64
+CondJump(x73, .L64, .L65)
+.L64
 LoadIntConst(1, x74)
-Jump(L66)
-L65
+Jump(.L66)
+.L65
 LoadIntConst(2, x75)
-L66
+.L66
 LoadIntConst(1, x79)
 LoadIntConst(2, x80)
 Call(<=, [x79, x80], x81)
@@ -98,43 +98,43 @@ LoadIntConst(3, x82)
 LoadIntConst(3, x83)
 Call(<, [x82, x83], x84)
 Call(or, [x81, x84], x85)
-CondJump(x85, L76, L77)
-L76
+CondJump(x85, .L76, .L77)
+.L76
 LoadIntConst(1, x86)
-Jump(L78)
-L77
+Jump(.L78)
+.L77
 LoadIntConst(2, x87)
-L78
+.L78
 LoadIntConst(1, x91)
 LoadIntConst(2, x92)
 Call(==, [x91, x92], x93)
-CondJump(x93, L88, L89)
-L88
+CondJump(x93, .L88, .L89)
+.L88
 LoadIntConst(3, x94)
-Jump(L90)
-L89
+Jump(.L90)
+.L89
 LoadIntConst(4, x95)
-L90
+.L90
 LoadIntConst(1, x99)
 LoadIntConst(2, x100)
 Call(!=, [x99, x100], x101)
-CondJump(x101, L96, L97)
-L96
+CondJump(x101, .L96, .L97)
+.L96
 LoadIntConst(3, x102)
-Jump(L98)
-L97
+Jump(.L98)
+.L97
 LoadIntConst(4, x103)
-L98
+.L98
 LoadIntConst(0, x107)
 LoadIntConst(1, x108)
 Call(and, [x107, x108], x109)
 LoadIntConst(1, x110)
 Call(or, [x109, x110], x111)
-CondJump(x111, L104, L105)
-L104
+CondJump(x111, .L104, .L105)
+.L104
 LoadIntConst(1, x112)
-Jump(L106)
-L105
+Jump(.L106)
+.L105
 LoadIntConst(2, x113)
-L106
+.L106
 LoadIntConst(0, x114)

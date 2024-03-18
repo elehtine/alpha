@@ -96,8 +96,8 @@ class Label : public Instruction {
 
 class CondJump : public Instruction {
   public:
-    CondJump(IrVar condition, Instruction* then_label,
-        Instruction* else_label);
+    CondJump(IrVar condition, Label* then_label,
+        Label* else_label);
     operator std::string() const override;
 
     void add_variables(Locals* locals) const override;
@@ -105,20 +105,20 @@ class CondJump : public Instruction {
 
   private:
     IrVar condition;
-    Instruction* then_label;
-    Instruction* else_label;
+    Label* then_label;
+    Label* else_label;
 };
 
 class Jump : public Instruction {
   public:
-    Jump(Instruction* label);
+    Jump(Label* label);
     operator std::string() const override;
 
     void add_variables(Locals* locals) const override;
     void to_asm(AssemblyGenerator* asm_generator) const override;
 
   private:
-    Instruction* label;
+    Label* label;
 };
 
 #endif

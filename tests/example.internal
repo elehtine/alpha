@@ -1,32 +1,32 @@
 Call(read_int, [], x1)
 Copy(x1, x2)
 Call(print_int, [x2], x3)
-L4
+.L4
 LoadIntConst(1, x7)
 Call(>, [x2, x7], x8)
-CondJump(x8, L5, L6)
-L5
+CondJump(x8, .L5, .L6)
+.L5
 LoadIntConst(2, x12)
 Call(%, [x2, x12], x13)
 LoadIntConst(0, x14)
 Call(==, [x13, x14], x15)
-CondJump(x15, L9, L10)
-L9
+CondJump(x15, .L9, .L10)
+.L9
 LoadIntConst(2, x16)
 Call(/, [x2, x16], x17)
 Copy(x17, x2)
 LoadIntConst(0, x18)
-Jump(L11)
-L10
+Jump(.L11)
+.L10
 LoadIntConst(3, x19)
 Call(*, [x19, x2], x20)
 LoadIntConst(1, x21)
 Call(+, [x20, x21], x22)
 Copy(x22, x2)
 LoadIntConst(0, x23)
-L11
+.L11
 Call(print_int, [x2], x24)
 LoadIntConst(0, x25)
-Jump(L4)
-L6
+Jump(.L4)
+.L6
 LoadIntConst(0, x26)

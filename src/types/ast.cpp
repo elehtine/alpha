@@ -354,9 +354,9 @@ ValueType IfThenElse::check(Checker* checker) {
 }
 
 IrVar IfThenElse::visit(IrGenerator* generator) const {
-  std::unique_ptr<Instruction> then_label = generator->create_label();
-  std::unique_ptr<Instruction> else_label = generator->create_label();
-  std::unique_ptr<Instruction> end_label = generator->create_label();
+  std::unique_ptr<Label> then_label = generator->create_label();
+  std::unique_ptr<Label> else_label = generator->create_label();
+  std::unique_ptr<Label> end_label = generator->create_label();
   IrVar cond = condition->visit(generator);
 
   generator->add_instruction(std::make_unique<CondJump>(
@@ -411,9 +411,9 @@ ValueType While::check(Checker* checker) {
 }
 
 IrVar While::visit(IrGenerator* generator) const {
-  std::unique_ptr<Instruction> start_label = generator->create_label();
-  std::unique_ptr<Instruction> body_label = generator->create_label();
-  std::unique_ptr<Instruction> end_label = generator->create_label();
+  std::unique_ptr<Label> start_label = generator->create_label();
+  std::unique_ptr<Label> body_label = generator->create_label();
+  std::unique_ptr<Label> end_label = generator->create_label();
 
   std::unique_ptr<Jump> loop_jump = std::make_unique<Jump>(start_label.get());
 

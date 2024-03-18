@@ -18,7 +18,7 @@ class IrGenerator {
     std::vector<Instruction*> get_instructions() const;
     void add_instruction(std::unique_ptr<Instruction> instruction);
     IrVar create_var(Location location);
-    std::unique_ptr<Instruction> create_label();
+    std::unique_ptr<Label> create_label();
 
     void declare_variable(std::string identifier, IrVar value);
     IrVar get_variable(std::string identifier);
