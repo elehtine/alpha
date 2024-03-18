@@ -30,7 +30,6 @@ clean:
 .PHONY: help
 help:
 	@echo "Commands for compiler alpha:"
-	@echo "  make test  - Run tests"
-	@echo "  make alpha - Build alpha"
-	@echo "  make clean - Clean binaries:"
-	@echo "  make help  - Show this help:"
+	@echo "  make help  - show this help"
+	@echo "  make       - run tests"
+	@echo "  make clean - remove binaries"
