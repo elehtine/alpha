@@ -1,8 +1,0 @@
-{
-  fun
-    print_int
-    (
-      true (BOOLEAN)
-    )
-  null (UNIT)
-}

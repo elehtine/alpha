@@ -2,35 +2,35 @@
   fun (UNIT)
     print_int
     (
-        3 (INTEGER)
+        7 (INTEGER)
       + (INTEGER)
         5 (INTEGER)
     )
   fun (UNIT)
     print_int
     (
-        3 (INTEGER)
+        7 (INTEGER)
       - (INTEGER)
         5 (INTEGER)
     )
   fun (UNIT)
     print_int
     (
-        3 (INTEGER)
+        7 (INTEGER)
       * (INTEGER)
         5 (INTEGER)
     )
   fun (UNIT)
     print_int
     (
-        3 (INTEGER)
+        7 (INTEGER)
       / (INTEGER)
         5 (INTEGER)
     )
   fun (UNIT)
     print_int
     (
-        3 (INTEGER)
+        7 (INTEGER)
       % (INTEGER)
         5 (INTEGER)
     )
@@ -49,42 +49,42 @@
   fun (UNIT)
     print_bool
     (
-        3 (INTEGER)
+        7 (INTEGER)
       == (BOOLEAN)
         5 (INTEGER)
     )
   fun (UNIT)
     print_bool
     (
-        3 (INTEGER)
+        7 (INTEGER)
       != (BOOLEAN)
         5 (INTEGER)
     )
   fun (UNIT)
     print_bool
     (
-        3 (INTEGER)
+        7 (INTEGER)
       < (BOOLEAN)
         5 (INTEGER)
     )
   fun (UNIT)
     print_bool
     (
-        3 (INTEGER)
+        7 (INTEGER)
       <= (BOOLEAN)
         5 (INTEGER)
     )
   fun (UNIT)
     print_bool
     (
-        3 (INTEGER)
+        7 (INTEGER)
       > (BOOLEAN)
         5 (INTEGER)
     )
   fun (UNIT)
     print_bool
     (
-        3 (INTEGER)
+        7 (INTEGER)
       >= (BOOLEAN)
         5 (INTEGER)
     )

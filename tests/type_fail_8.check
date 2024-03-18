@@ -1,7 +1,0 @@
-{ (UNIT)
-  var
-    x
-    Int
-    true (BOOLEAN)
-  null (UNIT)
-}

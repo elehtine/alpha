@@ -198,6 +198,38 @@ ValueType BinaryOp::check(Checker* checker) {
 }
 
 IrVar BinaryOp::visit(IrGenerator* generator) const {
+  if (op->match(TokenType::logical_and)) {
+    IrVar result = generator->create_var(location);
+    std::unique_ptr<Label> right_label = generator->create_label();
+    std::unique_ptr<Label> end_label = generator->create_label();
+
+    IrVar l = left->visit(generator);
+    generator->add_instruction(std::make_unique<Copy>(l, result));
+    generator->add_instruction(std::make_unique<CondJump>(l, right_label.get(), end_label.get()));
+
+    generator->add_instruction(std::move(right_label));
+    IrVar r = right->visit(generator);
+    generator->add_instruction(std::make_unique<Copy>(r, result));
+    generator->add_instruction(std::move(end_label));
+    return result;
+  }
+
+  if (op->match(TokenType::logical_or)) {
+    IrVar result = generator->create_var(location);
+    std::unique_ptr<Label> right_label = generator->create_label();
+    std::unique_ptr<Label> end_label = generator->create_label();
+
+    IrVar l = left->visit(generator);
+    generator->add_instruction(std::make_unique<Copy>(l, result));
+    generator->add_instruction(std::make_unique<CondJump>(l, end_label.get(), right_label.get()));
+
+    generator->add_instruction(std::move(right_label));
+    IrVar r = right->visit(generator);
+    generator->add_instruction(std::make_unique<Copy>(r, result));
+    generator->add_instruction(std::move(end_label));
+    return result;
+  }
+
   std::vector<IrVar> arguments = {
     left->visit(generator),
     right->visit(generator),

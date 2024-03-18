@@ -225,8 +225,8 @@ movq %rsp, %rbp
 subq $408, %rsp
 subq $8, %rsp
 
-# LoadIntConst(3, x1)
-movq $3, -8(%rbp)
+# LoadIntConst(7, x1)
+movq $7, -8(%rbp)
 movq -8(%rbp), %rdi
 
 # LoadIntConst(5, x2)
@@ -245,8 +245,8 @@ callq print_int
 movq %rax, -32(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(3, x5)
-movq $3, -40(%rbp)
+# LoadIntConst(7, x5)
+movq $7, -40(%rbp)
 movq -40(%rbp), %rdi
 
 # LoadIntConst(5, x6)
@@ -265,8 +265,8 @@ callq print_int
 movq %rax, -64(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(3, x9)
-movq $3, -72(%rbp)
+# LoadIntConst(7, x9)
+movq $7, -72(%rbp)
 movq -72(%rbp), %rdi
 
 # LoadIntConst(5, x10)
@@ -285,8 +285,8 @@ callq print_int
 movq %rax, -96(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(3, x13)
-movq $3, -104(%rbp)
+# LoadIntConst(7, x13)
+movq $7, -104(%rbp)
 movq -104(%rbp), %rdi
 
 # LoadIntConst(5, x14)
@@ -306,8 +306,8 @@ callq print_int
 movq %rax, -128(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(3, x17)
-movq $3, -136(%rbp)
+# LoadIntConst(7, x17)
+movq $7, -136(%rbp)
 movq -136(%rbp), %rdi
 
 # LoadIntConst(5, x18)
@@ -359,8 +359,8 @@ callq print_bool
 movq %rax, -208(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(3, x27)
-movq $3, -216(%rbp)
+# LoadIntConst(7, x27)
+movq $7, -216(%rbp)
 movq -216(%rbp), %rdi
 
 # LoadIntConst(5, x28)
@@ -381,8 +381,8 @@ callq print_bool
 movq %rax, -240(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(3, x31)
-movq $3, -248(%rbp)
+# LoadIntConst(7, x31)
+movq $7, -248(%rbp)
 movq -248(%rbp), %rdi
 
 # LoadIntConst(5, x32)
@@ -403,8 +403,8 @@ callq print_bool
 movq %rax, -272(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(3, x35)
-movq $3, -280(%rbp)
+# LoadIntConst(7, x35)
+movq $7, -280(%rbp)
 movq -280(%rbp), %rdi
 
 # LoadIntConst(5, x36)
@@ -425,8 +425,8 @@ callq print_bool
 movq %rax, -304(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(3, x39)
-movq $3, -312(%rbp)
+# LoadIntConst(7, x39)
+movq $7, -312(%rbp)
 movq -312(%rbp), %rdi
 
 # LoadIntConst(5, x40)
@@ -447,8 +447,8 @@ callq print_bool
 movq %rax, -336(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(3, x43)
-movq $3, -344(%rbp)
+# LoadIntConst(7, x43)
+movq $7, -344(%rbp)
 movq -344(%rbp), %rdi
 
 # LoadIntConst(5, x44)
@@ -469,8 +469,8 @@ callq print_bool
 movq %rax, -368(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(3, x47)
-movq $3, -376(%rbp)
+# LoadIntConst(7, x47)
+movq $7, -376(%rbp)
 movq -376(%rbp), %rdi
 
 # LoadIntConst(5, x48)

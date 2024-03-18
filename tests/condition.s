@@ -408,49 +408,63 @@ callq print_int
 movq %rax, -200(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(1, x41)
+# LoadIntConst(1, x44)
 movq $1, -208(%rbp)
 movq -208(%rbp), %rdi
 
-# LoadIntConst(2, x42)
+# LoadIntConst(2, x45)
 movq $2, -216(%rbp)
 movq -216(%rbp), %rdi
 
-# Call(<, [x41, x42], x43)
+# Call(<, [x44, x45], x46)
 xor %rax, %rax
 movq -208(%rbp), %rdx
 cmpq -216(%rbp), %rdx
 setl %al
 movq %rax, -224(%rbp)
 
-# LoadIntConst(3, x44)
-movq $3, -232(%rbp)
-movq -232(%rbp), %rdi
+# Copy(x46, x41)
+movq -224(%rbp), %rax
+movq %rax, -232(%rbp)
 
-# LoadIntConst(3, x45)
+cmpq $0, -224(%rbp)
+jne .L42
+jmp .L43
+
+.L42:
+
+# LoadIntConst(3, x47)
 movq $3, -240(%rbp)
 movq -240(%rbp), %rdi
 
-# Call(<=, [x44, x45], x46)
+# LoadIntConst(3, x48)
+movq $3, -248(%rbp)
+movq -248(%rbp), %rdi
+
+# Call(<=, [x47, x48], x49)
 xor %rax, %rax
-movq -232(%rbp), %rdx
-cmpq -240(%rbp), %rdx
+movq -240(%rbp), %rdx
+cmpq -248(%rbp), %rdx
 setle %al
-movq %rax, -248(%rbp)
+movq %rax, -256(%rbp)
 
-# Call(and, [x43, x46], x47)
+# Copy(x49, x41)
+movq -256(%rbp), %rax
+movq %rax, -232(%rbp)
 
-cmpq $0, -256(%rbp)
+.L43:
+
+cmpq $0, -232(%rbp)
 jne .L38
 jmp .L39
 
 .L38:
 
-# LoadIntConst(1, x49)
+# LoadIntConst(1, x51)
 movq $1, -264(%rbp)
 movq -264(%rbp), %rdi
 
-# Copy(x49, x48)
+# Copy(x51, x50)
 movq -264(%rbp), %rax
 movq %rax, -272(%rbp)
 
@@ -458,233 +472,275 @@ jmp .L40
 
 .L39:
 
-# LoadIntConst(2, x50)
+# LoadIntConst(2, x52)
 movq $2, -280(%rbp)
 movq -280(%rbp), %rdi
 
-# Copy(x50, x48)
+# Copy(x52, x50)
 movq -280(%rbp), %rax
 movq %rax, -272(%rbp)
 
 .L40:
 
-# Call(print_int, [x48], x51)
+# Call(print_int, [x50], x53)
 subq $8, %rsp
 movq -272(%rbp), %rdi
 callq print_int
 movq %rax, -288(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(1, x55)
+# LoadIntConst(1, x60)
 movq $1, -296(%rbp)
 movq -296(%rbp), %rdi
 
-# LoadIntConst(2, x56)
+# LoadIntConst(2, x61)
 movq $2, -304(%rbp)
 movq -304(%rbp), %rdi
 
-# Call(<, [x55, x56], x57)
+# Call(<, [x60, x61], x62)
 xor %rax, %rax
 movq -296(%rbp), %rdx
 cmpq -304(%rbp), %rdx
 setl %al
 movq %rax, -312(%rbp)
 
-# LoadIntConst(3, x58)
-movq $3, -320(%rbp)
-movq -320(%rbp), %rdi
+# Copy(x62, x57)
+movq -312(%rbp), %rax
+movq %rax, -320(%rbp)
 
-# LoadIntConst(3, x59)
+cmpq $0, -312(%rbp)
+jne .L59
+jmp .L58
+
+.L58:
+
+# LoadIntConst(3, x63)
 movq $3, -328(%rbp)
 movq -328(%rbp), %rdi
 
-# Call(<=, [x58, x59], x60)
+# LoadIntConst(3, x64)
+movq $3, -336(%rbp)
+movq -336(%rbp), %rdi
+
+# Call(<=, [x63, x64], x65)
 xor %rax, %rax
-movq -320(%rbp), %rdx
-cmpq -328(%rbp), %rdx
+movq -328(%rbp), %rdx
+cmpq -336(%rbp), %rdx
 setle %al
-movq %rax, -336(%rbp)
+movq %rax, -344(%rbp)
 
-# Call(or, [x57, x60], x61)
+# Copy(x65, x57)
+movq -344(%rbp), %rax
+movq %rax, -320(%rbp)
 
-cmpq $0, -344(%rbp)
-jne .L52
-jmp .L53
+.L59:
 
-.L52:
-
-# LoadIntConst(1, x63)
-movq $1, -352(%rbp)
-movq -352(%rbp), %rdi
-
-# Copy(x63, x62)
-movq -352(%rbp), %rax
-movq %rax, -360(%rbp)
-
-jmp .L54
-
-.L53:
-
-# LoadIntConst(2, x64)
-movq $2, -368(%rbp)
-movq -368(%rbp), %rdi
-
-# Copy(x64, x62)
-movq -368(%rbp), %rax
-movq %rax, -360(%rbp)
+cmpq $0, -320(%rbp)
+jne .L54
+jmp .L55
 
 .L54:
 
-# Call(print_int, [x62], x65)
+# LoadIntConst(1, x67)
+movq $1, -352(%rbp)
+movq -352(%rbp), %rdi
+
+# Copy(x67, x66)
+movq -352(%rbp), %rax
+movq %rax, -360(%rbp)
+
+jmp .L56
+
+.L55:
+
+# LoadIntConst(2, x68)
+movq $2, -368(%rbp)
+movq -368(%rbp), %rdi
+
+# Copy(x68, x66)
+movq -368(%rbp), %rax
+movq %rax, -360(%rbp)
+
+.L56:
+
+# Call(print_int, [x66], x69)
 subq $8, %rsp
 movq -360(%rbp), %rdi
 callq print_int
 movq %rax, -376(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(1, x69)
+# LoadIntConst(1, x76)
 movq $1, -384(%rbp)
 movq -384(%rbp), %rdi
 
-# LoadIntConst(2, x70)
+# LoadIntConst(2, x77)
 movq $2, -392(%rbp)
 movq -392(%rbp), %rdi
 
-# Call(<=, [x69, x70], x71)
+# Call(<=, [x76, x77], x78)
 xor %rax, %rax
 movq -384(%rbp), %rdx
 cmpq -392(%rbp), %rdx
 setle %al
 movq %rax, -400(%rbp)
 
-# LoadIntConst(3, x72)
-movq $3, -408(%rbp)
-movq -408(%rbp), %rdi
+# Copy(x78, x73)
+movq -400(%rbp), %rax
+movq %rax, -408(%rbp)
 
-# LoadIntConst(3, x73)
+cmpq $0, -400(%rbp)
+jne .L74
+jmp .L75
+
+.L74:
+
+# LoadIntConst(3, x79)
 movq $3, -416(%rbp)
 movq -416(%rbp), %rdi
 
-# Call(<, [x72, x73], x74)
+# LoadIntConst(3, x80)
+movq $3, -424(%rbp)
+movq -424(%rbp), %rdi
+
+# Call(<, [x79, x80], x81)
 xor %rax, %rax
-movq -408(%rbp), %rdx
-cmpq -416(%rbp), %rdx
+movq -416(%rbp), %rdx
+cmpq -424(%rbp), %rdx
 setl %al
-movq %rax, -424(%rbp)
+movq %rax, -432(%rbp)
 
-# Call(and, [x71, x74], x75)
+# Copy(x81, x73)
+movq -432(%rbp), %rax
+movq %rax, -408(%rbp)
 
-cmpq $0, -432(%rbp)
-jne .L66
-jmp .L67
+.L75:
 
-.L66:
+cmpq $0, -408(%rbp)
+jne .L70
+jmp .L71
 
-# LoadIntConst(1, x77)
+.L70:
+
+# LoadIntConst(1, x83)
 movq $1, -440(%rbp)
 movq -440(%rbp), %rdi
 
-# Copy(x77, x76)
+# Copy(x83, x82)
 movq -440(%rbp), %rax
 movq %rax, -448(%rbp)
 
-jmp .L68
+jmp .L72
 
-.L67:
+.L71:
 
-# LoadIntConst(2, x78)
+# LoadIntConst(2, x84)
 movq $2, -456(%rbp)
 movq -456(%rbp), %rdi
 
-# Copy(x78, x76)
+# Copy(x84, x82)
 movq -456(%rbp), %rax
 movq %rax, -448(%rbp)
 
-.L68:
+.L72:
 
-# Call(print_int, [x76], x79)
+# Call(print_int, [x82], x85)
 subq $8, %rsp
 movq -448(%rbp), %rdi
 callq print_int
 movq %rax, -464(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(1, x83)
+# LoadIntConst(1, x92)
 movq $1, -472(%rbp)
 movq -472(%rbp), %rdi
 
-# LoadIntConst(2, x84)
+# LoadIntConst(2, x93)
 movq $2, -480(%rbp)
 movq -480(%rbp), %rdi
 
-# Call(<=, [x83, x84], x85)
+# Call(<=, [x92, x93], x94)
 xor %rax, %rax
 movq -472(%rbp), %rdx
 cmpq -480(%rbp), %rdx
 setle %al
 movq %rax, -488(%rbp)
 
-# LoadIntConst(3, x86)
-movq $3, -496(%rbp)
-movq -496(%rbp), %rdi
+# Copy(x94, x89)
+movq -488(%rbp), %rax
+movq %rax, -496(%rbp)
 
-# LoadIntConst(3, x87)
+cmpq $0, -488(%rbp)
+jne .L91
+jmp .L90
+
+.L90:
+
+# LoadIntConst(3, x95)
 movq $3, -504(%rbp)
 movq -504(%rbp), %rdi
 
-# Call(<, [x86, x87], x88)
+# LoadIntConst(3, x96)
+movq $3, -512(%rbp)
+movq -512(%rbp), %rdi
+
+# Call(<, [x95, x96], x97)
 xor %rax, %rax
-movq -496(%rbp), %rdx
-cmpq -504(%rbp), %rdx
+movq -504(%rbp), %rdx
+cmpq -512(%rbp), %rdx
 setl %al
-movq %rax, -512(%rbp)
+movq %rax, -520(%rbp)
 
-# Call(or, [x85, x88], x89)
+# Copy(x97, x89)
+movq -520(%rbp), %rax
+movq %rax, -496(%rbp)
 
-cmpq $0, -520(%rbp)
-jne .L80
-jmp .L81
+.L91:
 
-.L80:
+cmpq $0, -496(%rbp)
+jne .L86
+jmp .L87
 
-# LoadIntConst(1, x91)
+.L86:
+
+# LoadIntConst(1, x99)
 movq $1, -528(%rbp)
 movq -528(%rbp), %rdi
 
-# Copy(x91, x90)
+# Copy(x99, x98)
 movq -528(%rbp), %rax
 movq %rax, -536(%rbp)
 
-jmp .L82
+jmp .L88
 
-.L81:
+.L87:
 
-# LoadIntConst(2, x92)
+# LoadIntConst(2, x100)
 movq $2, -544(%rbp)
 movq -544(%rbp), %rdi
 
-# Copy(x92, x90)
+# Copy(x100, x98)
 movq -544(%rbp), %rax
 movq %rax, -536(%rbp)
 
-.L82:
+.L88:
 
-# Call(print_int, [x90], x93)
+# Call(print_int, [x98], x101)
 subq $8, %rsp
 movq -536(%rbp), %rdi
 callq print_int
 movq %rax, -552(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(1, x97)
+# LoadIntConst(1, x105)
 movq $1, -560(%rbp)
 movq -560(%rbp), %rdi
 
-# LoadIntConst(2, x98)
+# LoadIntConst(2, x106)
 movq $2, -568(%rbp)
 movq -568(%rbp), %rdi
 
-# Call(==, [x97, x98], x99)
+# Call(==, [x105, x106], x107)
 xor %rax, %rax
 movq -560(%rbp), %rdx
 cmpq -568(%rbp), %rdx
@@ -692,49 +748,49 @@ sete %al
 movq %rax, -576(%rbp)
 
 cmpq $0, -576(%rbp)
-jne .L94
-jmp .L95
+jne .L102
+jmp .L103
 
-.L94:
+.L102:
 
-# LoadIntConst(3, x101)
+# LoadIntConst(3, x109)
 movq $3, -584(%rbp)
 movq -584(%rbp), %rdi
 
-# Copy(x101, x100)
+# Copy(x109, x108)
 movq -584(%rbp), %rax
 movq %rax, -592(%rbp)
 
-jmp .L96
+jmp .L104
 
-.L95:
+.L103:
 
-# LoadIntConst(4, x102)
+# LoadIntConst(4, x110)
 movq $4, -600(%rbp)
 movq -600(%rbp), %rdi
 
-# Copy(x102, x100)
+# Copy(x110, x108)
 movq -600(%rbp), %rax
 movq %rax, -592(%rbp)
 
-.L96:
+.L104:
 
-# Call(print_int, [x100], x103)
+# Call(print_int, [x108], x111)
 subq $8, %rsp
 movq -592(%rbp), %rdi
 callq print_int
 movq %rax, -608(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(1, x107)
+# LoadIntConst(1, x115)
 movq $1, -616(%rbp)
 movq -616(%rbp), %rdi
 
-# LoadIntConst(2, x108)
+# LoadIntConst(2, x116)
 movq $2, -624(%rbp)
 movq -624(%rbp), %rdi
 
-# Call(!=, [x107, x108], x109)
+# Call(!=, [x115, x116], x117)
 xor %rax, %rax
 movq -616(%rbp), %rdx
 cmpq -624(%rbp), %rdx
@@ -742,92 +798,120 @@ setne %al
 movq %rax, -632(%rbp)
 
 cmpq $0, -632(%rbp)
-jne .L104
-jmp .L105
+jne .L112
+jmp .L113
 
-.L104:
+.L112:
 
-# LoadIntConst(3, x111)
+# LoadIntConst(3, x119)
 movq $3, -640(%rbp)
 movq -640(%rbp), %rdi
 
-# Copy(x111, x110)
+# Copy(x119, x118)
 movq -640(%rbp), %rax
 movq %rax, -648(%rbp)
 
-jmp .L106
+jmp .L114
 
-.L105:
+.L113:
 
-# LoadIntConst(4, x112)
+# LoadIntConst(4, x120)
 movq $4, -656(%rbp)
 movq -656(%rbp), %rdi
 
-# Copy(x112, x110)
+# Copy(x120, x118)
 movq -656(%rbp), %rax
 movq %rax, -648(%rbp)
 
-.L106:
+.L114:
 
-# Call(print_int, [x110], x113)
+# Call(print_int, [x118], x121)
 subq $8, %rsp
 movq -648(%rbp), %rdi
 callq print_int
 movq %rax, -664(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(0, x117)
+# LoadIntConst(0, x131)
 movq $0, -672(%rbp)
 movq -672(%rbp), %rdi
 
-# LoadIntConst(1, x118)
-movq $1, -680(%rbp)
-movq -680(%rbp), %rdi
+# Copy(x131, x128)
+movq -672(%rbp), %rax
+movq %rax, -680(%rbp)
 
-# Call(and, [x117, x118], x119)
+cmpq $0, -672(%rbp)
+jne .L129
+jmp .L130
 
-# LoadIntConst(1, x120)
-movq $1, -696(%rbp)
-movq -696(%rbp), %rdi
+.L129:
 
-# Call(or, [x119, x120], x121)
+# LoadIntConst(1, x132)
+movq $1, -688(%rbp)
+movq -688(%rbp), %rdi
 
-cmpq $0, -704(%rbp)
-jne .L114
-jmp .L115
+# Copy(x132, x128)
+movq -688(%rbp), %rax
+movq %rax, -680(%rbp)
 
-.L114:
+.L130:
 
-# LoadIntConst(1, x123)
+# Copy(x128, x125)
+movq -680(%rbp), %rax
+movq %rax, -696(%rbp)
+
+cmpq $0, -680(%rbp)
+jne .L127
+jmp .L126
+
+.L126:
+
+# LoadIntConst(1, x133)
+movq $1, -704(%rbp)
+movq -704(%rbp), %rdi
+
+# Copy(x133, x125)
+movq -704(%rbp), %rax
+movq %rax, -696(%rbp)
+
+.L127:
+
+cmpq $0, -696(%rbp)
+jne .L122
+jmp .L123
+
+.L122:
+
+# LoadIntConst(1, x135)
 movq $1, -712(%rbp)
 movq -712(%rbp), %rdi
 
-# Copy(x123, x122)
+# Copy(x135, x134)
 movq -712(%rbp), %rax
 movq %rax, -720(%rbp)
 
-jmp .L116
+jmp .L124
 
-.L115:
+.L123:
 
-# LoadIntConst(2, x124)
+# LoadIntConst(2, x136)
 movq $2, -728(%rbp)
 movq -728(%rbp), %rdi
 
-# Copy(x124, x122)
+# Copy(x136, x134)
 movq -728(%rbp), %rax
 movq %rax, -720(%rbp)
 
-.L116:
+.L124:
 
-# Call(print_int, [x122], x125)
+# Call(print_int, [x134], x137)
 subq $8, %rsp
 movq -720(%rbp), %rdi
 callq print_int
 movq %rax, -736(%rbp)
 addq $8, %rsp
 
-# LoadIntConst(0, x126)
+# LoadIntConst(0, x138)
 movq $0, -744(%rbp)
 movq -744(%rbp), %rdi
 

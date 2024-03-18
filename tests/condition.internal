@@ -47,113 +47,137 @@ LoadIntConst(2, x36)
 Copy(x36, x34)
 .L29
 Call(print_int, [x34], x37)
-LoadIntConst(1, x41)
-LoadIntConst(2, x42)
-Call(<, [x41, x42], x43)
-LoadIntConst(3, x44)
-LoadIntConst(3, x45)
-Call(<=, [x44, x45], x46)
-Call(and, [x43, x46], x47)
-CondJump(x47, .L38, .L39)
+LoadIntConst(1, x44)
+LoadIntConst(2, x45)
+Call(<, [x44, x45], x46)
+Copy(x46, x41)
+CondJump(x46, .L42, .L43)
+.L42
+LoadIntConst(3, x47)
+LoadIntConst(3, x48)
+Call(<=, [x47, x48], x49)
+Copy(x49, x41)
+.L43
+CondJump(x41, .L38, .L39)
 .L38
-LoadIntConst(1, x49)
-Copy(x49, x48)
+LoadIntConst(1, x51)
+Copy(x51, x50)
 Jump(.L40)
 .L39
-LoadIntConst(2, x50)
-Copy(x50, x48)
+LoadIntConst(2, x52)
+Copy(x52, x50)
 .L40
-Call(print_int, [x48], x51)
-LoadIntConst(1, x55)
-LoadIntConst(2, x56)
-Call(<, [x55, x56], x57)
-LoadIntConst(3, x58)
-LoadIntConst(3, x59)
-Call(<=, [x58, x59], x60)
-Call(or, [x57, x60], x61)
-CondJump(x61, .L52, .L53)
-.L52
-LoadIntConst(1, x63)
-Copy(x63, x62)
-Jump(.L54)
-.L53
-LoadIntConst(2, x64)
-Copy(x64, x62)
+Call(print_int, [x50], x53)
+LoadIntConst(1, x60)
+LoadIntConst(2, x61)
+Call(<, [x60, x61], x62)
+Copy(x62, x57)
+CondJump(x62, .L59, .L58)
+.L58
+LoadIntConst(3, x63)
+LoadIntConst(3, x64)
+Call(<=, [x63, x64], x65)
+Copy(x65, x57)
+.L59
+CondJump(x57, .L54, .L55)
 .L54
-Call(print_int, [x62], x65)
-LoadIntConst(1, x69)
-LoadIntConst(2, x70)
-Call(<=, [x69, x70], x71)
-LoadIntConst(3, x72)
-LoadIntConst(3, x73)
-Call(<, [x72, x73], x74)
-Call(and, [x71, x74], x75)
-CondJump(x75, .L66, .L67)
-.L66
-LoadIntConst(1, x77)
-Copy(x77, x76)
-Jump(.L68)
-.L67
-LoadIntConst(2, x78)
-Copy(x78, x76)
-.L68
-Call(print_int, [x76], x79)
+LoadIntConst(1, x67)
+Copy(x67, x66)
+Jump(.L56)
+.L55
+LoadIntConst(2, x68)
+Copy(x68, x66)
+.L56
+Call(print_int, [x66], x69)
+LoadIntConst(1, x76)
+LoadIntConst(2, x77)
+Call(<=, [x76, x77], x78)
+Copy(x78, x73)
+CondJump(x78, .L74, .L75)
+.L74
+LoadIntConst(3, x79)
+LoadIntConst(3, x80)
+Call(<, [x79, x80], x81)
+Copy(x81, x73)
+.L75
+CondJump(x73, .L70, .L71)
+.L70
 LoadIntConst(1, x83)
+Copy(x83, x82)
+Jump(.L72)
+.L71
 LoadIntConst(2, x84)
-Call(<=, [x83, x84], x85)
-LoadIntConst(3, x86)
-LoadIntConst(3, x87)
-Call(<, [x86, x87], x88)
-Call(or, [x85, x88], x89)
-CondJump(x89, .L80, .L81)
-.L80
-LoadIntConst(1, x91)
-Copy(x91, x90)
-Jump(.L82)
-.L81
-LoadIntConst(2, x92)
-Copy(x92, x90)
-.L82
-Call(print_int, [x90], x93)
-LoadIntConst(1, x97)
-LoadIntConst(2, x98)
-Call(==, [x97, x98], x99)
-CondJump(x99, .L94, .L95)
-.L94
-LoadIntConst(3, x101)
-Copy(x101, x100)
-Jump(.L96)
-.L95
-LoadIntConst(4, x102)
-Copy(x102, x100)
-.L96
-Call(print_int, [x100], x103)
-LoadIntConst(1, x107)
-LoadIntConst(2, x108)
-Call(!=, [x107, x108], x109)
-CondJump(x109, .L104, .L105)
+Copy(x84, x82)
+.L72
+Call(print_int, [x82], x85)
+LoadIntConst(1, x92)
+LoadIntConst(2, x93)
+Call(<=, [x92, x93], x94)
+Copy(x94, x89)
+CondJump(x94, .L91, .L90)
+.L90
+LoadIntConst(3, x95)
+LoadIntConst(3, x96)
+Call(<, [x95, x96], x97)
+Copy(x97, x89)
+.L91
+CondJump(x89, .L86, .L87)
+.L86
+LoadIntConst(1, x99)
+Copy(x99, x98)
+Jump(.L88)
+.L87
+LoadIntConst(2, x100)
+Copy(x100, x98)
+.L88
+Call(print_int, [x98], x101)
+LoadIntConst(1, x105)
+LoadIntConst(2, x106)
+Call(==, [x105, x106], x107)
+CondJump(x107, .L102, .L103)
+.L102
+LoadIntConst(3, x109)
+Copy(x109, x108)
+Jump(.L104)
+.L103
+LoadIntConst(4, x110)
+Copy(x110, x108)
 .L104
-LoadIntConst(3, x111)
-Copy(x111, x110)
-Jump(.L106)
-.L105
-LoadIntConst(4, x112)
-Copy(x112, x110)
-.L106
-Call(print_int, [x110], x113)
-LoadIntConst(0, x117)
-LoadIntConst(1, x118)
-Call(and, [x117, x118], x119)
-LoadIntConst(1, x120)
-Call(or, [x119, x120], x121)
-CondJump(x121, .L114, .L115)
+Call(print_int, [x108], x111)
+LoadIntConst(1, x115)
+LoadIntConst(2, x116)
+Call(!=, [x115, x116], x117)
+CondJump(x117, .L112, .L113)
+.L112
+LoadIntConst(3, x119)
+Copy(x119, x118)
+Jump(.L114)
+.L113
+LoadIntConst(4, x120)
+Copy(x120, x118)
 .L114
-LoadIntConst(1, x123)
-Copy(x123, x122)
-Jump(.L116)
-.L115
-LoadIntConst(2, x124)
-Copy(x124, x122)
-.L116
-Call(print_int, [x122], x125)
-LoadIntConst(0, x126)
+Call(print_int, [x118], x121)
+LoadIntConst(0, x131)
+Copy(x131, x128)
+CondJump(x131, .L129, .L130)
+.L129
+LoadIntConst(1, x132)
+Copy(x132, x128)
+.L130
+Copy(x128, x125)
+CondJump(x128, .L127, .L126)
+.L126
+LoadIntConst(1, x133)
+Copy(x133, x125)
+.L127
+CondJump(x125, .L122, .L123)
+.L122
+LoadIntConst(1, x135)
+Copy(x135, x134)
+Jump(.L124)
+.L123
+LoadIntConst(2, x136)
+Copy(x136, x134)
+.L124
+Call(print_int, [x134], x137)
+LoadIntConst(0, x138)

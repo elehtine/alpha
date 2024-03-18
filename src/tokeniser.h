@@ -25,7 +25,7 @@ class Tokeniser {
     int last_column;
 
     const std::regex whitespace { "^\\s+" };
-    const std::regex comment { "^(//|#)[^(\\n)]+" };
+    const std::regex comment { "^(//|#)[^\\n]+" };
     const std::regex punctuation { "^(\\(|\\)|\\{|\\}|,|:|;)" };
     const std::regex oper { "^(\\+|-|\\*|/|%|==|!=|<=|>=|=|<|>|and|or)" };
     const std::regex keyword {

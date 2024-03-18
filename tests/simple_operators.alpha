@@ -1,16 +1,16 @@
-print_int(3 + 5);
-print_int(3 - 5);
-print_int(3 * 5);
-print_int(3 / 5);
-print_int(3 % 5);
+print_int(7 + 5);
+print_int(7 - 5);
+print_int(7 * 5);
+print_int(7 / 5);
+print_int(7 % 5);
 
 print_int(-5);
 print_bool(not true);
 
-print_bool(3 == 5);
-print_bool(3 != 5);
+print_bool(7 == 5);
+print_bool(7 != 5);
 
-print_bool(3 < 5);
-print_bool(3 <= 5);
-print_bool(3 > 5);
-print_bool(3 >= 5);
+print_bool(7 < 5);
+print_bool(7 <= 5);
+print_bool(7 > 5);
+print_bool(7 >= 5);
